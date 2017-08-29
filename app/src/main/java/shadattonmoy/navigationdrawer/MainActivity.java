@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         if (!prefs.getBoolean("firstTime", false)) {
             // <---- run your one time code here
-            addTeacher();
+
 
             // mark first time has runned.
             SharedPreferences.Editor editor = prefs.edit();
@@ -268,7 +268,7 @@ public class MainActivity extends AppCompatActivity
 
     public void openTeacherManageFragment(View view)
     {
-        Toast.makeText(getBaseContext(),"Teacher Manage",Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getBaseContext(),"Teacher Manage",Toast.LENGTH_SHORT).show();
         FragmentManager manager = getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         DeptFragment deptFragment = new DeptFragment();
@@ -281,7 +281,13 @@ public class MainActivity extends AppCompatActivity
 
     public void openSyllabusManageFragment(View view)
     {
-        Toast.makeText(getBaseContext(),"Syllabus Manage",Toast.LENGTH_SHORT).show();
+        FragmentManager manager = getFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        DeptFragment deptFragment = new DeptFragment();
+        deptFragment.setRoot("SYLLABUS_MANAGE");
+        transaction.replace(R.id.main_content_root,deptFragment);
+        transaction.addToBackStack("syllabus_manage_fragment");
+        transaction.commit();
 
     }
 
@@ -320,20 +326,5 @@ public class MainActivity extends AppCompatActivity
     protected void onStop() {
         super.onStop();
         firebaseAuth.removeAuthStateListener(authStateListener);
-    }
-    public void addTeacher()
-    {
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference().child("teacher").child("cse");
-        databaseReference.push().setValue(new Teacher("Mahruba Sharmin Chowdhury","Assistant Professor","N/A","+8801917566699","mahruba-cse@sust.edu","https://web.facebook.com/mahruba.chowdhury"));
-
-        databaseReference.push().setValue(new Teacher("Md Masum","Associate Professor","N/A","+8801919736248","masum-cse@sust.edu","N/A"));
-
-        databaseReference.push().setValue(new Teacher("M. Jahirul Islam,PhD.,PEng.","Professor","Room 321,IICT","N/A","jahir-cse@sust.edu","N/A"));
-
-        databaseReference.push().setValue(new Teacher("Dr Mohammad Reza Selim","Professor","Room 320,IICT","+8801972357830","selim@sust.edu","N/A"));
-
-        databaseReference.push().setValue(new Teacher("Dr Mohammad Shahidur Rahman","Professor","Room 321,IICT","+8801914930807","rahmanms@sust.edu","N/A"));
-
     }
 }
