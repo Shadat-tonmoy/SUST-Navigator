@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/teacher"
+            android:icon="@drawable/ic_action_person"
+            android:title="Teachers" />
+        <item
+            android:id="@+id/syllabus"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Syllabus" />
+        <item
+            android:id="@+id/CGPA"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="CGPA" />
+        <item
+            android:id="@+id/staff"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Staff" />
+        <item
+            android:id="@+id/bus_service"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Bus Service" />
+        <item
+            android:id="@+id/student_organization"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Student Organization" />
+        <item
+            android:id="@+id/holidays"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Holidays" />
+        <item
+            android:id="@+id/proctorial_body"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Proctorial Body" />
+        <item
+            android:id="@+id/admission_info"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Admission Info" />
+    </group>
+
+    <item android:title="Communicate">
+        <menu>
+            <item
+                android:id="@+id/nav_share"
+                android:icon="@drawable/ic_menu_share"
+                android:title="Share" />
+            <item
+                android:id="@+id/nav_send"
+                android:icon="@drawable/ic_menu_send"
+                android:title="Send" />
+        </menu>
+    </item>
+
+</menu>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="dept_title">
+        <item name="android:textSize">8sp</item>
+        <item name="android:textColor">#7f8c8d</item>
+        <item name="android:textAlignment">center</item>
+
+
+    </style>
+</resources>

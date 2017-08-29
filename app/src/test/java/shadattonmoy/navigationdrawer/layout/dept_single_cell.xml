@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/single_cell"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/dept_code"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textSize="32sp"
+        android:gravity="center"
+        android:textColor="#ffffff"
+        android:background="@drawable/round"
+        android:text="CSE" />
+
+    <TextView
+        android:id="@+id/dept_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="8sp"
+        android:text="Computer Science and Engineering"
+        android:layout_below="@+id/dept_code"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp" />
+</RelativeLayout>
