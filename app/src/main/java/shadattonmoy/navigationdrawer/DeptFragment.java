@@ -140,22 +140,21 @@ public class DeptFragment extends android.app.Fragment implements View.OnClickLi
             else if(id==id_eee)
             {
                 FragmentManager manager = getFragmentManager();
-                TeacherFragment cseTeacherFragment = new TeacherFragment("EEE");
+                TeacherManageFragment eeeTeacherManageFragment = new TeacherManageFragment("EEE");
                 FragmentTransaction transaction = manager.beginTransaction();
-                transaction.replace(R.id.main_content_root,cseTeacherFragment,"eee_teacher_fragment");
-                transaction.addToBackStack("eee_teacher_fragment");
+                transaction.replace(R.id.main_content_root,eeeTeacherManageFragment,"eee_teacher_fragment");
+                transaction.addToBackStack("eee_teacher_manage_fragment");
                 transaction.commit();
 
             }
             else if(id==id_ipe)
             {
                 FragmentManager manager = getFragmentManager();
-                TeacherFragment cseTeacherFragment = new TeacherFragment("IPE");
+                TeacherManageFragment ipeTeacherManageFragment = new TeacherManageFragment("IPE");
                 FragmentTransaction transaction = manager.beginTransaction();
-                transaction.replace(R.id.main_content_root,cseTeacherFragment,"ipe_teacher_fragment");
-                transaction.addToBackStack("ipe_teacher_fragment");
+                transaction.replace(R.id.main_content_root,ipeTeacherManageFragment,"ipe_teacher_fragment");
+                transaction.addToBackStack("ipe_teacher_manage_fragment");
                 transaction.commit();
-                Toast.makeText(getActivity().getApplicationContext(),"IPE",Toast.LENGTH_SHORT).show();
             }
             else if(id==id_cee)
             {
@@ -186,6 +185,47 @@ public class DeptFragment extends android.app.Fragment implements View.OnClickLi
 
 
         else if(root.equals("SYLLABUS"))
+        {
+            if(id==id_cse)
+            {
+                FragmentManager manager = getFragmentManager();
+                SyllabusFragment syllabusFragment= new SyllabusFragment();
+                FragmentTransaction transaction = manager.beginTransaction();
+                transaction.replace(R.id.main_content_root,syllabusFragment,"syllabus_fragment");
+                transaction.addToBackStack("syllabus_fragment");
+                transaction.commit();
+            }
+
+            else if(id==id_eee)
+            {
+                Toast.makeText(getActivity().getApplicationContext(),"Syllabus EEE",Toast.LENGTH_SHORT).show();
+            }
+            else if(id==id_ipe)
+            {
+                Toast.makeText(getActivity().getApplicationContext(),"Syllabus IPE",Toast.LENGTH_SHORT).show();
+            }
+            else if(id==id_cee)
+            {
+                Toast.makeText(getActivity().getApplicationContext(),"Syllabus CEE",Toast.LENGTH_SHORT).show();
+            }
+            else if(id==id_cep)
+            {
+                Toast.makeText(getActivity().getApplicationContext(),"Syllabus CEP",Toast.LENGTH_SHORT).show();
+            }
+            else if(id==id_mee)
+            {
+                Toast.makeText(getActivity().getApplicationContext(),"Syllabus MEE",Toast.LENGTH_SHORT).show();
+            }
+            else if(id==id_fet)
+            {
+                Toast.makeText(getActivity().getApplicationContext(),"Syllabus FET",Toast.LENGTH_SHORT).show();
+            }
+            else if(id==id_pme)
+            {
+                Toast.makeText(getActivity().getApplicationContext(),"Syllabus PME",Toast.LENGTH_SHORT).show();
+            }
+        }
+        else if(root.equals("SYLLABUS_MANAGE"))
         {
             if(id==id_cse)
             {
