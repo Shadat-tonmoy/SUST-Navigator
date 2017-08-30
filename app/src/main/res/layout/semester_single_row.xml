@@ -4,67 +4,56 @@
     android:layout_width="match_parent" android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/teacher_icon"
+        android:layout_margin="10dp"
+        android:id="@+id/semester_icon"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="5dp"
         android:background="@drawable/round_light_green"
-        android:text="M"
+        android:text="1/1"
         android:textColor="#ffffff"
         android:textAlignment="center"
         android:gravity="center"
         android:textSize="18sp"
-        />
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <TextView
-        android:id="@+id/teacher_name"
+        android:id="@+id/semester_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/teacher_icon"
+        android:layout_alignTop="@+id/semester_icon"
         android:layout_marginLeft="10dp"
-        android:layout_toEndOf="@+id/teacher_icon"
-        android:layout_toRightOf="@+id/teacher_icon"
-        android:text="Muhammed Zafar Iqbal"
+        android:layout_toEndOf="@+id/semester_icon"
+        android:layout_toRightOf="@+id/semester_icon"
+        android:text="1st Year 1st Semester"
         android:textColor="#000000"
         android:textSize="16sp"
         />
 
     <TextView
-        android:id="@+id/teacher_designation"
+        android:id="@+id/number_of_course_in_semester"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/teacher_name"
-        android:layout_alignStart="@+id/teacher_name"
-        android:layout_below="@+id/teacher_name"
-        android:text="Professor"
+        android:layout_alignLeft="@+id/semester_title"
+        android:layout_alignStart="@+id/semester_title"
+        android:layout_below="@+id/semester_title"
+        android:text="5 Courses"
         android:textColor="#7f8c8d"
         android:textSize="12sp"
         />
 
     <TextView
-        android:id="@+id/teacher_room"
+        android:id="@+id/total_credit_in_semester"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/teacher_designation"
-        android:layout_alignStart="@+id/teacher_designation"
-        android:layout_below="@+id/teacher_designation"
-        android:text="Room No 321,IICT"
+        android:layout_alignLeft="@+id/number_of_course_in_semester"
+        android:layout_alignStart="@+id/number_of_course_in_semester"
+        android:layout_below="@+id/number_of_course_in_semester"
+        android:text="22.0 Credits"
         android:textColor="#7f8c8d"
         android:textSize="12sp"
         />
-
-    <ImageView
-        android:id="@+id/contact_teacher"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_marginRight="20dp"
-        app:srcCompat="@android:drawable/sym_action_call"
-        android:layout_marginEnd="20dp"
-        android:layout_above="@+id/teacher_room"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
 
 
 </RelativeLayout>
