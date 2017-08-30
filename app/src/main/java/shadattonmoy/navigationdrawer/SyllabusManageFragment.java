@@ -5,9 +5,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -59,6 +61,22 @@ public class SyllabusManageFragment extends android.app.Fragment {
         semesters.add(new Semester("5","30","4th Year 1st Semester","4/1"));
         semesters.add(new Semester("5","30","4th Year 1st Semester","4/2"));
         semesterList.setAdapter(new SemesterAdapter(context,R.layout.semester_single_row,R.id.semester_icon,semesters));
+        semesterList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Semester currentSemester = (Semester) parent.getItemAtPosition(position);
+                String semesterCode = currentSemester.getSemesterCode();
+                android.app.FragmentManager manager = getFragmentManager();
+                android.app.FragmentTransaction transaction = manager.beginTransaction();
+                SyllabusFragment syllabusFragment = new SyllabusFragment(dept,semesterCode);
+                transaction.replace(R.id.main_content_root,syllabusFragment);
+                transaction.addToBackStack("syllabus_fragment");
+                transaction.commit();
+
+
+
+            }
+        });
 
 
     }

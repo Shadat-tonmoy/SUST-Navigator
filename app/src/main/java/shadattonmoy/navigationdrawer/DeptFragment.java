@@ -189,9 +189,9 @@ public class DeptFragment extends android.app.Fragment implements View.OnClickLi
             if(id==id_cse)
             {
                 FragmentManager manager = getFragmentManager();
-                SyllabusFragment syllabusFragment= new SyllabusFragment();
+                SyllabusFragmentTmp syllabusFragmentTmp = new SyllabusFragmentTmp();
                 FragmentTransaction transaction = manager.beginTransaction();
-                transaction.replace(R.id.main_content_root,syllabusFragment,"syllabus_fragment");
+                transaction.replace(R.id.main_content_root, syllabusFragmentTmp,"syllabus_fragment");
                 transaction.addToBackStack("syllabus_fragment");
                 transaction.commit();
             }

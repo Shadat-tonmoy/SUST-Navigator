@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -20,9 +21,11 @@ import java.util.List;
 public class SemesterAdapter extends ArrayAdapter<Semester> {
     private TextView semesterCodeView,semesterNameView,totalCourseView,totalCreditView;
     private String semesterCode,semesterName,totalCourse,totalCredit;
+    private Context context;
 
     public SemesterAdapter(@NonNull Context context, @LayoutRes int resource, @IdRes int textViewResourceId, @NonNull List<Semester> objects) {
         super(context, resource, textViewResourceId, objects);
+        this.context = context;
     }
 
     @NonNull
@@ -66,6 +69,7 @@ public class SemesterAdapter extends ArrayAdapter<Semester> {
             semesterCodeView.setBackgroundResource(R.drawable.round_green3);
         else if(semesterCode.equals("4/2"))
             semesterCodeView.setBackgroundResource(R.drawable.round_yellow);
+
         return row;
     }
 }

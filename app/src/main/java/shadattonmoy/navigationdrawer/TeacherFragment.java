@@ -74,22 +74,13 @@ public class TeacherFragment extends android.app.Fragment {
                 {
                     Teacher currentTeachcer = child.getValue(Teacher.class);
                     teachers.add(currentTeachcer);
-                    //Toast.makeText(getActivity().getApplicationContext(),currentTeachcer.toString(),Toast.LENGTH_SHORT).show();
-
-
-//                    Toast.makeText(getActivity().getApplicationContext(),teachers.size()+" ",Toast.LENGTH_SHORT).show();
 
 
                     manager = getFragmentManager();
-
-                    //teachers = new ArrayList<Teacher>();
-//        SQLiteAdapter sqLiteAdapter = new SQLiteAdapter(getActivity().getApplicationContext());
-//        Cursor cursor = sqLiteAdapter.getTeacherRecord(dept);
                     TeacherAdapter adapter = new TeacherAdapter(getActivity().getApplicationContext(),R.layout.teacher_single_row,R.id.teacher_icon,teachers,dept);
                     ListView teacherListView = (ListView) view.findViewById(R.id.teacherList);
                     teacherListView.setAdapter(adapter);
                     teacherListView.setOnItemClickListener(new detailListener(getActivity().getApplicationContext(),manager));
-//                    Toast.makeText(getActivity().getApplicationContext(),"HH",Toast.LENGTH_SHORT).show();
                     progressBar.setVisibility(View.GONE);
                 }
             }
