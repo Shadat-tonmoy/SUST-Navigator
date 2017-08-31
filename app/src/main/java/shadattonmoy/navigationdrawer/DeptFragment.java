@@ -189,9 +189,9 @@ public class DeptFragment extends android.app.Fragment implements View.OnClickLi
             if(id==id_cse)
             {
                 FragmentManager manager = getFragmentManager();
-                SyllabusFragmentTmp syllabusFragmentTmp = new SyllabusFragmentTmp();
+                SyllabusManageFragment syllabusManageFragment = new SyllabusManageFragment("cse",getActivity().getApplicationContext(),false);
                 FragmentTransaction transaction = manager.beginTransaction();
-                transaction.replace(R.id.main_content_root, syllabusFragmentTmp,"syllabus_fragment");
+                transaction.replace(R.id.main_content_root, syllabusManageFragment,"syllabus_fragment");
                 transaction.addToBackStack("syllabus_fragment");
                 transaction.commit();
             }
@@ -230,7 +230,7 @@ public class DeptFragment extends android.app.Fragment implements View.OnClickLi
             if(id==id_cse)
             {
                 FragmentManager manager = getFragmentManager();
-                SyllabusManageFragment syllabusManageFragment= new SyllabusManageFragment("cse",getActivity().getApplicationContext());
+                SyllabusManageFragment syllabusManageFragment= new SyllabusManageFragment("cse",getActivity().getApplicationContext(),true);
                 FragmentTransaction transaction = manager.beginTransaction();
                 transaction.replace(R.id.main_content_root,syllabusManageFragment,"syllabus_manage_fragment");
                 transaction.addToBackStack("syllabus_manage_fragment");

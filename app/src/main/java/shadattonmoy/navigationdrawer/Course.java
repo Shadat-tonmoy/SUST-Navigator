@@ -5,13 +5,21 @@ package shadattonmoy.navigationdrawer;
  */
 
 public class Course {
-    private String course_code,course_title,course_credit,course_detp;
+    private String course_code,course_title,course_credit,course_detp,course_id;
 
+    public Course(){
+        super();
+    }
     public Course(String course_code, String course_title, String course_credit, String course_detp) {
         this.course_code = course_code;
         this.course_title = course_title;
         this.course_credit = course_credit;
         this.course_detp = course_detp;
+    }
+    public Course(String course_code, String course_title, String course_credit) {
+        this.course_code = course_code;
+        this.course_title = course_title;
+        this.course_credit = course_credit;
     }
 
     public String getCourse_code() {
@@ -28,5 +36,25 @@ public class Course {
 
     public String getCourse_detp() {
         return course_detp;
+    }
+
+    public void setCourse_code(String course_code) {
+        this.course_code = course_code;
+    }
+
+    public void setCourse_title(String course_title) {
+        this.course_title = course_title;
+    }
+
+    public void setCourse_credit(String course_credit) {
+        this.course_credit = course_credit;
+    }
+
+    public String getCourse_id() {
+        return course_id;
+    }
+
+    public void setCourse_id(String course_id) {
+        this.course_id = course_id;
     }
 }

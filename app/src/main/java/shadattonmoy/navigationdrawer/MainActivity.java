@@ -159,7 +159,7 @@ public class MainActivity extends AppCompatActivity
 
         }
         else if (id == R.id.holidays) {
-            fragment = new CourseEditFragment.HolidaysFragment();
+            fragment = new HolidaysFragment();
 
         }
         else if (id == R.id.proctorial_body) {
@@ -216,7 +216,7 @@ public class MainActivity extends AppCompatActivity
     {
         FragmentManager manager = getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
-        CourseEditFragment.HolidaysFragment holidaysFragment = new CourseEditFragment.HolidaysFragment();
+        HolidaysFragment holidaysFragment = new HolidaysFragment();
         transaction.replace(R.id.main_content_root,holidaysFragment);
         transaction.addToBackStack("holiday_fragment");
         transaction.commit();

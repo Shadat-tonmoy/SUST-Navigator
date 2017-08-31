@@ -142,7 +142,8 @@ public class TeacherManageFragment extends android.app.Fragment {
             TextView teacherRoom = (TextView) row.findViewById(R.id.teacher_room);
             imageView = (ImageView) row.findViewById(R.id.contact_teacher);
             imageView.setImageResource(R.drawable.edit_icon);
-            popupMenu = new PopupMenu(context,imageView, Gravity.RELATIVE_HORIZONTAL_GRAVITY_MASK);
+            popupMenu = new PopupMenu(getContext(),imageView);
+
             final String name = currentTeacher.getName();
             final String designation = currentTeacher.getDesignation();
             final String room = currentTeacher.getRoom();
@@ -152,7 +153,8 @@ public class TeacherManageFragment extends android.app.Fragment {
             final String fb = currentTeacher.getFb();
             final String teacherId = currentTeacher.getId();
             String iconText = String.valueOf(name.charAt(0));
-            popupMenu.getMenuInflater().inflate(R.menu.list_menu,popupMenu.getMenu());
+            popupMenu.inflate(R.menu.list_menu);
+            //popupMenu.getMenuInflater().inflate(R.menu.list_menu,popupMenu.getMenu());
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

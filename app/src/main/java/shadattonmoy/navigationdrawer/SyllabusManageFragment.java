@@ -24,12 +24,14 @@ public class SyllabusManageFragment extends android.app.Fragment {
     private String dept;
     private ListView semesterList;
     private Context context;
+    private boolean isEditable;
     public SyllabusManageFragment() {
         super();
     }
-    public SyllabusManageFragment(String dept, Context context){
+    public SyllabusManageFragment(String dept, Context context, boolean isEditable){
         this.dept = dept;
         this.context = context;
+        this.isEditable = isEditable;
     }
 
     @Override
@@ -68,7 +70,7 @@ public class SyllabusManageFragment extends android.app.Fragment {
                 String semesterCode = currentSemester.getSemesterCode();
                 android.app.FragmentManager manager = getFragmentManager();
                 android.app.FragmentTransaction transaction = manager.beginTransaction();
-                SyllabusFragment syllabusFragment = new SyllabusFragment(dept,semesterCode);
+                SyllabusFragment syllabusFragment = new SyllabusFragment(dept,semesterCode,isEditable);
                 transaction.replace(R.id.main_content_root,syllabusFragment);
                 transaction.addToBackStack("syllabus_fragment");
                 transaction.commit();

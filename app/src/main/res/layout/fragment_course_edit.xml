@@ -1,5 +1,6 @@
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
 
     android:layout_width="match_parent"
@@ -11,21 +12,17 @@
     android:layout_height="match_parent"
     tools:context="shadattonmoy.navigationdrawer.CourseEditFragment">
 
+        <ImageView
+            android:id="@+id/edit_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            app:srcCompat="@drawable/edit_icon" />
 
-    <TextView
-        android:id="@+id/edit_header"
-        android:layout_width="96dp"
-        android:layout_height="96dp"
-        android:textAlignment="center"
-        android:gravity="center"
-        android:textColor="#ffffff"
-        android:textSize="20sp"
-        android:background="@drawable/round_black"
-        android:layout_marginTop="20dp"
-        android:layout_centerHorizontal="true"
-        android:text="Edit\nCSE143" />
 
-    <TextView
+        <TextView
         android:id="@+id/textView12"
         android:textSize="18sp"
         android:layout_width="wrap_content"
@@ -35,7 +32,8 @@
         android:layout_below="@id/edit_header"
         android:layout_marginLeft="20dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="25dp"
+        android:textColor="#009688"
         android:text="Course Code" />
 
     <EditText
@@ -61,6 +59,7 @@
         android:layout_below="@+id/course_code_edit"
         android:layout_marginTop="20dp"
         android:textSize="18sp"
+        android:textColor="#009688"
         android:text="Course Title" />
 
     <EditText
@@ -86,6 +85,7 @@
         android:layout_below="@+id/course_title_edit"
         android:layout_marginTop="20dp"
         android:textSize="18sp"
+        android:textColor="#009688"
         android:text="Course Credit" />
 
     <EditText
@@ -103,29 +103,31 @@
         android:text="3.00" />
 
         <Button
-            android:id="@+id/course_edit_update"
-            android:layout_width="wrap_content"
+            android:id="@+id/course_edit_submit_btn"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/course_credit_edit"
-            android:layout_alignStart="@+id/course_credit_edit"
             android:layout_below="@+id/course_credit_edit"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             android:layout_marginTop="20dp"
             android:textColor="#ffffff"
-            android:background="#2ecc71"
+            android:background="#009688"
             android:text="Update" />
 
         <Button
-            android:id="@+id/button5"
-            android:layout_width="wrap_content"
+            android:id="@+id/course_edit_reset_btn"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/course_edit_update"
-            android:layout_marginLeft="5dp"
-            android:layout_marginStart="5dp"
-            android:layout_toEndOf="@+id/textView15"
-            android:layout_toRightOf="@+id/textView15"
+            android:layout_below="@+id/course_edit_submit_btn"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             android:textColor="#ffffff"
             android:background="#e74c3c"
-            android:text="Back" />
+            android:text="Reset All Field" />
+
+
 
 
     </RelativeLayout>
