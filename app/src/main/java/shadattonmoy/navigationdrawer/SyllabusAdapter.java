@@ -2,11 +2,13 @@ package shadattonmoy.navigationdrawer;
 
 import android.content.Context;
 import android.os.Build;
+import android.provider.ContactsContract;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
@@ -19,6 +21,10 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
@@ -76,7 +82,7 @@ public class SyllabusAdapter extends ArrayAdapter<Course>{
                 }
             });
 
-            popupMenu.setOnMenuItemClickListener(new menuItemClickHandler(getContext(),manager,currentCourse,dept,semester));
+            popupMenu.setOnMenuItemClickListener(new menuItemClickHandler(getContext(),manager,currentCourse,dept,semester,row));
         }
 
         return row;
@@ -88,12 +94,14 @@ class menuItemClickHandler implements PopupMenu.OnMenuItemClickListener{
     private Course course;
     private android.app.FragmentManager manager;
     private String dept,semester;
-    menuItemClickHandler(Context context,android.app.FragmentManager manager,Course course,String dept, String semester){
+    private View view;
+    menuItemClickHandler(Context context,android.app.FragmentManager manager,Course course,String dept, String semester,View view){
         this.context = context;
         this.manager = manager;
         this.course = course;
         this.dept = dept;
         this.semester = semester;
+        this.view = view;
     }
     @Override
     public boolean onMenuItemClick(MenuItem item) {
@@ -115,6 +123,21 @@ class menuItemClickHandler implements PopupMenu.OnMenuItemClickListener{
         else if (id == R.id.remove_course_menu)
         {
             //Toast.makeText(context,"Remove course" + courseId,Toast.LENGTH_SHORT).show();
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference databaseReference = database.getReference().child("syllabus").child(dept).child(semester).child(course.getCourse_id());
+            databaseReference.removeValue(new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if(databaseError==null)
+                    {
+                        Snackbar snackbar = Snackbar.make(view,"Course has been removed",Snackbar.LENGTH_LONG);
+                        snackbar.show();
+                        SyllabusFragment.adapter.remove(course);
+
+                    }
+                }
+            });
+
             return true;
 
         }

@@ -36,6 +36,7 @@ public class SyllabusFragment extends android.app.Fragment {
     private DatabaseReference databaseReference;
     private boolean isEditable;
     private ArrayList<Course> courses;
+    public static SyllabusAdapter adapter;
     public SyllabusFragment() {
         super();
     }
@@ -95,7 +96,7 @@ public class SyllabusFragment extends android.app.Fragment {
                     String pushId = child.getKey();
                     currentCourse.setCourse_id(pushId);
                     courses.add(currentCourse);
-                    SyllabusAdapter adapter = new SyllabusAdapter(getContext().getApplicationContext(),R.layout.fragment_syllabus2,R.id.course_code,courses,isEditable,getFragmentManager(),dept,semester);
+                    adapter = new SyllabusAdapter(getContext().getApplicationContext(),R.layout.fragment_syllabus2,R.id.course_code,courses,isEditable,getFragmentManager(),dept,semester);
                     syllabusList.setAdapter(adapter);
                     syllabusLoadingProgress.setVisibility(View.GONE);
                 }
