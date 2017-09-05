@@ -272,10 +272,10 @@ public class DeptFragment extends android.app.Fragment implements View.OnClickLi
             if(id==id_cse)
             {
                 FragmentManager manager = getFragmentManager();
-                CGPAFragment cgpaFragment= new CGPAFragment("Computer Science and Engineering");
+                SemesterListFragment semesterListFragment = new SemesterListFragment ("cse");
                 FragmentTransaction transaction = manager.beginTransaction();
-                transaction.replace(R.id.main_content_root,cgpaFragment,"cgpa_fragment");
-                transaction.addToBackStack("cgpa_fragment");
+                transaction.replace(R.id.main_content_root,semesterListFragment,"semester_list_fragment");
+                transaction.addToBackStack("semester_list_fragment");
                 transaction.commit();
             }
 

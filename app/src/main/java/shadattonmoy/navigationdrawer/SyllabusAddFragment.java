@@ -60,6 +60,10 @@ public class SyllabusAddFragment extends android.app.Fragment {
         super.onActivityCreated(savedInstanceState);
 
 
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference().child("syllabus").child(dept.toLowerCase()).child(semester);
+
+
         courseAddSubmitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

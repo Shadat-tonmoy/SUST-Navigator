@@ -14,6 +14,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
@@ -25,6 +28,8 @@ public class SyllabusManageFragment extends android.app.Fragment {
     private ListView semesterList;
     private Context context;
     private boolean isEditable;
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference databaseReference;
     public SyllabusManageFragment() {
         super();
     }
@@ -74,9 +79,6 @@ public class SyllabusManageFragment extends android.app.Fragment {
                 transaction.replace(R.id.main_content_root,syllabusFragment);
                 transaction.addToBackStack("syllabus_fragment");
                 transaction.commit();
-
-
-
             }
         });
 

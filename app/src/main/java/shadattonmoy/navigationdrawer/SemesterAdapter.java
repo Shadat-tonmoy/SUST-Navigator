@@ -12,6 +12,9 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.List;
 
 /**
@@ -22,6 +25,8 @@ public class SemesterAdapter extends ArrayAdapter<Semester> {
     private TextView semesterCodeView,semesterNameView,totalCourseView,totalCreditView;
     private String semesterCode,semesterName,totalCourse,totalCredit;
     private Context context;
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference databaseReference;
 
     public SemesterAdapter(@NonNull Context context, @LayoutRes int resource, @IdRes int textViewResourceId, @NonNull List<Semester> objects) {
         super(context, resource, textViewResourceId, objects);
@@ -47,6 +52,8 @@ public class SemesterAdapter extends ArrayAdapter<Semester> {
         totalCourse = currentSemester.getTotalCourse();
         totalCredit = currentSemester.getTotalCredit();
 
+
+
         semesterCodeView.setText(semesterCode);
         semesterNameView.setText(semesterName);
         totalCourseView.setText("Total Courses : "+totalCourse);
@@ -54,7 +61,6 @@ public class SemesterAdapter extends ArrayAdapter<Semester> {
 
         if(semesterCode.equals("1/1"))
             semesterCodeView.setBackgroundResource(R.drawable.round_yellow);
-
         else if(semesterCode.equals("1/2"))
             semesterCodeView.setBackgroundResource(R.drawable.round_black);
         else if(semesterCode.equals("2/1"))

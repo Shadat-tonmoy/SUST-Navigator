@@ -2,18 +2,12 @@ package shadattonmoy.navigationdrawer;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.view.menu.ListMenuItemView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,15 +18,17 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
 
     private TextView deptTileView,cgpaLoadButton,cgpaCalculateButton,cgpaResetButton;
     private ListView courseList;
-    private String deptTitle;
+    private String dept,semester;
     private ArrayList<CGPA> cgpaForCourse;
 
     public CGPAFragment() {
 
     }
 
-    public CGPAFragment(String deptTitle) {
-        this.deptTitle = deptTitle;
+    public CGPAFragment(String dept,String semester) {
+
+        this.dept = dept;
+        this.semester = semester;
     }
 
     @Override
@@ -56,32 +52,14 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        deptTileView.setText(deptTitle);
+        deptTileView.setText(dept);
         cgpaForCourse=new ArrayList<CGPA>();
-        if(deptTitle.equals("Computer Science and Engineering"))
+        if(dept.equals("cse"))
         {
 
-            cgpaForCourse.add(new CGPA("CSE133","Structured Programming Language","3.00"));
 
-            cgpaForCourse.add(new CGPA("CSE134","Structured Programming Language Lab","3.00"));
 
-            cgpaForCourse.add(new CGPA("CSE143","Discrete Mathematics","3.00"));
-            cgpaForCourse.add(new CGPA("CSE144","Discrete Mathematics Lab","1.50"));
-            cgpaForCourse.add(new CGPA("EEE109Q","Electrical Circuits","3.00"));
-            cgpaForCourse.add(new CGPA("EEE110Q","Electrical Circuits Lab","1.50"));
-            cgpaForCourse.add(new CGPA("MAT102D","Matrices,Vector Analysis and Geometry","4.00"));
-            cgpaForCourse.add(new CGPA("ENG101","English Language I","2.00"));
-            cgpaForCourse.add(new CGPA("ENG101","English Language I Lab","1.00"));
 
-            cgpaForCourse.add(new CGPA("CSE100","Project Work","1.00"));
-            cgpaForCourse.add(new CGPA("CSE137","Data Structure","3.00"));
-            cgpaForCourse.add(new CGPA("CSE138","Data Structure Lab","2.00"));
-            cgpaForCourse.add(new CGPA("EEE203Q","Electric Device and Circuit","3.00"));
-            cgpaForCourse.add(new CGPA("EEE204Q","Electric Device and Circuit Lab","1.50"));
-            cgpaForCourse.add(new CGPA("IPE106","Engineering Graphics","1.00"));
-            cgpaForCourse.add(new CGPA("IPE108","Workshop Practice","1.00"));
-            cgpaForCourse.add(new CGPA("PHY103E","Mechanics,Wave,Heat and Thermodynamics","3.00"));
-            cgpaForCourse.add(new CGPA("MAT103D","Calculus","4.00"));
 
 
 

@@ -35,7 +35,7 @@ import java.util.ArrayList;
 public class SyllabusAdapter extends ArrayAdapter<Course>{
 
     private View row;
-    private TextView courseCodeView,courseTitleView,courseCreditView;
+    private TextView courseCodeView,courseTitleView,courseCreditView,courseIconView;
     private String courseCode,courseTitle,courseCredit,courseId,dept,semester;
     private ImageView courseEditIcon;
     private boolean isEditable;
@@ -60,6 +60,7 @@ public class SyllabusAdapter extends ArrayAdapter<Course>{
             courseCodeView = (TextView) row.findViewById(R.id.course_code);
             courseTitleView = (TextView) row.findViewById(R.id.course_title);
             courseCreditView = (TextView) row.findViewById(R.id.course_credit);
+            courseIconView = (TextView) row.findViewById(R.id.course_icon);
             courseEditIcon = (ImageView) row.findViewById(R.id.edit_course_icon1);
         }
         Course currentCourse = getItem(position);
@@ -69,6 +70,8 @@ public class SyllabusAdapter extends ArrayAdapter<Course>{
         courseId = currentCourse.getCourse_id();
         courseCodeView.setText(courseCode);
         courseTitleView.setText(courseTitle);
+        String courseIconText = courseCode.substring(0,3);
+        courseIconView.setText(courseIconText);
         courseCreditView.setText(courseCredit + " Credits");
         if(isEditable)
         {
