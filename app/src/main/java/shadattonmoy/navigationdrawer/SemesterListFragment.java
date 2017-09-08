@@ -134,7 +134,7 @@ public class SemesterListFragment extends android.app.Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Semester currentSemester = (Semester) parent.getItemAtPosition(position);
                 String semesterCode = currentSemester.getSemesterCode();
-                Toast.makeText(getActivity().getApplicationContext(),dept+" "+semesterCode,Toast.LENGTH_SHORT).show();
+
                 android.app.FragmentManager manager = getFragmentManager();
                 android.app.FragmentTransaction transaction = manager.beginTransaction();
                 CGPAFragment cgpaFragment = new CGPAFragment(dept,semesterCode);

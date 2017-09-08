@@ -293,7 +293,12 @@ public class MainActivity extends AppCompatActivity
 
     public void openHolidayManageFragment(View view)
     {
-        Toast.makeText(getBaseContext(),"Holiday Manage",Toast.LENGTH_SHORT).show();
+        FragmentManager manager = getFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        HolidayManageFragment holidayManageFragment = new HolidayManageFragment();
+        transaction.replace(R.id.main_content_root,holidayManageFragment);
+        transaction.addToBackStack("holiday_manage_fragment");
+        transaction.commit();
 
     }
 

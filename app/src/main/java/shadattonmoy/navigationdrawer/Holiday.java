@@ -6,11 +6,21 @@ package shadattonmoy.navigationdrawer;
 
 public class Holiday {
     private String holidayName,holidayDate,holidayDays,holidayDesc;
+    private String holidayTitle,startingDate,endingDate,holiayId;
+    public Holiday(){
+        super();
+    }
     public Holiday(String holidayName, String holidayDate, String holidayDesc,String holidayDays) {
         this.holidayName = holidayName;
         this.holidayDate = holidayDate;
         this.holidayDays = holidayDays;
         this.holidayDesc = holidayDesc;
+    }
+
+    public Holiday(String holidayTitle, String startingDate, String endingDate) {
+        this.holidayTitle = holidayTitle;
+        this.startingDate = startingDate;
+        this.endingDate = endingDate;
     }
 
     public String getHolidayName() {
@@ -27,5 +37,25 @@ public class Holiday {
 
     public String getHolidayDesc() {
         return holidayDesc;
+    }
+
+    public String getHolidayTitle() {
+        return holidayTitle;
+    }
+
+    public String getStartingDate() {
+        return startingDate;
+    }
+
+    public String getEndingDate() {
+        return endingDate;
+    }
+
+    public String getHoliayId() {
+        return holiayId;
+    }
+
+    public void setHoliayId(String holiayId) {
+        this.holiayId = holiayId;
     }
 }

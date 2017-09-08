@@ -5,37 +5,37 @@
     android:layout_height="match_parent"
     tools:context="shadattonmoy.navigationdrawer.DeptFragment">
 
-    <TextView
-        android:id="@+id/deptTitle"
-        android:layout_width="match_parent"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:background="@drawable/rectangle"
-        android:padding="10dp"
-        android:textColor="#ffffff"
-        android:layout_marginTop="10dp"
-        android:text="Computer Science and Engineering" />
+    <!--<TextView-->
+        <!--android:id="@+id/deptTitle"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_marginLeft="10dp"-->
+        <!--android:layout_marginRight="10dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:textSize="16sp"-->
+        <!--android:background="@drawable/rectangle"-->
+        <!--android:padding="10dp"-->
+        <!--android:textColor="#ffffff"-->
+        <!--android:layout_marginTop="10dp"-->
+        <!--android:text="Computer Science and Engineering" />-->
 
     <ListView
         android:id="@+id/courseList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/deptTitle"
         android:layout_marginTop="10dp"
+        android:layout_marginBottom="75dp"
         />
 
+
+
     <LinearLayout
+        android:id="@+id/cgpa_button_panel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/deptTitle"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-
         android:background="@drawable/rectangle"
-        android:layout_alignRight="@+id/deptTitle"
         android:orientation="horizontal">
 
 
@@ -72,6 +72,24 @@
             android:textAlignment="center"
             android:text="Calculate" />
     </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/add_in_cgpa_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="70dp"
+        android:layout_alignParentRight="true"
+        android:layout_above="@id/cgpa_button_panel"
+        android:src="@drawable/ic_add_black_24dp" />
+
+    <ProgressBar
+        android:id="@+id/cgpa_fragment_loading"
+        style="?android:attr/progressBarStyle"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 
 </RelativeLayout>

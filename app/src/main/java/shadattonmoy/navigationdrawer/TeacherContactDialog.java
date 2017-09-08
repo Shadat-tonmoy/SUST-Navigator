@@ -40,7 +40,8 @@ public class TeacherContactDialog extends DialogFragment{
         View dialogView = inflater.inflate(R.layout.dialog_layout,null);
 
         TextView dialogTitle = (TextView) dialogView.findViewById(R.id.dailog_title);
-        ImageView emailButton = (ImageView) dialogView.findViewById(R.id.emailButton);          ImageView phoneButton = (ImageView) dialogView.findViewById(R.id.phoneButton);
+        ImageView emailButton = (ImageView) dialogView.findViewById(R.id.emailButton);
+        ImageView phoneButton = (ImageView) dialogView.findViewById(R.id.phoneButton);
         ImageView fbButton = (ImageView) dialogView.findViewById(R.id.fbButton);
 
 

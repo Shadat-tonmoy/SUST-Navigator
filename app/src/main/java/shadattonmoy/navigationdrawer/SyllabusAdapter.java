@@ -57,12 +57,12 @@ public class SyllabusAdapter extends ArrayAdapter<Course>{
         {
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             row = inflater.inflate(R.layout.syllabus_single_row,parent,false);
-            courseCodeView = (TextView) row.findViewById(R.id.course_code);
-            courseTitleView = (TextView) row.findViewById(R.id.course_title);
-            courseCreditView = (TextView) row.findViewById(R.id.course_credit);
-            courseIconView = (TextView) row.findViewById(R.id.course_icon);
-            courseEditIcon = (ImageView) row.findViewById(R.id.edit_course_icon1);
         }
+        courseCodeView = (TextView) row.findViewById(R.id.course_code);
+        courseTitleView = (TextView) row.findViewById(R.id.course_title);
+        courseCreditView = (TextView) row.findViewById(R.id.course_credit);
+        courseIconView = (TextView) row.findViewById(R.id.course_icon);
+        courseEditIcon = (ImageView) row.findViewById(R.id.edit_course_icon1);
         Course currentCourse = getItem(position);
         courseCode = currentCourse.getCourse_code();
         courseTitle = currentCourse.getCourse_title();

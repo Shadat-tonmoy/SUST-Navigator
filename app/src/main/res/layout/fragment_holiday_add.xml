@@ -1,0 +1,111 @@
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="shadattonmoy.navigationdrawer.HolidayAddFragment">
+
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <TextView
+        android:id="@+id/add_heading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@color/colorPrimary"
+        android:padding="8dp"
+        android:textColor="#ffffff"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/textView20"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/add_heading"
+        android:layout_margin="10dp"
+        android:textSize="16sp"
+        android:textColor="@color/colorPrimary"
+        android:text="Holiday Title" />
+
+    <EditText
+        android:id="@+id/holiday_add_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView20"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:inputType="textPersonName"
+        android:hint="Enter Title of Holiday"/>
+
+    <TextView
+        android:id="@+id/textView21"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/holiday_add_title"
+        android:layout_margin="10dp"
+        android:textSize="16sp"
+        android:textColor="@color/colorPrimary"
+        android:text="Start From" />
+
+    <EditText
+        android:id="@+id/holiday_add_start_from"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView21"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:inputType="textPersonName"
+        android:editable="false"
+        android:hint="Choose Starting Date of Holiday"/>
+
+    <TextView
+        android:id="@+id/textView22"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/holiday_add_start_from"
+        android:layout_margin="10dp"
+        android:textSize="16sp"
+        android:textColor="@color/colorPrimary"
+        android:text="Ends At" />
+
+    <EditText
+        android:id="@+id/holiday_add_end_at"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView22"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:inputType="textPersonName"
+        android:editable="false"
+        android:hint="Choose Ending Date of Holiday"/>
+
+    <Button
+        android:id="@+id/holiday_add_submit"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/holiday_add_end_at"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:background="@color/colorPrimary"
+        android:textColor="#ffffff"
+        android:text="Submit" />
+
+    <Button
+        android:id="@+id/holiday_add_reset"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/holiday_add_submit"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:background="#e74c3c"
+        android:textColor="#ffffff"
+        android:text="Reset All Field" />
+</RelativeLayout>
+</ScrollView>

@@ -1,6 +1,8 @@
 package shadattonmoy.navigationdrawer;
 
 import android.content.Context;
+import android.support.annotation.IdRes;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,13 +15,14 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
  * Created by Shadat Tonmoy on 6/20/2017.
  */
 
-public class CGPAAdapter extends ArrayAdapter<CGPA> {
+public class CGPAAdapter extends ArrayAdapter<Course> {
 
     private String[] gpa = new String[]{"F","A+","A","A-","B+","B","B-","C+","C","C-"};
     ArrayList<String> gpaList = new ArrayList<String>();
@@ -34,11 +37,11 @@ public class CGPAAdapter extends ArrayAdapter<CGPA> {
     public static boolean isReset = false;
 
 
-
-    public CGPAAdapter(Context context, int resource, int textViewResourceId, ArrayList<CGPA> objects) {
+    public CGPAAdapter(@NonNull Context context, @LayoutRes int resource, @IdRes int textViewResourceId, @NonNull List<Course> objects) {
         super(context, resource, textViewResourceId, objects);
         for(int i=0;i<gpa.length;i++)
             gpaList.add(gpa[i]);
+
     }
 
     @NonNull
@@ -64,10 +67,10 @@ public class CGPAAdapter extends ArrayAdapter<CGPA> {
         else
         {
 
-            CGPA currentCourseCgpa = getItem(position);
-            String courseCode = currentCourseCgpa.getCourseCode();
-            String courseTitle = currentCourseCgpa.getCourseTitle();
-            String courseCredit = currentCourseCgpa.getCourseCredit();
+            Course currentCourseCgpa = getItem(position);
+            String courseCode = currentCourseCgpa.getCourse_code();
+            String courseTitle = currentCourseCgpa.getCourse_title();
+            String courseCredit = currentCourseCgpa.getCourse_credit();
 
             TextView courseCodeView = (TextView) row.findViewById(R.id.holiday_name);
             TextView courseTitleView = (TextView) row.findViewById(R.id.holiday_desc);
@@ -83,9 +86,11 @@ public class CGPAAdapter extends ArrayAdapter<CGPA> {
 
             if(record.get(courseCode)!=null)
             {
+
                 String grade = record.get(courseCode).toString();
                 int index = gpaList.indexOf(grade);
                 cgpaListView.setSelection(index);
+
             }
 
             cgpaListView.setOnItemSelectedListener(new selectListener(getContext(),courseCredit,courseCode));
@@ -111,6 +116,7 @@ class selectListener implements AdapterView.OnItemSelectedListener{
         if(CGPAAdapter.record.get(code)==null)
         {
             //Log.e("Msg : ","onItemSelected called for "+code+" null");
+
             String grade = ((TextView)view).getText().toString();
             CGPAAdapter.record.put(code,grade);
             ((TextView)view).setText(CGPAAdapter.record.get(code).toString());
@@ -118,6 +124,7 @@ class selectListener implements AdapterView.OnItemSelectedListener{
         else
         {
             //Log.e("Msg : ","onItemSelected called for "+code+" not null");
+
             String grade = ((TextView)view).getText().toString();
             CGPAAdapter.record.put(code,grade);
         }
