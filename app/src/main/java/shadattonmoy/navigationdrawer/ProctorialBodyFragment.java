@@ -7,11 +7,13 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+import android.widget.ListView;
 
 
 public class ProctorialBodyFragment extends android.app.Fragment {
 
+    private ListView proctorList;
+    private View view;
 
     public ProctorialBodyFragment() {
 
@@ -27,6 +29,8 @@ public class ProctorialBodyFragment extends android.app.Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        return inflater.inflate(R.layout.fragment_proctorial_body, container, false);
+        view = inflater.inflate(R.layout.fragment_proctorial_body, container, false);
+        proctorList = (ListView) view.findViewById(R.id.proctor_list);
+        return view;
     }
 }

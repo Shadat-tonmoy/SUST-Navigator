@@ -259,7 +259,12 @@ public class MainActivity extends AppCompatActivity
 
     public void openProctorFragment(View view)
     {
-        Toast.makeText(getBaseContext(),"Not ready yet",Toast.LENGTH_SHORT).show();
+        FragmentManager manager = getFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        ProctorialBodyFragment proctorialBodyFragment = new ProctorialBodyFragment();
+        transaction.replace(R.id.main_content_root,proctorialBodyFragment);
+        transaction.addToBackStack("proctor_fragment");
+        transaction.commit();
     }
     public void openBusFragment(View view)
     {
