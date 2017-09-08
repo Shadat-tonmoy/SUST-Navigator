@@ -5,7 +5,7 @@ package shadattonmoy.navigationdrawer;
  */
 
 public class Proctor {
-    private String name,designation,roomNo,contactNo;
+    private String name,designation,roomNo,contactNo,proctorId;
 
     public Proctor() {
         super();
@@ -32,5 +32,13 @@ public class Proctor {
 
     public String getContactNo() {
         return contactNo;
+    }
+
+    public String getProctorId() {
+        return proctorId;
+    }
+
+    public void setProctorId(String proctorId) {
+        this.proctorId = proctorId;
     }
 }

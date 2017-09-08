@@ -161,9 +161,9 @@ public class MainActivity extends AppCompatActivity
         else if (id == R.id.holidays) {
             fragment = new HolidaysFragment();
 
-        }
+       }
         else if (id == R.id.proctorial_body) {
-            fragment = new ProctorialBodyFragment();
+            fragment = new ProctorialBodyFragment(false);
 
         }
         else if (id == R.id.admission_info) {
@@ -261,11 +261,23 @@ public class MainActivity extends AppCompatActivity
     {
         FragmentManager manager = getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
-        ProctorialBodyFragment proctorialBodyFragment = new ProctorialBodyFragment();
+        ProctorialBodyFragment proctorialBodyFragment = new ProctorialBodyFragment(false);
         transaction.replace(R.id.main_content_root,proctorialBodyFragment);
         transaction.addToBackStack("proctor_fragment");
         transaction.commit();
     }
+
+    public void openProctorManageFragment(View view)
+    {
+        FragmentManager manager = getFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        ProctorialBodyFragment proctorialBodyFragment = new ProctorialBodyFragment(true);
+        transaction.replace(R.id.main_content_root,proctorialBodyFragment);
+        transaction.addToBackStack("proctor_fragment");
+        transaction.commit();
+    }
+
+
     public void openBusFragment(View view)
     {
         Toast.makeText(getBaseContext(),"Not ready yet",Toast.LENGTH_SHORT).show();

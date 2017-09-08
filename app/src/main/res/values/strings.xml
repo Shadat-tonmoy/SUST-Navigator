@@ -31,4 +31,10 @@
         <item>Assistant Professor</item>
         <item>Lecturer</item>
     </string-array>
+
+    <string-array name="designation_for_proctor">
+        <item>Choose a Designation</item>
+        <item>Proctor</item>
+        <item>Assistant Proctor</item>
+    </string-array>
 </resources>
