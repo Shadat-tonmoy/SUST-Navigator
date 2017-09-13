@@ -1,61 +1,197 @@
 <RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="shadattonmoy.navigationdrawer.CGPAShowFragment">
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="shadattonmoy.navigationdrawer.CGPAShowFragment">
 
-    <TextView
-        android:id="@+id/final_cgpa_view"
-        android:layout_width="175dp"
-        android:layout_height="175dp"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:background="@drawable/round_light_green"
-        android:textColor="#ffffff"
-        android:gravity="center"
-        android:textSize="48sp"
-        android:text="3.75" />
-
-    <TextView
-        android:id="@+id/textView11"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/final_cgpa_view"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="30dp"
-        android:textSize="24sp"
-        android:text="Your CGPA is " />
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:padding="20dp"
-        android:background="@drawable/rectangle"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-
-        <TextView
-            android:id="@+id/cgpa_view_back_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <LinearLayout
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1"
-            android:textSize="24sp"
-            android:textColor="#ffffff"
-            android:textAlignment="center"
-            android:text="Back" />
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/cgpa_view_save_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            <LinearLayout
+                android:padding="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/cgpaMsg"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="CGPA\n(Total) : "
+                    android:textSize="24sp" />
+
+                <TextView
+                    android:id="@+id/gpaMsg"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="GPA (Current Semester) : "
+                    android:textAlignment="center"
+                    android:textSize="24sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/final_cgpa_view"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="20dp"
+                        android:background="@drawable/round_light_green"
+                        android:gravity="center"
+                        android:text="3.75"
+                        android:textColor="#ffffff"
+                        android:textSize="24sp" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/final_cgpa_view2"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="50dp"
+                        android:background="@drawable/round_light_green"
+                        android:gravity="center"
+                        android:text="3.75"
+                        android:textColor="#ffffff"
+                        android:textSize="24sp" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1"
-            android:textSize="24sp"
-            android:textColor="#ffffff"
-            android:textAlignment="center"
-            android:text="Save" />
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:padding="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/creditMsg"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:textSize="24sp"
+                    android:text="Total Credit : "/>
+
+                <TextView
+                    android:id="@+id/passedCreditMsg"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:textSize="24sp"
+                    android:text="Passed Credit : "/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/final_total_credit_view"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="20dp"
+                        android:background="@drawable/round_light_green"
+                        android:gravity="center"
+                        android:text="3.75"
+                        android:textColor="#ffffff"
+                        android:textSize="24sp" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/final_passed_credit_view"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:background="@drawable/round_light_green"
+                        android:textColor="#ffffff"
+                        android:gravity="center"
+                        android:textSize="24sp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="50dp"
+                        android:text="3.75" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
     </LinearLayout>
 
-</RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/colorPrimary"
+            android:padding="15dp">
+
+            <TextView
+                android:id="@+id/cgpa_view_back_button"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textSize="24sp"
+                android:textColor="#ffffff"
+                android:textAlignment="center"
+                android:text="Back"/>
+
+            <TextView
+                android:id="@+id/cgpa_view_save_button"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textSize="24sp"
+                android:textColor="#ffffff"
+                android:textAlignment="center"
+                android:text="Save"/>
+
+
+        </LinearLayout>
+
+    </RelativeLayout>

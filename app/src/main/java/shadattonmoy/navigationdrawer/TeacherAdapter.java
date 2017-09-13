@@ -32,7 +32,6 @@ public class TeacherAdapter extends ArrayAdapter<Teacher>{
     private String dept=null;
     private Context context;
     private ImageView imageView;
-    private PopupMenu popupMenu;
     public TeacherAdapter(Context context, int resource, int textViewResourceId, ArrayList<Teacher> objects,String dept) {
         super(context, resource, textViewResourceId, objects);
         this.context = context;
@@ -58,7 +57,7 @@ public class TeacherAdapter extends ArrayAdapter<Teacher>{
         TextView teacherRoom = (TextView) row.findViewById(R.id.teacher_room);
         imageView = (ImageView) row.findViewById(R.id.contact_teacher);
         imageView.setImageResource(R.drawable.edit_icon);
-        popupMenu = new PopupMenu(context,imageView,Gravity.NO_GRAVITY);
+        final PopupMenu popupMenu = new PopupMenu(getContext(),imageView,Gravity.LEFT);
         String name = currentTeacher.getName();
         String designation = currentTeacher.getDesignation();
         String room = currentTeacher.getRoom();
@@ -67,7 +66,7 @@ public class TeacherAdapter extends ArrayAdapter<Teacher>{
         String fb = currentTeacher.getFb();
         final String teacherId = currentTeacher.getId();
         String iconText = String.valueOf(name.charAt(0));
-        popupMenu.getMenuInflater().inflate(R.menu.list_menu,popupMenu.getMenu());
+        popupMenu.inflate(R.menu.list_menu);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

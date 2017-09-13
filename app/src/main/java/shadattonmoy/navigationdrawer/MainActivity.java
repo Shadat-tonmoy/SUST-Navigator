@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener authStateListener;
     private FirebaseUser user;
+    private SQLiteAdapter sqLiteAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +42,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        SQLiteAdapter sqLiteAdapter = new SQLiteAdapter(this);
+        sqLiteAdapter = new SQLiteAdapter(this);
         firebaseAuth = FirebaseAuth.getInstance();
 
 

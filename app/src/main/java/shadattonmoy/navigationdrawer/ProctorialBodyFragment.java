@@ -33,6 +33,7 @@ public class ProctorialBodyFragment extends android.app.Fragment {
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
     private ProgressBar progressBar;
+    static ProctorAdapter adapter;
 
     public ProctorialBodyFragment(boolean isEditable) {
         super();
@@ -62,7 +63,7 @@ public class ProctorialBodyFragment extends android.app.Fragment {
                 public void onClick(View v) {
                     FragmentManager manager = getFragmentManager();
                     FragmentTransaction transaction = manager.beginTransaction();
-                    ProctorAddFragment proctorAddFragment = new ProctorAddFragment();
+                    ProctorAddFragment proctorAddFragment = new ProctorAddFragment(false);
                     transaction.replace(R.id.main_content_root,proctorAddFragment);
                     transaction.addToBackStack("proctor_add_fragment");
                     transaction.commit();
@@ -92,7 +93,8 @@ public class ProctorialBodyFragment extends android.app.Fragment {
                     proctor.setProctorId(key);
                     proctors.add(proctor);
                 }
-                ProctorAdapter adapter = new ProctorAdapter(getActivity().getApplicationContext(),R.layout.teacher_single_row,R.id.teacher_icon,proctors,isEditable);
+                adapter = new ProctorAdapter(getActivity().getApplicationContext(),R.layout.teacher_single_row,R.id.teacher_icon,proctors,isEditable,getFragmentManager());
+                adapter.setActivity(getActivity());
                 proctorList.setAdapter(adapter);
                 progressBar.setVisibility(View.GONE);
             }

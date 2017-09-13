@@ -28,8 +28,22 @@ public class ProctorAddFragment extends android.app.Fragment implements View.OnC
     private Button submitButton;
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
+    private Proctor proctor;
+    private boolean isUpdating;
     public ProctorAddFragment() {
         // Required empty public constructor
+    }
+    public ProctorAddFragment(boolean isUpdating)
+    {
+        this.isUpdating = isUpdating;
+    }
+
+    public Proctor getProctor() {
+        return proctor;
+    }
+
+    public void setProctor(Proctor proctor) {
+        this.proctor = proctor;
     }
 
     @Override
@@ -56,7 +70,14 @@ public class ProctorAddFragment extends android.app.Fragment implements View.OnC
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity().getApplicationContext(),R.array.designation_for_proctor,R.layout.spinner_layout);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         designationField.setAdapter(adapter);
-        designationField.setSelection(0);
+        if(!isUpdating)
+            designationField.setSelection(0);
+        else{
+            nameField.setText(proctor.getName());
+            roomNoField.setText(proctor.getRoomNo());
+            contactNoField.setText(proctor.getContactNo());
+
+        }
         submitButton.setOnClickListener(this);
     }
 
@@ -64,29 +85,61 @@ public class ProctorAddFragment extends android.app.Fragment implements View.OnC
     public void onClick(View v) {
         if(v.getId()==R.id.proctor_add_submit_btn)
         {
-            String name = nameField.getText().toString();
-            String contactNo = contactNoField.getText().toString();
-            String roomNo = roomNoField.getText().toString();
-            String designation = designationField.getSelectedItem().toString();
-            if(designation.equals("Choose a Designation"))
-                designation = "N/A";
-            Toast.makeText(getActivity().getApplicationContext(),name+" "+contactNo+" "+roomNo+" "+designation,Toast.LENGTH_SHORT).show();
-            firebaseDatabase = FirebaseDatabase.getInstance();
-            databaseReference = firebaseDatabase.getReference().child("proctor");
-            databaseReference.push().setValue(new Proctor(name, designation, roomNo, contactNo), new DatabaseReference.CompletionListener() {
-                @Override
-                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                    Snackbar snackbar = Snackbar.make(view,"Proctorial Body Member added...",Snackbar.LENGTH_SHORT);
-                    snackbar.setAction("Back", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            getFragmentManager().popBackStack();
-                        }
-                    });
-                    snackbar.show();
+            if(!isUpdating)
+            {
+                String name = nameField.getText().toString();
+                String contactNo = contactNoField.getText().toString();
+                String roomNo = roomNoField.getText().toString();
+                String designation = designationField.getSelectedItem().toString();
+                if(designation.equals("Choose a Designation"))
+                    designation = "N/A";
+                if(roomNo.equals(""))
+                    roomNo="Room : N/A";
+                Toast.makeText(getActivity().getApplicationContext(),name+" "+contactNo+" "+roomNo+" "+designation,Toast.LENGTH_SHORT).show();
+                firebaseDatabase = FirebaseDatabase.getInstance();
+                databaseReference = firebaseDatabase.getReference().child("proctor");
+                databaseReference.push().setValue(new Proctor(name, designation, roomNo, contactNo), new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                        Snackbar snackbar = Snackbar.make(view,"Proctorial Body Member added...",Snackbar.LENGTH_SHORT);
+                        snackbar.setAction("Back", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                getFragmentManager().popBackStack();
+                            }
+                        });
+                        snackbar.show();
 
-                }
-            });
+                    }
+                });
+            }
+            else {
+                String name = nameField.getText().toString();
+                String contactNo = contactNoField.getText().toString();
+                String roomNo = roomNoField.getText().toString();
+                String designation = designationField.getSelectedItem().toString();
+                if(designation.equals("Choose a Designation"))
+                    designation = "N/A";
+                if(roomNo.equals(""))
+                    roomNo="Room : N/A";
+                Toast.makeText(getActivity().getApplicationContext(),name+" "+contactNo+" "+roomNo+" "+designation,Toast.LENGTH_SHORT).show();
+                firebaseDatabase = FirebaseDatabase.getInstance();
+                databaseReference = firebaseDatabase.getReference().child("proctor").child(proctor.getProctorId());
+                databaseReference.setValue(new Proctor(name, designation, roomNo, contactNo), new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                        Snackbar snackbar = Snackbar.make(view,"Updated successfully...",Snackbar.LENGTH_SHORT);
+                        snackbar.setAction("Back", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                getFragmentManager().popBackStack();
+                            }
+                        });
+                        snackbar.show();
+                    }
+                });
+
+            }
         }
     }
 }

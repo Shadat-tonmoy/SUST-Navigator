@@ -5,7 +5,7 @@ package shadattonmoy.navigationdrawer;
  */
 
 public class Course {
-    private String course_code,course_title,course_credit,course_detp,course_id;
+    private String course_code,course_title,course_credit,course_detp,course_id,grade,local_id;
 
     public Course(){
         super();
@@ -56,5 +56,21 @@ public class Course {
 
     public void setCourse_id(String course_id) {
         this.course_id = course_id;
+    }
+
+    public void setGrade(String grade) {
+        this.grade = grade;
+    }
+
+    public String getGrade() {
+        return grade;
+    }
+
+    public String getLocal_id() {
+        return local_id;
+    }
+
+    public void setLocal_id(String local_id) {
+        this.local_id = local_id;
     }
 }

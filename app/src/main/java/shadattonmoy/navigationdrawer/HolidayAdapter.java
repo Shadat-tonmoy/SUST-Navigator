@@ -79,7 +79,7 @@ public class HolidayAdapter extends ArrayAdapter<Holiday>{
         {
             editIcon = (ImageView) row.findViewById(R.id.holiday_edit_icon);
             editIcon.setImageResource(R.drawable.edit_icon);
-            final PopupMenu popupMenu = new PopupMenu(getContext(),editIcon, Gravity.LEFT);
+            final PopupMenu popupMenu = new PopupMenu(context,editIcon, Gravity.LEFT);
             popupMenu.inflate(R.menu.holiday_manage_menu);
             editIcon.setOnClickListener(new View.OnClickListener() {
                 @Override

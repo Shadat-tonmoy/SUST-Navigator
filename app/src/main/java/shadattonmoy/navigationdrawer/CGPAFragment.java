@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -125,24 +126,57 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
         if(v.getId()==cgpaLoadButton.getId())
         {
             Toast.makeText(getActivity().getApplicationContext(),"Will Load the save data",Toast.LENGTH_SHORT).show();
+            SQLiteAdapter sqLiteAdapter = new SQLiteAdapter(getActivity().getApplicationContext());
+            String[] semesters = {semester};
+            Cursor cursor = sqLiteAdapter.getGPARecord(semesters);
+            int count = 0;
+            cgpaForCourse.clear();
+            CGPAAdapter.record.clear();
+            while (cursor.moveToNext())
+            {
+                String id = cursor.getString(0);
+                String semester = cursor.getString(1);
+                String code = cursor.getString(2);
+                String title = cursor.getString(3);
+                String credit = cursor.getString(4);
+                String grade = cursor.getString(5);
+                Course course = new Course(code,title,credit);
+                course.setGrade(grade);
+                course.setLocal_id(id);
+                cgpaForCourse.add(course);
+                CGPAAdapter.record.put(code,grade);
+                //Toast.makeText(getActivity().getApplicationContext(),"Id : "+id+" semester : "+semester+" code : "+code+" title : "+title+" credit : "+credit+" grade : "+grade,Toast.LENGTH_SHORT).show();
+                count++;
+            }
+            if(count==0)
+                Toast.makeText(getActivity().getApplicationContext(),"Nothing Found",Toast.LENGTH_SHORT).show();
+            else
+            {
+                adapter = new CGPAAdapter(getActivity().getApplicationContext(),R.layout.fragment_cgpa,R.id.cgpa_calculate_button,cgpaForCourse);
+                courseList.setAdapter(adapter);
+
+            }
+
         }
         else if(v.getId()==cgpaCalculateButton.getId())
         {
 
 
             String result = "";
-            float totalCredit=(float)0.0,totalGPA=(float)0.0,finalCGPA=(float)0.0;
-//            Toast.makeText(getActivity().getApplicationContext(),"isReset = "+CGPAAdapter.isReset,Toast.LENGTH_LONG).show();
+            float totalCredit=(float)0.0,totalGPA=(float)0.0,finalGPA=(float)0.0,finalCGPA=(float)0.0,finalTotalCredit=(float)0.0;
+
             for(int i=0;i<cgpaForCourse.size();i++)
             {
                 Course cgpa = cgpaForCourse.get(i);
                 String code = cgpa.getCourse_code();
                 String credit = cgpa.getCourse_credit();
                 String grade = (String) CGPAAdapter.record.get(code);
+                cgpaForCourse.get(i).setGrade(grade);
                 if(grade==null)
                     grade="F";
                 Float creditVal = Float.parseFloat(credit);
                 float creditValue = creditVal.floatValue();
+                finalTotalCredit+=creditValue;
                 float gpaValue = (float) 0.0;
                 if(grade.equals("F"))
                     creditValue = (float)0.0;
@@ -182,9 +216,72 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
                 }
                 totalCredit+=creditValue;
                 totalGPA+=(gpaValue*creditValue);
-//                result = result + "Code : "+code+" , Credit : "+creditVal+" , Grade : "+grade+" , GPA : "+gpaValue+"\n";
             }
+            finalGPA = (float) totalGPA/totalCredit;
             finalCGPA = (float) totalGPA/totalCredit;
+            SQLiteAdapter sqLiteAdapter = new SQLiteAdapter(getActivity().getApplicationContext());
+            if(semester.equals("1_2"))
+            {
+                String[] arr = {"1_1"};
+                Cursor cursor = sqLiteAdapter.getGPARecord(arr);
+                while (cursor.moveToNext())
+                {
+                    String credit = cursor.getString(4);
+                    String grade = cursor.getString(5);
+                    if(grade==null)
+                        grade="F";
+                    Float creditVal = Float.parseFloat(credit);
+                    float creditValue = creditVal.floatValue();
+                    finalTotalCredit+=creditValue;
+                    float gpaValue = (float) 0.0;
+                    if(grade.equals("F"))
+                        creditValue = (float)0.0;
+                    switch (grade){
+                        case "F" :
+                            gpaValue = (float) 0.00;
+                            break;
+                        case "A+" :
+                            gpaValue = (float) 4.00;
+                            break;
+                        case "A" :
+                            gpaValue = (float) 3.75;
+                            break;
+                        case "A-" :
+                            gpaValue = (float) 3.50;
+                            break;
+                        case "B+" :
+                            gpaValue = (float) 3.25;
+                            break;
+                        case "B" :
+                            gpaValue = (float) 3.00;
+                            break;
+                        case "B-" :
+                            gpaValue = (float) 2.75;
+                            break;
+                        case "C+" :
+                            gpaValue = (float) 2.50;
+                            break;
+                        case "C" :
+                            gpaValue = (float) 2.25;
+                            break;
+                        case "C-" :
+                            gpaValue = (float) 2.00;
+                            break;
+                        default:
+                            gpaValue = (float) 0.00;
+                    }
+                    totalCredit+=creditValue;
+                    totalGPA+=(gpaValue*creditValue);
+                }
+                finalCGPA = (float) totalGPA/totalCredit;
+
+            }
+            else if(semester.equals("2_1"))
+            {
+                String[] arr = {"1_1","1_2"};
+                Cursor cursor = sqLiteAdapter.getGPARecord(arr);
+
+            }
             if(totalCredit==(float)0.0)
             {
                 Toast.makeText(getActivity().getApplicationContext(),"You have not passed any course yet",Toast.LENGTH_SHORT).show();
@@ -194,7 +291,8 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
                 FragmentManager manager = getFragmentManager();
                 FragmentTransaction transaction = manager.beginTransaction();
                 transaction.addToBackStack("cgpa_final_show");
-                CGPAShowFragment cgpaShowFragment = new CGPAShowFragment(String.format("%.2f", finalCGPA),manager);
+                CGPAShowFragment cgpaShowFragment = new CGPAShowFragment(String.format("%.2f", finalGPA),String.format("%.2f", finalCGPA),manager,semester,String.format("%.2f", totalCredit),String.format("%.2f", finalTotalCredit));
+                cgpaShowFragment.setCourseList(cgpaForCourse);
                 transaction.replace(R.id.main_content_root,cgpaShowFragment,"cgpa_final_show");
                 transaction.commit();
                //Toast.makeText(getActivity().getApplicationContext(),"Your CGPA is : "+String.format("%.2f", finalCGPA),Toast.LENGTH_LONG).show();

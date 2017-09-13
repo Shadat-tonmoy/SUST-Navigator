@@ -116,7 +116,6 @@ public class TeacherManageFragment extends android.app.Fragment {
         private String dept=null;
         private Context context;
         private ImageView imageView;
-        private PopupMenu popupMenu;
         public TeacherAdapterForManage(Context context, int resource, int textViewResourceId, ArrayList<Teacher> objects,String dept) {
             super(context, resource, textViewResourceId, objects);
             this.context = context;
@@ -142,7 +141,7 @@ public class TeacherManageFragment extends android.app.Fragment {
             TextView teacherRoom = (TextView) row.findViewById(R.id.teacher_room);
             imageView = (ImageView) row.findViewById(R.id.contact_teacher);
             imageView.setImageResource(R.drawable.edit_icon);
-            popupMenu = new PopupMenu(getContext(),imageView);
+            final PopupMenu popupMenu = new PopupMenu(getContext(),imageView,Gravity.LEFT);
 
             final String name = currentTeacher.getName();
             final String designation = currentTeacher.getDesignation();
