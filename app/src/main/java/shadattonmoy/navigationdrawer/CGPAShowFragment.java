@@ -110,7 +110,10 @@ public class CGPAShowFragment extends android.app.Fragment implements View.OnCli
                     String title = course.getCourse_title();
                     String credit = course.getCourse_credit();
                     String grade = course.getGrade();
-                    long id = sqLiteAdapter.insertCourse(semester,code,title,credit,grade);
+                    int isAdded = 0;
+                    if(course.isAdded())
+                        isAdded=1;
+                    long id = sqLiteAdapter.insertCourse(semester,code,title,credit,grade,isAdded);
                 }
                 Toast.makeText(getActivity().getApplicationContext(),"Record is saved",Toast.LENGTH_SHORT).show();
             }
@@ -124,7 +127,10 @@ public class CGPAShowFragment extends android.app.Fragment implements View.OnCli
                     String title = course.getCourse_title();
                     String credit = course.getCourse_credit();
                     String grade = course.getGrade();
-                    long id = sqLiteAdapter.insertCourse(semester,code,title,credit,grade);
+                    int isAdded = 0;
+                    if(course.isAdded())
+                        isAdded=1;
+                    long id = sqLiteAdapter.insertCourse(semester,code,title,credit,grade,isAdded);
 
                 }
                 Toast.makeText(getActivity().getApplicationContext(),"Record is saved",Toast.LENGTH_SHORT).show();

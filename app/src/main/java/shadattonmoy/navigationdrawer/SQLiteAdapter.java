@@ -31,7 +31,7 @@ public class SQLiteAdapter {
     /*
     * method to insert teacher data in sqlite
     */
-    public long insertCourse(String semester,String code,String title,String credit, String grade)
+    public long insertCourse(String semester,String code,String title,String credit, String grade,int isAdded)
     {
         SQLiteDatabase db = sqLiteHelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -40,6 +40,7 @@ public class SQLiteAdapter {
         contentValues.put(SQLiteHelper.COURSE_TITLE,title);
         contentValues.put(SQLiteHelper.COURSE_CREDIT,credit);
         contentValues.put(SQLiteHelper.GRADE,grade);
+        contentValues.put(SQLiteHelper.IS_ADDED,isAdded);
         long id = db.insert(SQLiteHelper.TABLE_NAME,null,contentValues);
         return id;
 
@@ -47,7 +48,7 @@ public class SQLiteAdapter {
 
     public Cursor getGPARecord(String[] semesters)
     {
-        String [] columns = {SQLiteHelper.ID,SQLiteHelper.SEMESTER,SQLiteHelper.COURSE_CODE,SQLiteHelper.COURSE_TITLE,SQLiteHelper.COURSE_CREDIT,SQLiteHelper.GRADE};
+        String [] columns = {SQLiteHelper.ID,SQLiteHelper.SEMESTER,SQLiteHelper.COURSE_CODE,SQLiteHelper.COURSE_TITLE,SQLiteHelper.COURSE_CREDIT,SQLiteHelper.GRADE,SQLiteHelper.IS_ADDED};
         SQLiteDatabase db = sqLiteHelper.getReadableDatabase();
         String selection = SQLiteHelper.SEMESTER+"=?";
         String[] selectionArgs = semesters;
@@ -82,7 +83,7 @@ public class SQLiteAdapter {
     public class SQLiteHelper extends SQLiteOpenHelper{
 
         static final String DB_NAME = "database";
-        static final int DB_VERSION = 19;
+        static final int DB_VERSION = 20;
         static final String TABLE_NAME = "cgpa";
         static final String ID = "_id";
         static final String SEMESTER = "semseter";
@@ -91,8 +92,9 @@ public class SQLiteAdapter {
         static final String COURSE_CREDIT = "course_credit";
         static final String GRADE = "grade";
         static final String SEMESTER_INT = "semester_int";
+        static final String IS_ADDED = "is_added";
 
-        static final String CREATE_TABLE = "create table "+TABLE_NAME +"("+ID +" INTEGER primary key autoincrement, "+SEMESTER+" varchar(50),"+ COURSE_CODE+" varchar(500), "+ COURSE_TITLE+" varchar(500),"+ COURSE_CREDIT +" varchar(50),"+ GRADE +" varchar(100))";
+        static final String CREATE_TABLE = "create table "+TABLE_NAME +"("+ID +" INTEGER primary key autoincrement, "+SEMESTER+" varchar(50),"+ COURSE_CODE+" varchar(500), "+ COURSE_TITLE+" varchar(500),"+ COURSE_CREDIT +" varchar(50),"+ GRADE +" varchar(100),"+IS_ADDED+" INTEGER DEFAULT 0)";
         private static final String DROP_TABLE = "drop table if exists "+TABLE_NAME+" ";
 
 

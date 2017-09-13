@@ -88,7 +88,7 @@ public class HolidayAdapter extends ArrayAdapter<Holiday>{
                 }
             });
 
-            popupMenu.setOnMenuItemClickListener(new clickHandler(context,manager,holidayName,holidayStartTmp,holidayEndTmp,row));
+           // popupMenu.setOnMenuItemClickListener(new clickHandler(context,manager,holidayName,holidayStartTmp,holidayEndTmp,row));
         }
 
         holidayNameView.setText(holidayName);

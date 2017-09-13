@@ -82,6 +82,7 @@ public class CourseAddForCGPADialog extends DialogFragment{
                             String title = course.getCourse_title();
                             String credit = course.getCourse_credit();
                             txt+="Code : "+code+"\nTitle : "+title+"\nCredit : "+credit+"\n";
+                            course.setAdded(true);
                             courses.add(course);
                         }
 
@@ -142,6 +143,7 @@ class clickListener implements AdapterView.OnItemClickListener{
         else
         {
             CourseAddForCGPADialog.checkTaken.put(course,true);
+            course.setAdded(true);
             CGPAFragment.adapter.add(course);
 
             String code = course.getCourse_code();

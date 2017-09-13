@@ -140,7 +140,11 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
                 String title = cursor.getString(3);
                 String credit = cursor.getString(4);
                 String grade = cursor.getString(5);
+                int isAdded = cursor.getInt(6);
                 Course course = new Course(code,title,credit);
+                if(isAdded>0)
+                    course.setAdded(true);
+                else course.setAdded(false);
                 course.setGrade(grade);
                 course.setLocal_id(id);
                 cgpaForCourse.add(course);
@@ -163,7 +167,7 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
 
 
             String result = "";
-            float totalCredit=(float)0.0,totalGPA=(float)0.0,finalGPA=(float)0.0,finalCGPA=(float)0.0,finalTotalCredit=(float)0.0;
+            float passedCredit=(float)0.0,totalGPA=(float)0.0,finalGPA=(float)0.0,finalCGPA=(float)0.0,totalCredit=(float)0.0;
 
             for(int i=0;i<cgpaForCourse.size();i++)
             {
@@ -176,7 +180,8 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
                     grade="F";
                 Float creditVal = Float.parseFloat(credit);
                 float creditValue = creditVal.floatValue();
-                finalTotalCredit+=creditValue;
+                if(!cgpa.isAdded())
+                    totalCredit+=creditValue;
                 float gpaValue = (float) 0.0;
                 if(grade.equals("F"))
                     creditValue = (float)0.0;
@@ -214,11 +219,11 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
                     default:
                         gpaValue = (float) 0.00;
                 }
-                totalCredit+=creditValue;
+                passedCredit+=creditValue;
                 totalGPA+=(gpaValue*creditValue);
             }
-            finalGPA = (float) totalGPA/totalCredit;
-            finalCGPA = (float) totalGPA/totalCredit;
+            finalGPA = (float) totalGPA/passedCredit;
+            finalCGPA = (float) totalGPA/passedCredit;
             SQLiteAdapter sqLiteAdapter = new SQLiteAdapter(getActivity().getApplicationContext());
             if(semester.equals("1_2"))
             {
@@ -228,11 +233,13 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
                 {
                     String credit = cursor.getString(4);
                     String grade = cursor.getString(5);
+                    int isAdded = cursor.getInt(6);
                     if(grade==null)
                         grade="F";
                     Float creditVal = Float.parseFloat(credit);
                     float creditValue = creditVal.floatValue();
-                    finalTotalCredit+=creditValue;
+                    
+                    totalCredit+=creditValue;
                     float gpaValue = (float) 0.0;
                     if(grade.equals("F"))
                         creditValue = (float)0.0;
@@ -270,10 +277,10 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
                         default:
                             gpaValue = (float) 0.00;
                     }
-                    totalCredit+=creditValue;
+                    passedCredit+=creditValue;
                     totalGPA+=(gpaValue*creditValue);
                 }
-                finalCGPA = (float) totalGPA/totalCredit;
+                finalCGPA = (float) totalGPA/passedCredit;
 
             }
             else if(semester.equals("2_1"))
@@ -282,7 +289,7 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
                 Cursor cursor = sqLiteAdapter.getGPARecord(arr);
 
             }
-            if(totalCredit==(float)0.0)
+            if(passedCredit==(float)0.0)
             {
                 Toast.makeText(getActivity().getApplicationContext(),"You have not passed any course yet",Toast.LENGTH_SHORT).show();
             }
@@ -291,7 +298,7 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
                 FragmentManager manager = getFragmentManager();
                 FragmentTransaction transaction = manager.beginTransaction();
                 transaction.addToBackStack("cgpa_final_show");
-                CGPAShowFragment cgpaShowFragment = new CGPAShowFragment(String.format("%.2f", finalGPA),String.format("%.2f", finalCGPA),manager,semester,String.format("%.2f", totalCredit),String.format("%.2f", finalTotalCredit));
+                CGPAShowFragment cgpaShowFragment = new CGPAShowFragment(String.format("%.2f", finalGPA),String.format("%.2f", finalCGPA),manager,semester,String.format("%.2f", passedCredit),String.format("%.2f", totalCredit));
                 cgpaShowFragment.setCourseList(cgpaForCourse);
                 transaction.replace(R.id.main_content_root,cgpaShowFragment,"cgpa_final_show");
                 transaction.commit();
