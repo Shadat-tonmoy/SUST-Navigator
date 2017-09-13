@@ -6,6 +6,7 @@ package shadattonmoy.navigationdrawer;
 
 public class Course {
     private String course_code,course_title,course_credit,course_detp,course_id,grade,local_id;
+    private boolean isAdded;
 
     public Course(){
         super();
@@ -72,5 +73,13 @@ public class Course {
 
     public void setLocal_id(String local_id) {
         this.local_id = local_id;
+    }
+
+    public boolean isAdded() {
+        return isAdded;
+    }
+
+    public void setAdded(boolean added) {
+        isAdded = added;
     }
 }
