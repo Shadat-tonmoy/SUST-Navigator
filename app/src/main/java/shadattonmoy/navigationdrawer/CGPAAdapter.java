@@ -1,14 +1,21 @@
 package shadattonmoy.navigationdrawer;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
+import android.support.design.widget.FloatingActionButton;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,6 +33,7 @@ public class CGPAAdapter extends ArrayAdapter<Course> {
 
     private String[] gpa = new String[]{"F","A+","A","A-","B+","B","B-","C+","C","C-"};
     ArrayList<String> gpaList = new ArrayList<String>();
+    private Context context;
 
 
 
@@ -37,8 +45,10 @@ public class CGPAAdapter extends ArrayAdapter<Course> {
     public static boolean isReset = false;
 
 
+
     public CGPAAdapter(@NonNull Context context, @LayoutRes int resource, @IdRes int textViewResourceId, @NonNull List<Course> objects) {
         super(context, resource, textViewResourceId, objects);
+        this.context = context;
         for(int i=0;i<gpa.length;i++)
             gpaList.add(gpa[i]);
 
@@ -46,7 +56,7 @@ public class CGPAAdapter extends ArrayAdapter<Course> {
 
     @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, final View convertView, ViewGroup parent) {
         View row = convertView;
         if(row==null)
         {
@@ -67,17 +77,19 @@ public class CGPAAdapter extends ArrayAdapter<Course> {
         else
         {
 
-            Course currentCourseCgpa = getItem(position);
-            String courseCode = currentCourseCgpa.getCourse_code();
+            final Course currentCourseCgpa = getItem(position);
+            final String courseCode = currentCourseCgpa.getCourse_code();
             String courseTitle = currentCourseCgpa.getCourse_title();
-            String courseCredit = currentCourseCgpa.getCourse_credit();
+            final String courseCredit = currentCourseCgpa.getCourse_credit();
 
             TextView courseCodeView = (TextView) row.findViewById(R.id.holiday_name);
             TextView courseTitleView = (TextView) row.findViewById(R.id.holiday_desc);
             TextView courseCreditView = (TextView) row.findViewById(R.id.holiday_days);
             Spinner cgpaListView = (Spinner) row.findViewById(R.id.cgpa_list);
+            final ImageView moreOption = (ImageView) row.findViewById(R.id.more_option_cgpa);
+            moreOption.setImageResource(R.drawable.more);
 
-            ArrayAdapter adapter = ArrayAdapter.createFromResource(getContext(),R.array.cgpa,R.layout.spinner_layout);
+            final ArrayAdapter adapter = ArrayAdapter.createFromResource(getContext(),R.array.cgpa,R.layout.spinner_layout);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             cgpaListView.setAdapter(adapter);
             courseCodeView.setText(courseCode);
@@ -94,6 +106,39 @@ public class CGPAAdapter extends ArrayAdapter<Course> {
             }
 
             cgpaListView.setOnItemSelectedListener(new selectListener(getContext(),courseCredit,courseCode));
+
+            moreOption.setOnClickListener(new View.OnClickListener() {
+                @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                @Override
+                public void onClick(View v) {
+                    PopupMenu popupMenu = new PopupMenu(context,moreOption, Gravity.LEFT);
+                    popupMenu.inflate(R.menu.cgpa_menu);
+                    popupMenu.show();
+
+                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            if(item.getItemId() == R.id.remove_course_for_cgpa_menu)
+                            {
+                                CGPAFragment.adapter.remove(currentCourseCgpa);
+                                float removedCredit = Float.parseFloat(courseCredit);
+                                CGPAFragment.removedCredit+=removedCredit;
+                                Toast.makeText(context,courseCode+" is removed",Toast.LENGTH_SHORT).show();
+                                return true;
+                            }
+                            else if(item.getItemId() == R.id.edit_course_for_cgpa_menu)
+                            {
+                                Toast.makeText(context,"Edit Course "+courseCode,Toast.LENGTH_SHORT).show();
+                                return true;
+                            }
+
+
+                            return false;
+                        }
+                    });
+
+                }
+            });
         }
 
 

@@ -23,19 +23,6 @@
         <item name="android:padding">10dp</item>
     </style>
 
-    <style name="dept_code">
-        <item name="android:textSize">24sp</item>
-        <item name="android:gravity">center</item>
-        <item name="android:textColor">#ffffff</item>
-        <item name="android:layout_centerInParent">true</item>
-        <item name="android:background">@drawable/round</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginLeft">15dp</item>
-        <item name="android:layout_marginRight">15dp</item>
-        <item name="android:layout_marginTop">15dp</item>
-    </style>
-
 
     <style name="dept_code_ls">
         <item name="android:textSize">24dp</item>
@@ -63,16 +50,33 @@
     </style>
 
     <style name="dept_code_ss">
-        <item name="android:textSize">24dp</item>
+        <item name="android:textSize">24sp</item>
         <item name="android:gravity">center</item>
         <item name="android:textColor">#ffffff</item>
-        <item name="android:layout_centerInParent">true</item>
-        <item name="android:background">@drawable/round_light_green</item>
+        <item name="android:textAlignment">center</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginLeft">15dp</item>
-        <item name="android:layout_marginRight">15dp</item>
-        <item name="android:layout_marginTop">15dp</item>
+        <item name="android:padding">25dp</item>
+    </style>
+
+
+    <style name="dept_code">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:background">#ffffff</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:padding">2dp</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="dept_title_ss">
+        <item name="android:textSize">14sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">25dp</item>
     </style>
 
     <style name="dept_code_bs">
@@ -109,10 +113,13 @@
         <item name="android:layout_width">80dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_centerHorizontal">true</item>
+    </style>
 
-
-
-
+    <style name="homeScreenText">
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:padding">2dp</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:layout_gravity">center</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

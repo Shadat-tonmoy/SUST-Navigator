@@ -14,63 +14,98 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/imageView20"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <android.support.v7.widget.CardView
+            android:layout_width="0dp"
             android:layout_weight="1"
-            android:onClick="openTeacherFragment"
-            app:srcCompat="@drawable/teacher" />
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            app:cardElevation="4dp">
 
-        <ImageView
-            android:id="@+id/imageView21"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="openSyllabusFragment"
-            app:srcCompat="@drawable/syllabus" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/imageView22"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+                <ImageView
+                    android:padding="15dp"
+                    android:id="@+id/imageView20"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="openTeacherFragment"
+                    android:layout_gravity="center"
+                    app:srcCompat="@drawable/teacher" />
+
+                <TextView
+                    android:id="@+id/textView27"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:background="#3798D3"
+                    android:text="Teacher"
+                    style="@style/homeScreenText"
+                    />
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="0dp"
             android:layout_weight="1"
-            android:onClick="openProctorFragment"
-            app:srcCompat="@drawable/proctor" />
+            android:layout_height="wrap_content"
+            app:cardElevation="4dp"
+            android:layout_margin="5dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <ImageView
+                    android:id="@+id/imageView21"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="openSyllabusFragment"
+                    android:layout_gravity="center"
+                    android:padding="15dp"
+                    app:srcCompat="@drawable/syllabus" />
+                <TextView
+                    android:id="@+id/textView28"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Syllabus"
+                    android:background="#FD9209"
+                    style="@style/homeScreenText"/>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            app:cardElevation="4dp"
+            android:layout_margin="5dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <ImageView
+                    android:id="@+id/imageView22"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="openProctorFragment"
+                    android:layout_gravity="center"
+                    android:padding="15dp"
+                    app:srcCompat="@drawable/proctor" />
+                <TextView
+                    android:id="@+id/textView29"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Proctor"
+                    android:background="#E53935"
+                    style="@style/homeScreenText"/>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/textView27"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textAlignment="center"
-            android:onClick="openTeacherFragment"
-            android:text="Teacher" />
-
-        <TextView
-            android:id="@+id/textView28"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textAlignment="center"
-            android:text="Syllabus" />
-
-        <TextView
-            android:id="@+id/textView29"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textAlignment="center"
-            android:text="Proctor" />
-
-    </LinearLayout>
 
     <LinearLayout
         android:layout_marginTop="30dp"
@@ -78,120 +113,192 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/imageView23"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <android.support.v7.widget.CardView
+            android:layout_width="0dp"
             android:layout_weight="1"
-            android:onClick="openCGPAFragment"
-            app:srcCompat="@drawable/cgpa" />
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            app:cardElevation="4dp">
 
-        <ImageView
-            android:id="@+id/imageView24"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="openBusFragment"
-            app:srcCompat="@drawable/bus" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/imageView25"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+                <ImageView
+                    android:padding="15dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:id="@+id/imageView23"
+                    android:onClick="openCGPAFragment"
+                    app:srcCompat="@drawable/cgpa"/>
+
+                <TextView
+                    android:id="@+id/textView30"
+                    style="@style/homeScreenText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#00796B"
+                    android:text="CGPA" />
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="0dp"
             android:layout_weight="1"
-            android:onClick="openHolidayFragment"
-            app:srcCompat="@drawable/holiday" />
+            android:layout_height="wrap_content"
+            app:cardElevation="4dp"
+            android:layout_margin="5dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <ImageView
+                    android:layout_gravity="center"
+                    android:padding="15dp"
+                    android:id="@+id/imageView24"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="openBusFragment"
+                    app:srcCompat="@drawable/bus"/>
+                <TextView
+                    android:id="@+id/textView31"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Transport"
+                    android:background="#4F8196"
+                    style="@style/homeScreenText"/>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            app:cardElevation="4dp"
+            android:layout_margin="5dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <ImageView
+                    android:layout_gravity="center"
+                    android:padding="15dp"
+                    android:id="@+id/imageView25"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:onClick="openHolidayFragment"
+                    app:srcCompat="@drawable/holiday"/>
+                <TextView
+                    android:id="@+id/textView32"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Holidays"
+                    android:background="#FBAF3F"
+                    style="@style/homeScreenText"/>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/textView30"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textAlignment="center"
-            android:text="CGPA" />
-
-        <TextView
-            android:id="@+id/textView31"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textAlignment="center"
-            android:text="Transport" />
-
-        <TextView
-            android:id="@+id/textView32"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textAlignment="center"
-            android:text="Holidays" />
-    </LinearLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:id="@+id/imageView26"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            app:srcCompat="@drawable/location" />
-
-        <ImageView
-            android:id="@+id/imageView30"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            app:srcCompat="@drawable/holiday" />
-
-        <ImageView
-            android:id="@+id/imageView31"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="openAdminFragment"
-            app:srcCompat="@drawable/teacher" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/textView33"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <android.support.v7.widget.CardView
+            android:layout_width="0dp"
             android:layout_weight="1"
-            android:textAlignment="center"
-            android:text="Location" />
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            app:cardElevation="4dp">
 
-        <TextView
-            android:id="@+id/textView34"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textAlignment="center"
-            android:text="Dummy" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textView35"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+                <ImageView
+                    android:padding="15dp"
+                    android:layout_gravity="center"
+                    android:id="@+id/imageView26"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/location"/>
+
+                <TextView
+                    android:id="@+id/textView33"
+                    style="@style/homeScreenText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#6CAE7E"
+                    android:text="Location" />
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:onClick="openStaffFragment"
+            android:layout_width="0dp"
             android:layout_weight="1"
-            android:textAlignment="center"
-            android:text="Admin" />
+            android:layout_height="wrap_content"
+            app:cardElevation="4dp"
+            android:layout_margin="5dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <ImageView
+                    android:padding="15dp"
+                    android:layout_gravity="center"
+                    android:id="@+id/imageView30"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/holiday"/>
+                <TextView
+                    android:id="@+id/textView34"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Staff"
+                    android:background="#FBAF3F"
+                    style="@style/homeScreenText"/>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            app:cardElevation="4dp"
+            android:layout_margin="5dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <ImageView
+                    android:padding="15dp"
+                    android:layout_gravity="center"
+                    android:id="@+id/imageView31"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:onClick="openAdminFragment"
+                    app:srcCompat="@drawable/teacher"/>
+                <TextView
+                    android:id="@+id/textView35"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Admin"
+                    android:background="#2F2F2F"
+                    style="@style/homeScreenText"/>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
     </LinearLayout>
 </LinearLayout>

@@ -1,8 +1,8 @@
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="shadattonmoy.navigationdrawer.DeptFragment"
     android:id="@+id/scrollRoot"
     android:fillViewport="true">
@@ -32,101 +32,212 @@
                 android:layout_weight="1"
                 android:orientation="horizontal">
 
-                <LinearLayout
+                <android.support.v7.widget.CardView
                     android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1">
-
+                    app:cardElevation="4dp"
+                    android:layout_margin="10dp"
+                    app:cardBackgroundColor="#16A085">                  <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/cse"
+                        android:layout_gravity="center"
+                        android:padding="15dp"/>
                     <TextView
                         android:id="@+id/dept_code_cse"
-                        style="@style/dept_code_ss"
+                        style="@style/dept_code"
+                        android:textColor="#16A085"
                         android:text="CSE" />
                 </LinearLayout>
+                </android.support.v7.widget.CardView>
 
-                <LinearLayout
+
+                <android.support.v7.widget.CardView
                     android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1">
-
+                    app:cardElevation="4dp"
+                    android:layout_margin="10dp"
+                    app:cardBackgroundColor="#CDDC39">                  <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/cse"
+                        android:layout_gravity="center"
+                        android:padding="15dp"/>
                     <TextView
+                        style="@style/dept_code"
+                        android:textColor="#CDDC39"
                         android:id="@+id/dept_code_eee"
-                        style="@style/dept_code_ss"
-                        android:text="EEE" />
+                        android:text="EEE"/>
                 </LinearLayout>
+                </android.support.v7.widget.CardView>
 
-                <LinearLayout
+
+                <android.support.v7.widget.CardView
                     android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1">
-
+                    app:cardElevation="4dp"
+                    android:layout_margin="10dp"
+                    app:cardBackgroundColor="#7E57C2">                  <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/cse"
+                        android:layout_gravity="center"
+                        android:padding="15dp"/>
                     <TextView
+                        style="@style/dept_code"
+                        android:textColor="#7E57C2"
                         android:id="@+id/dept_code_ipe"
-                        style="@style/dept_code_ss"
-                        android:text="IPE" />
+                        android:text="IPE"/>
                 </LinearLayout>
+                </android.support.v7.widget.CardView>
 
-                <LinearLayout
+
+                <android.support.v7.widget.CardView
                     android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1">
-
+                    app:cardElevation="4dp"
+                    android:layout_margin="10dp"
+                    app:cardBackgroundColor="#757575">                  <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/cse"
+                        android:layout_gravity="center"
+                        android:padding="15dp"/>
                     <TextView
+                        style="@style/dept_code"
+                        android:textColor="#757575"
                         android:id="@+id/dept_code_cep"
-                        style="@style/dept_code_ss"
-                        android:text="CEP" />
+                        android:text="CEP"/>
                 </LinearLayout>
-
+                </android.support.v7.widget.CardView>
             </LinearLayout>
+
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:orientation="horizontal">
-                <LinearLayout
+
+                <android.support.v7.widget.CardView
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    app:cardElevation="4dp"
+                    android:layout_margin="10dp"
+                    app:cardBackgroundColor="#C51162">                  <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/cse"
+                        android:layout_gravity="center"
+                        android:padding="15dp"/>
                     <TextView
                         android:id="@+id/dept_code_cee"
-                        style="@style/dept_code_ss"
+                        style="@style/dept_code"
+                        android:textColor="#C51162"
                         android:text="CEE" />
                 </LinearLayout>
+                </android.support.v7.widget.CardView>
 
-                <LinearLayout
+
+                <android.support.v7.widget.CardView
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    app:cardElevation="4dp"
+                    android:layout_margin="10dp"
+                    app:cardBackgroundColor="#03A9F4">                  <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/cse"
+                        android:layout_gravity="center"
+                        android:padding="15dp"/>
                     <TextView
+                        style="@style/dept_code"
+                        android:textColor="#03A9F4"
                         android:id="@+id/dept_code_fet"
-                        style="@style/dept_code_ss"
-                        android:text="FET" />
+                        android:text="FET"/>
                 </LinearLayout>
+                </android.support.v7.widget.CardView>
 
-                <LinearLayout
+
+                <android.support.v7.widget.CardView
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    app:cardElevation="4dp"
+                    android:layout_margin="10dp"
+                    app:cardBackgroundColor="#81C784">                  <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/cse"
+                        android:layout_gravity="center"
+                        android:padding="15dp"/>
                     <TextView
+                        style="@style/dept_code"
+                        android:textColor="#81C784"
                         android:id="@+id/dept_code_pme"
-                        style="@style/dept_code_ss"
-                        android:text="PME" />
+                        android:text="PME"/>
                 </LinearLayout>
+                </android.support.v7.widget.CardView>
 
-                <LinearLayout
+
+                <android.support.v7.widget.CardView
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    app:cardElevation="4dp"
+                    android:layout_margin="10dp"
+                    app:cardBackgroundColor="#FF5722">                  <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/cse"
+                        android:layout_gravity="center"
+                        android:padding="15dp"/>
                     <TextView
+                        style="@style/dept_code"
+                        android:textColor="#FF5722"
                         android:id="@+id/dept_code_mee"
-                        style="@style/dept_code_ss"
-                        android:text="MEE" />
+                        android:text="MEE"/>
                 </LinearLayout>
-
-
+                </android.support.v7.widget.CardView>
             </LinearLayout>
-
-
         </LinearLayout>
         <!--end of ast-->
 
@@ -150,46 +261,105 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:orientation="horizontal">
-                <LinearLayout
+
+                <android.support.v7.widget.CardView
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    app:cardElevation="4dp"
+                    android:layout_margin="10dp"
+                    app:cardBackgroundColor="#C51162">                  <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/cse"
+                        android:layout_gravity="center"
+                        android:padding="15dp"/>
                     <TextView
                         android:id="@+id/dept_code_phy"
-                        style="@style/dept_code_ls"
+                        style="@style/dept_code"
+                        android:textColor="#C51162"
                         android:text="PHY" />
                 </LinearLayout>
+                </android.support.v7.widget.CardView>
 
-                <LinearLayout
+
+                <android.support.v7.widget.CardView
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    app:cardElevation="4dp"
+                    android:layout_margin="10dp"
+                    app:cardBackgroundColor="#03A9F4">                  <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/cse"
+                        android:layout_gravity="center"
+                        android:padding="15dp"/>
                     <TextView
+                        style="@style/dept_code"
+                        android:textColor="#03A9F4"
                         android:id="@+id/dept_code_che"
-                        style="@style/dept_code_ls"
-                        android:text="CHE" />
+                        android:text="CHE"/>
                 </LinearLayout>
+                </android.support.v7.widget.CardView>
 
-                <LinearLayout
+
+                <android.support.v7.widget.CardView
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    app:cardElevation="4dp"
+                    android:layout_margin="10dp"
+                    app:cardBackgroundColor="#81C784">                  <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/cse"
+                        android:layout_gravity="center"
+                        android:padding="15dp"/>
                     <TextView
+                        style="@style/dept_code"
+                        android:textColor="#81C784"
                         android:id="@+id/dept_code_sta"
-                        style="@style/dept_code_ls"
-                        android:text="STA" />
+                        android:text="STA"/>
                 </LinearLayout>
+                </android.support.v7.widget.CardView>
 
-                <LinearLayout
+
+                <android.support.v7.widget.CardView
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    app:cardElevation="4dp"
+                    android:layout_margin="10dp"
+                    app:cardBackgroundColor="#FF5722">                  <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/cse"
+                        android:layout_gravity="center"
+                        android:padding="15dp"/>
                     <TextView
+                        style="@style/dept_code"
+                        android:textColor="#FF5722"
                         android:id="@+id/dept_code_mat"
-                        style="@style/dept_code_ls"
-                        android:text="MAT" />
+                        android:text="MAT"/>
                 </LinearLayout>
-
+                </android.support.v7.widget.CardView>
             </LinearLayout>
 
             <LinearLayout
@@ -197,16 +367,31 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:orientation="horizontal">
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content">
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:cardElevation="4dp"
+                    android:layout_margin="10dp"
+                    app:cardBackgroundColor="#16A085">                  <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/cse"
+                        android:layout_gravity="center"
+                        android:padding="15dp"/>
                     <TextView
                         android:id="@+id/dept_code_gee"
-                        style="@style/dept_code_ls"
+                        style="@style/dept_code"
+                        android:textColor="#16A085"
                         android:text="GEE" />
                 </LinearLayout>
+                </android.support.v7.widget.CardView>
             </LinearLayout>
+
         </LinearLayout>
 
         <!--end of physical-->

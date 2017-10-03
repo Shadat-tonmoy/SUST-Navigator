@@ -3,7 +3,6 @@ package shadattonmoy.navigationdrawer;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,11 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -23,22 +20,22 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
-public class StaffFragment extends android.app.Fragment {
-    private String dept;
+public class AdminManage extends android.app.Fragment {
+    private ListView adminList;
+    private ArrayList<Admin> adminArray;
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
-    private ArrayList<Staff> staffArray;
-    private ListView staffList;
-    private ProgressBar progressBar;
-    public StaffFragment() {
+    private TextView debugView;
+    private ProgressBar adminLoading;
+    private RelativeLayout relativeLayout;
+    private View view;
 
+    public AdminManage() {
+        // Required empty public constructor
     }
-    public StaffFragment(String dept){
-        this.dept = dept;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,40 +46,50 @@ public class StaffFragment extends android.app.Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_staff, container, false);
-        staffList = (ListView) view.findViewById(R.id.staff_list);
-        progressBar = (ProgressBar) view.findViewById(R.id.staff_loading);
+        view = inflater.inflate(R.layout.fragment_admin_manage, container, false);
         return view;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        int i=0;
+        init();
+        fetchData();
+    }
+
+    void fetchData()
+    {
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference().child("staff").child(dept);
-        staffArray = new ArrayList<Staff>();
+        databaseReference = firebaseDatabase.getReference().child("admin");
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot child : dataSnapshot.getChildren())
+                String txt = "";
+                for(DataSnapshot child : dataSnapshot.getChildren())
                 {
-                    Staff staff = child.getValue(Staff.class);
-                    staff.setId(child.getKey());
-                    staffArray.add(staff);
+                    Admin admin  = child.getValue(Admin.class);
+                    admin.setId(child.getKey());
+                    adminArray.add(admin);
                 }
-                StaffAdapter adapter = new StaffAdapter(getActivity().getApplicationContext(),R.layout.teacher_single_row,R.id.teacher_icon,staffArray,false);
-                adapter.setActivity(getActivity());
-                staffList.setAdapter(adapter);
-                progressBar.setVisibility(View.GONE);
-
+                AdminAdapter adminAdapter = new AdminAdapter(getActivity().getApplicationContext(),R.layout.admin_single_row,R.id.admin_icon,adminArray,relativeLayout);
+                adminAdapter.setProgressBar(adminLoading);
+                adminList.setAdapter(adminAdapter);
+                adminLoading.setVisibility(View.GONE);
             }
+
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
         });
+    }
 
+    void init()
+    {
+        adminArray =  new ArrayList<Admin>();
+        adminList = (ListView) view.findViewById(R.id.admin_list);
+        adminLoading = (ProgressBar) view.findViewById(R.id.admin_loading);
+        relativeLayout = (RelativeLayout) view.findViewById(R.id.admin_fragment);
     }
 }

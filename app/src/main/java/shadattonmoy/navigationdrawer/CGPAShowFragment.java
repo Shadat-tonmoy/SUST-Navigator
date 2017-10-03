@@ -15,18 +15,19 @@ import java.util.ArrayList;
 
 public class CGPAShowFragment extends android.app.Fragment implements View.OnClickListener {
 
-    private TextView gpaFinalView,cgpaFinalView,passedCreditView,totalCreditView,cgpaViewBackButton,debugView,cgpaViewSaveButton;
-    private String finalCGPA,finalGPA,totalCredit,passedCredit;
+    private TextView gpaFinalView,cgpaFinalView,passedCreditView,totalCreditView,cgpaViewBackButton,debugView,cgpaViewSaveButton,extraCreditView,totalTakenCreditView;
+    private String finalCGPA,finalGPA,totalCredit,passedCredit,extraCredit,totalTakenCredit;
     private FragmentManager manager;
     private ArrayList<Course> courseList;
     private String semester;
-    public CGPAShowFragment(String finalGPA,String finalCGPA,FragmentManager manager,String semester,String passedCredit,String totalCredit) {
+    public CGPAShowFragment(String finalGPA,String finalCGPA,FragmentManager manager,String semester,String passedCredit,String totalCredit,String extraCredit) {
         this.finalGPA = finalGPA;
         this.manager = manager;
         this.semester = semester;
         this.finalCGPA = finalCGPA;
         this.passedCredit = passedCredit;
         this.totalCredit = totalCredit;
+        this.extraCredit = extraCredit;
     }
 
 
@@ -44,8 +45,10 @@ public class CGPAShowFragment extends android.app.Fragment implements View.OnCli
         cgpaViewBackButton = (TextView) view.findViewById(R.id.cgpa_view_back_button);
         cgpaViewSaveButton = (TextView) view.findViewById(R.id.cgpa_view_save_button);
         //debugView = (TextView) view.findViewById(R.id.debugView);
+        //extraCreditView = (TextView) view.findViewById(R.id.extra_credit_view);
+        //totalTakenCreditView = (TextView) view.findViewById(R.id.total_taken_credit_view);
         gpaFinalView = (TextView) view.findViewById(R.id.final_cgpa_view2);
-        totalCreditView = (TextView) view.findViewById(R.id.final_total_credit_view);
+        //totalCreditView = (TextView) view.findViewById(R.id.final_total_credit_view);
         passedCreditView = (TextView) view.findViewById(R.id.final_passed_credit_view);
         return view;
     }
@@ -53,10 +56,14 @@ public class CGPAShowFragment extends android.app.Fragment implements View.OnCli
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        //totalTakenCredit = Float.toString((Float.parseFloat(totalCredit) + Float.parseFloat(extraCredit)));
         cgpaFinalView.setText(finalCGPA);
         gpaFinalView.setText(finalGPA);
         passedCreditView.setText(passedCredit);
-        totalCreditView.setText(totalCredit);
+        //totalCreditView.setText(totalCredit);
+        //extraCreditView.setText(extraCredit);
+        //totalTakenCreditView.setText(totalCredit);
         float finalCGPAVal = Float.parseFloat(finalCGPA);
         float finalGPAVal = Float.parseFloat(finalGPA);
         float finalTotalCredit = Float.parseFloat(totalCredit);

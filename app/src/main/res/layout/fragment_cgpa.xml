@@ -1,8 +1,9 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="shadattonmoy.navigationdrawer.DeptFragment">
 
     <!--<TextView-->
@@ -32,9 +33,7 @@
         android:id="@+id/cgpa_button_panel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
+        android:layout_gravity="bottom"
         android:background="@drawable/rectangle"
         android:orientation="horizontal">
 
@@ -73,23 +72,97 @@
             android:text="Calculate" />
     </LinearLayout>
 
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+    </LinearLayout>
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/add_in_cgpa_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginBottom="10dp"
-        android:layout_marginRight="70dp"
+        android:layout_marginRight="16dp"
         android:layout_alignParentRight="true"
         android:layout_above="@id/cgpa_button_panel"
-        android:src="@drawable/ic_add_black_24dp" />
+        android:src="@drawable/add"
+        app:layout_anchor="@id/cgpa_button_panel"
+        app:layout_anchorGravity="top|end"/>
+
+
+    <LinearLayout
+        android:id="@+id/more_fab"
+        android:visibility="invisible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_anchor="@id/add_in_cgpa_fab">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:elevation="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:textColor="#FFFFFF"
+                android:padding="5dp"
+                android:background="#34495e"
+                android:text="Add Your Custom Course"/>
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/addFromCustomFab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="5dp"
+                app:backgroundTint="@color/fab1"
+                android:src="@drawable/add"
+                app:fabSize="mini" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:elevation="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="6dp"
+                android:textColor="#FFFFFF"
+                android:padding="5dp"
+                android:background="#34495e"
+                android:text="Add From Current Syllabus"/>
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/addFromCurrentFab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="100dp"
+                android:layout_marginRight="20dp"
+                android:src="@drawable/add"
+                app:backgroundTint="@color/fab2"
+                app:fabSize="mini" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
 
     <ProgressBar
         android:id="@+id/cgpa_fragment_loading"
         style="?android:attr/progressBarStyle"
-        android:layout_centerInParent="true"
+        android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
 
-</RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

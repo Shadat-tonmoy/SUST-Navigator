@@ -4,6 +4,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +52,7 @@ public class DeptFragment extends android.app.Fragment implements View.OnClickLi
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
 
 
 
@@ -307,6 +309,50 @@ public class DeptFragment extends android.app.Fragment implements View.OnClickLi
             {
                 Toast.makeText(getActivity().getApplicationContext(),"CGPA PME",Toast.LENGTH_SHORT).show();
             }
+        }
+        else if(root.equals("STAFF"))
+        {
+
+            if(id==id_cse)
+            {
+                FragmentManager manager = getFragmentManager();
+                StaffFragment staffFragment= new StaffFragment ("cse");
+                FragmentTransaction transaction = manager.beginTransaction();
+                transaction.replace(R.id.main_content_root,staffFragment,"staff_fragment");
+                transaction.addToBackStack("staff_fragment");
+                transaction.commit();
+            }
+
+            else if(id==id_eee)
+            {
+                Toast.makeText(getActivity().getApplicationContext(),"Staff EEE",Toast.LENGTH_SHORT).show();
+            }
+            else if(id==id_ipe)
+            {
+                Toast.makeText(getActivity().getApplicationContext(),"Staff IPE",Toast.LENGTH_SHORT).show();
+            }
+            else if(id==id_cee)
+            {
+                Toast.makeText(getActivity().getApplicationContext(),"Staff CEE",Toast.LENGTH_SHORT).show();
+            }
+            else if(id==id_cep)
+            {
+                Toast.makeText(getActivity().getApplicationContext(),"Staff CEP",Toast.LENGTH_SHORT).show();
+            }
+            else if(id==id_mee)
+            {
+                Toast.makeText(getActivity().getApplicationContext(),"Staff MEE",Toast.LENGTH_SHORT).show();
+            }
+            else if(id==id_fet)
+            {
+                Toast.makeText(getActivity().getApplicationContext(),"Staff FET",Toast.LENGTH_SHORT).show();
+            }
+            else if(id==id_pme)
+            {
+                Toast.makeText(getActivity().getApplicationContext(),"Staff PME",Toast.LENGTH_SHORT).show();
+            }
+
+
         }
     }
 }

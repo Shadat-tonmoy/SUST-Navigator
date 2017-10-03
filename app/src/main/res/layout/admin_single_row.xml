@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/admin_icon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="5dp"
+        android:background="@drawable/round_light_green"
+        android:text="M"
+        android:textColor="#ffffff"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:textSize="18sp"
+        />
+
+    <TextView
+        android:id="@+id/admin_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/admin_icon"
+        android:layout_marginLeft="10dp"
+        android:layout_toEndOf="@+id/admin_icon"
+        android:layout_toRightOf="@+id/admin_icon"
+        android:text="Muhammed Zafar Iqbal"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        />
+
+    <TextView
+        android:id="@+id/admin_dept"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/admin_name"
+        android:layout_alignStart="@+id/admin_name"
+        android:layout_below="@+id/admin_name"
+        android:text="Professor"
+        android:textColor="#7f8c8d"
+        android:textSize="12sp"
+        />
+
+    <TextView
+        android:id="@+id/admin_regNo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/admin_dept"
+        android:layout_alignStart="@+id/admin_dept"
+        android:layout_below="@+id/admin_dept"
+        android:text="Room No 321,IICT"
+        android:textColor="#7f8c8d"
+        android:textSize="12sp"
+        />
+
+    <ImageView
+        android:id="@+id/remove_admin"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginRight="20dp"
+        app:srcCompat="@drawable/admin_remove"
+        android:layout_marginEnd="20dp"
+        android:layout_above="@+id/admin_regNo"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+
+    <ImageView
+        android:id="@+id/approve_admin"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginRight="60dp"
+        app:srcCompat="@drawable/admin_approve_icon"
+        android:layout_marginEnd="60dp"
+        android:layout_above="@+id/admin_regNo"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:id="@+id/not_varified_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textColor="#F44336"
+        android:layout_below="@+id/admin_regNo"
+        android:layout_alignLeft="@+id/admin_regNo"
+        android:layout_alignStart="@+id/admin_regNo" />
+
+
+</RelativeLayout>

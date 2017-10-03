@@ -145,6 +145,7 @@ class clickListener implements AdapterView.OnItemClickListener{
             CourseAddForCGPADialog.checkTaken.put(course,true);
             course.setAdded(true);
             CGPAFragment.adapter.add(course);
+            CGPAFragment.extraCredit += Float.parseFloat(course.getCourse_credit());
 
             String code = course.getCourse_code();
             Snackbar snackbar = Snackbar.make(view,code+" is Added..",Snackbar.LENGTH_LONG);

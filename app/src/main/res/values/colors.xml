@@ -5,4 +5,6 @@
     <color name="colorAccent">#FF4081</color>
     <color name="warningRed">#e74c3c</color>
     <color name="warningGreen">#16a085</color>
+    <color name="fab1">#FF6F00</color>
+    <color name="fab2">#3F51B5</color>
 </resources>

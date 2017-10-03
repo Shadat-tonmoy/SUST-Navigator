@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/edit_course_for_cgpa_menu"
+        android:title="Edit Course Detail"
+        android:orderInCategory="100"></item>
+    <item
+        android:id="@+id/remove_course_for_cgpa_menu"
+        android:title="Remove Course"
+        android:orderInCategory="100"></item>
+
+</menu>

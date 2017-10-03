@@ -34,13 +34,16 @@ public class MainActivity extends AppCompatActivity
     private FirebaseAuth.AuthStateListener authStateListener;
     private FirebaseUser user;
     private SQLiteAdapter sqLiteAdapter;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("SUST Navigator");
+
+
 
         sqLiteAdapter = new SQLiteAdapter(this);
         firebaseAuth = FirebaseAuth.getInstance();
@@ -234,6 +237,17 @@ public class MainActivity extends AppCompatActivity
         transaction.commit();
     }
 
+    public void openStaffFragment(View view)
+    {
+        FragmentManager manager = getFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        DeptFragment deptFragment = new DeptFragment();
+        deptFragment.setRoot("STAFF");
+        transaction.replace(R.id.main_content_root,deptFragment);
+        transaction.addToBackStack("staff_fragment");
+        transaction.commit();
+    }
+
     public void openAdminFragment(View view)
     {
         //Toast.makeText(this,"LL",Toast.LENGTH_SHORT).show();
@@ -322,7 +336,12 @@ public class MainActivity extends AppCompatActivity
 
     public void openAdminManageFragment(View view)
     {
-        Toast.makeText(getBaseContext(),"Admin Manage",Toast.LENGTH_SHORT).show();
+        FragmentManager manager = getFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        AdminManage adminManage= new AdminManage();
+        transaction.replace(R.id.main_content_root,adminManage);
+        transaction.addToBackStack("admin_manage_fragment");
+        transaction.commit();
 
     }
 
