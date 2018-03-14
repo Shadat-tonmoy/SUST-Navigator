@@ -102,7 +102,6 @@ public class CGPAAdapter extends ArrayAdapter<Course> {
                 String grade = record.get(courseCode).toString();
                 int index = gpaList.indexOf(grade);
                 cgpaListView.setSelection(index);
-
             }
 
             cgpaListView.setOnItemSelectedListener(new selectListener(getContext(),courseCredit,courseCode));
