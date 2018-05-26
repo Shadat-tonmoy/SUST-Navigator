@@ -4,9 +4,12 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.SharedPreferences;
+import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -19,10 +22,18 @@ import android.view.MenuItem;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -98,6 +109,7 @@ public class MainActivity extends AppCompatActivity
             editor.putBoolean("firstTime", true);
             editor.commit();
         }
+//        addFaculty();
     }
     /*end of onCreate Method*/
 
@@ -368,5 +380,51 @@ public class MainActivity extends AppCompatActivity
     protected void onStop() {
         super.onStop();
         firebaseAuth.removeAuthStateListener(authStateListener);
+    }
+
+    public void addFaculty(/*Teacher teacher, final String dept*/)
+    {
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        AssetManager assetManager = getAssets();
+        InputStream input;
+        try {
+            input = assetManager.open("chemistry.txt");
+            String fileName = "chemistry.txt";
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(input, "UTF-8"));
+            String line = null;
+            while((line = bufferedReader.readLine()) != null) {
+                Log.e("ReadLine",line);
+                String[] properties = line.split(":");
+                String name,telephone,mobile,email;
+                int i=0;
+                /*for (String prop:properties){
+                    System.out.println(prop+" at index "+i);;
+                    i++;
+                }*/
+
+                name = properties[0];
+                telephone = properties[1];
+                mobile = properties[2];
+                email = properties[3];
+
+                databaseReference = firebaseDatabase.getReference().child("teacher").child("CHE".toLowerCase());
+                databaseReference.push().setValue(new Teacher(name, "N/A", "N/A", mobile, email, "N/A")).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Log.e("TeacherAddeds","For Dept CHE");
+                    }
+                });
+
+                Log.e("Detail", "Name "+name+"\nTelephone "+telephone+"\nmobile "+mobile+"\nemail "+email+"\n");
+
+//                fileContent+=line;
+            }
+            bufferedReader.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
     }
 }

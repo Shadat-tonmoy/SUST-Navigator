@@ -46,6 +46,7 @@ public class DeptFragment extends android.app.Fragment implements View.OnClickLi
         view.findViewById(R.id.dept_code_cee).setOnClickListener(this);
         view.findViewById(R.id.dept_code_cep).setOnClickListener(this);
         view.findViewById(R.id.dept_code_pme).setOnClickListener(this);
+        view.findViewById(R.id.dept_code_che).setOnClickListener(this);
         return view;
     }
 
@@ -69,6 +70,7 @@ public class DeptFragment extends android.app.Fragment implements View.OnClickLi
         int id_mee = getActivity().findViewById(R.id.dept_code_mee).getId();
         int id_fet = getActivity().findViewById(R.id.dept_code_fet).getId();
         int id_pme = getActivity().findViewById(R.id.dept_code_pme).getId();
+        int id_che = getActivity().findViewById(R.id.dept_code_che).getId();
         if(root.equals("TEACHER"))
         {
             if(id==id_cse)
@@ -88,6 +90,15 @@ public class DeptFragment extends android.app.Fragment implements View.OnClickLi
                 FragmentTransaction transaction = manager.beginTransaction();
                 transaction.replace(R.id.main_content_root,cseTeacherFragment,"eee_teacher_fragment");
                 transaction.addToBackStack("eee_teacher_fragment");
+                transaction.commit();
+
+            } else if(id==id_che)
+            {
+                FragmentManager manager = getFragmentManager();
+                TeacherFragment cseTeacherFragment = new TeacherFragment("CHE");
+                FragmentTransaction transaction = manager.beginTransaction();
+                transaction.replace(R.id.main_content_root,cseTeacherFragment,"che_teacher_fragment");
+                transaction.addToBackStack("che_teacher_fragment");
                 transaction.commit();
 
             }
