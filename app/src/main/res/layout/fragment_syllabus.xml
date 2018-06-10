@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="shadattonmoy.navigationdrawer.DeptFragment">
+    tools:context="shadattonmoy.sustnavigator.DeptFragment">
 
         <ListView
             android:id="@+id/syllabus"

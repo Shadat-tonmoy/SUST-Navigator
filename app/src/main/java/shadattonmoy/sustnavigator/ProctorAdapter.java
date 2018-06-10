@@ -1,0 +1,183 @@
+package shadattonmoy.sustnavigator;
+
+import android.app.Activity;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
+import android.support.annotation.IdRes;
+import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.PopupMenu;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.List;
+
+/**
+ * Created by Shadat Tonmoy on 9/8/2017.
+ */
+
+public class ProctorAdapter extends ArrayAdapter<Proctor> {
+
+    private Context context;
+    private ImageView imageView;
+    private boolean isEditable;
+    private Activity activity;
+    private FragmentManager manager;
+
+    public ProctorAdapter(@NonNull Context context, @LayoutRes int resource, @IdRes int textViewResourceId, @NonNull List<Proctor> objects,boolean isEditable,FragmentManager manager) {
+        super(context, resource, textViewResourceId, objects);
+        this.isEditable = isEditable;
+        this.context = context;
+        this.manager = manager;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @NonNull
+    @Override
+    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+
+        View row = convertView;
+        if(row==null)
+        {
+            LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            row = inflater.inflate(R.layout.teacher_single_row,parent,false);
+        }
+        final Proctor proctor = getItem(position);
+        TextView teacherIcon = (TextView) row.findViewById(R.id.teacher_icon);
+        ImageView contactImage = (ImageView) row.findViewById(R.id.contact_teacher);
+        TextView teacherName = (TextView) row.findViewById(R.id.teacher_name);
+        TextView teacherDesignation = (TextView) row.findViewById(R.id.teacher_designation);
+        TextView teacherRoom = (TextView) row.findViewById(R.id.teacher_room);
+        imageView = (ImageView) row.findViewById(R.id.contact_teacher);
+        String name = proctor.getName();
+        String designation = proctor.getDesignation();
+        String room = proctor.getRoomNo();
+        final String phone = proctor.getContactNo();
+        final String proctorId = proctor.getProctorId();
+        String iconText = String.valueOf(name.charAt(0));
+        if(isEditable)
+        {
+            imageView.setImageResource(R.drawable.edit_icon);
+            final PopupMenu popupMenu = new PopupMenu(getContext(),imageView,Gravity.LEFT);
+            popupMenu.inflate(R.menu.proctor_manage_menu);
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    popupMenu.show();
+                    popupMenu.setOnMenuItemClickListener(new clickHandlerProctor(getContext(),proctor,manager));
+                }
+            });
+
+        }
+        else {
+            imageView.setImageResource(R.drawable.phone_final);
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    makeCall(phone);
+                    //Toast.makeText(context,"Call to"+phone,Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        if(iconText.equals("A") || iconText.equals("E") || iconText.equals("I") || iconText.equals("O"))
+            teacherIcon.setBackgroundResource(R.drawable.round_yellow);
+        else if(iconText.equals("B") || iconText.equals("D") || iconText.equals("F") || iconText.equals("H"))
+            teacherIcon.setBackgroundResource(R.drawable.round_carrot);
+        else if(iconText.equals("B") || iconText.equals("D") || iconText.equals("F") || iconText.equals("H"))
+            teacherIcon.setBackgroundResource(R.drawable.round_black);
+        else if(iconText.equals("C") || iconText.equals("G") || iconText.equals("J") || iconText.equals("K"))
+            teacherIcon.setBackgroundResource(R.drawable.round_blue);
+        else if(iconText.equals("L") || iconText.equals("P") || iconText.equals("S") || iconText.equals("Y"))
+            teacherIcon.setBackgroundResource(R.drawable.round_green2);
+        else if(iconText.equals("M") || iconText.equals("N") || iconText.equals("S") || iconText.equals("Z"))
+            teacherIcon.setBackgroundResource(R.drawable.round_green3);
+
+
+        teacherIcon.setText(iconText);
+        teacherName.setText(name);
+        teacherDesignation.setText(designation);
+        teacherRoom.setText(room);
+
+
+
+        return row;
+    }
+
+    public void setActivity(Activity activity)
+    {
+        this.activity = activity;
+    }
+
+    public void makeCall(String phoneNo)
+    {
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        intent.setData(Uri.parse("tel:"+phoneNo));
+        if(intent.resolveActivity(context.getPackageManager())!=null)
+        {
+            //context.startActivity(intent);
+            activity.startActivity(intent);
+        }
+    }
+}
+class clickHandlerProctor implements PopupMenu.OnMenuItemClickListener{
+
+    private Context context;
+    private Proctor proctor;
+    private FragmentManager manager;
+    public clickHandlerProctor(Context context,Proctor proctor,FragmentManager manager)
+    {
+        this.context = context;
+        this.proctor = proctor;
+        this.manager = manager;
+    }
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+
+        int id = item.getItemId();
+        if (id == R.id.edit_proctor_menu)
+        {
+            Toast.makeText(context,"Edit "+proctor.getProctorId(),Toast.LENGTH_SHORT).show();
+            ProctorAddFragment proctorAddFragment = new ProctorAddFragment(true);
+            proctorAddFragment.setProctor(proctor);
+            FragmentTransaction transaction = manager.beginTransaction();
+            transaction.replace(R.id.main_content_root,proctorAddFragment);
+            transaction.addToBackStack("proctor_edit_fragment");
+            transaction.commit();
+            return true;
+        }
+        else if ( id == R.id.remove_proctor_menu)
+        {
+            FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+            DatabaseReference databaseReference = firebaseDatabase.getReference().child("proctor").child(proctor.getProctorId());
+            databaseReference.removeValue(new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+
+                    ProctorialBodyFragment.adapter.remove(proctor);
+                    Toast.makeText(context,"Removed Successfully",Toast.LENGTH_SHORT).show();
+
+                }
+            });
+            return true;
+        }
+        return false;
+    }
+}

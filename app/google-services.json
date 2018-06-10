@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:873576606834:android:db32baab0db1e508",
         "android_client_info": {
-          "package_name": "shadattonmoy.navigationdrawer"
+          "package_name": "shadattonmoy.sustnavigator"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "873576606834-99folchp0s28v7h0a8djdqfpruankt30.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "shadattonmoy.navigationdrawer",
+            "package_name": "shadattonmoy.sustnavigator",
             "certificate_hash": "b2c99a347b3c70767b7daf20183c9cf10724190f"
           }
         },

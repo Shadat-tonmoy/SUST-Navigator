@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="shadattonmoy.navigationdrawer.DeptFragment">
+    tools:context="shadattonmoy.sustnavigator.DeptFragment">
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
