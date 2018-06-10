@@ -2,9 +2,18 @@
 <resources>
     <color name="colorPrimary">#009688</color>
     <color name="colorPrimaryDark">#00796B</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#263238</color>
     <color name="warningRed">#e74c3c</color>
     <color name="warningGreen">#16a085</color>
     <color name="fab1">#FF6F00</color>
     <color name="fab2">#3F51B5</color>
+    <color name="textBlack">#212121</color>
+    <color name="transparentBlack">#bb000000</color>
+    <color name="textAsh">#757575</color>
+    <color name="textWhite">#ffffff</color>
+    <color name="textRed">#e74c3c</color>
+    <color name="fabContainerBg">#bf2c3e50</color>
+    <color name="transparent">#00FFFFFF</color>
+    <color name="blue">#2980b9</color>
+    <color name="teel">#16a085</color>
 </resources>

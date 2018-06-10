@@ -382,7 +382,7 @@ public class MainActivity extends AppCompatActivity
         firebaseAuth.removeAuthStateListener(authStateListener);
     }
 
-    public void addFaculty(/*Teacher teacher, final String dept*/)
+    /*public void addFaculty(*//*Teacher teacher, final String dept*//*)
     {
         firebaseDatabase = FirebaseDatabase.getInstance();
         AssetManager assetManager = getAssets();
@@ -397,10 +397,10 @@ public class MainActivity extends AppCompatActivity
                 String[] properties = line.split(":");
                 String name,telephone,mobile,email;
                 int i=0;
-                /*for (String prop:properties){
+                *//*for (String prop:properties){
                     System.out.println(prop+" at index "+i);;
                     i++;
-                }*/
+                }*//*
 
                 name = properties[0];
                 telephone = properties[1];
@@ -426,5 +426,5 @@ public class MainActivity extends AppCompatActivity
         }
 
 
-    }
+    }*/
 }

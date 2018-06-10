@@ -4,6 +4,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 public class DeptFragment extends android.app.Fragment implements View.OnClickListener{
 
     private String root;
+    private AppBarLayout appBarLayout;
 
     public DeptFragment() {
 
@@ -47,6 +49,8 @@ public class DeptFragment extends android.app.Fragment implements View.OnClickLi
         view.findViewById(R.id.dept_code_cep).setOnClickListener(this);
         view.findViewById(R.id.dept_code_pme).setOnClickListener(this);
         view.findViewById(R.id.dept_code_che).setOnClickListener(this);
+        appBarLayout = (AppBarLayout) getActivity().findViewById(R.id.appbar_layout);
+        appBarLayout.setExpanded(false);
         return view;
     }
 
