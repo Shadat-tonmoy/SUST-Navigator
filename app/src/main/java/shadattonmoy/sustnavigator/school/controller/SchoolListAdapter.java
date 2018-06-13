@@ -1,18 +1,21 @@
 package shadattonmoy.sustnavigator.school.controller;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import shadattonmoy.sustnavigator.R;
 
 import java.util.List;
 
-import shadattonmoy.sustnavigator.dept.controller.DeptGridAdapter;
+import shadattonmoy.sustnavigator.teacher.view.TeacherFragment;
 import shadattonmoy.sustnavigator.dept.model.Dept;
 import shadattonmoy.sustnavigator.school.model.School;
 
@@ -23,23 +26,24 @@ public class SchoolListAdapter extends RecyclerView.Adapter<SchoolListAdapter.My
     private Context context;
     private FragmentActivity activity;
     private List<School> schools;
-
+    private FragmentManager fragmentManager;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView schoolTitle;
-        GridView deptGrid;
+        LinearLayout deptList;
 
         public MyViewHolder(View view) {
             super(view);
             schoolTitle = (TextView) view.findViewById(R.id.school_title);
-            deptGrid = (GridView) view.findViewById(R.id.dept_grid);
+            deptList = (LinearLayout) view.findViewById(R.id.dept_list);
         }
     }
 
 
-    public SchoolListAdapter(List<School> schools, Context context) {
+    public SchoolListAdapter(List<School> schools, Context context, FragmentManager fragmentManager) {
         this.context = context;
         this.schools = schools;
+        this.fragmentManager = fragmentManager;
     }
 
     @Override
@@ -55,9 +59,29 @@ public class SchoolListAdapter extends RecyclerView.Adapter<SchoolListAdapter.My
         School school = schools.get(position);
         String schoolTitle = school.getSchoolTitle();
         List<Dept> depts = school.getDepts();
-        DeptGridAdapter deptGridAdapter = new DeptGridAdapter(context,depts);
+        holder.deptList.removeAllViews();
+        for(final Dept dept:depts)
+        {
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LinearLayout deptCell = (LinearLayout) inflater.inflate(R.layout.dept_single_cell, parent, false);
+            TextView deptCode = (TextView) deptCell.findViewById(R.id.dept_code);
+            TextView deptTitle = (TextView) deptCell.findViewById(R.id.dept_title);
+            deptCode.setText(dept.getDeptCode());
+            deptTitle.setText(dept.getDeptTitle());
+            holder.deptList.addView(deptCell);
+            deptCell.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    FragmentManager manager = fragmentManager;
+                    TeacherFragment cseTeacherFragment = new TeacherFragment(dept.getDeptCode());
+                    FragmentTransaction transaction = manager.beginTransaction();
+                    transaction.replace(R.id.main_content_root,cseTeacherFragment,"eee_teacher_fragment");
+                    transaction.addToBackStack(dept.getDeptCode()+" teacher fragment");
+                    transaction.commit();
+                }
+            });
+        }
         holder.schoolTitle.setText(schoolTitle);
-        holder.deptGrid.setAdapter(deptGridAdapter);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package shadattonmoy.sustnavigator;
+package shadattonmoy.sustnavigator.dept.view;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -9,15 +9,32 @@ import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import shadattonmoy.sustnavigator.R;
+import shadattonmoy.sustnavigator.SemesterListFragment;
+import shadattonmoy.sustnavigator.StaffFragment;
+import shadattonmoy.sustnavigator.SyllabusManageFragment;
+import shadattonmoy.sustnavigator.TeacherManageFragment;
 import shadattonmoy.sustnavigator.school.controller.SchoolListAdapter;
-import shadattonmoy.sustnavigator.utils.DummyValues;
+import shadattonmoy.sustnavigator.school.model.School;
+import shadattonmoy.sustnavigator.teacher.view.TeacherFragment;
 
 
 public class DeptFragment extends android.app.Fragment implements View.OnClickListener{
@@ -28,6 +45,10 @@ public class DeptFragment extends android.app.Fragment implements View.OnClickLi
     private SchoolListAdapter schoolListAdapter;
     private Context context;
     private TextView headerText;
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference databaseReference;
+    private List<School> schoolList;
+    private ProgressBar progressBar;
 
     public DeptFragment() {
 
@@ -55,34 +76,17 @@ public class DeptFragment extends android.app.Fragment implements View.OnClickLi
         View view =inflater.inflate(R.layout.dept_fragment, container, false);
         deptList = (RecyclerView) view.findViewById(R.id.school_list);
         headerText = (TextView) view.findViewById(R.id.dept_header_msg);
-        schoolListAdapter = new SchoolListAdapter(DummyValues.getSchools(),context);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(context);
-        deptList.setLayoutManager(mLayoutManager);
-        deptList.setItemAnimator(new DefaultItemAnimator());
-        deptList.setAdapter(schoolListAdapter);
-        headerText.setText("Choose Department for Faculty");
-
-/*        view.findViewById(R.id.dept_code_cse).setOnClickListener(this);
-        view.findViewById(R.id.dept_code_eee).setOnClickListener(this);
-        view.findViewById(R.id.dept_code_ipe).setOnClickListener(this);
-        view.findViewById(R.id.dept_code_fet).setOnClickListener(this);
-        view.findViewById(R.id.dept_code_mee).setOnClickListener(this);
-        view.findViewById(R.id.dept_code_cee).setOnClickListener(this);
-        view.findViewById(R.id.dept_code_cep).setOnClickListener(this);
-        view.findViewById(R.id.dept_code_pme).setOnClickListener(this);
-        view.findViewById(R.id.dept_code_che).setOnClickListener(this);*/
         appBarLayout = (AppBarLayout) getActivity().findViewById(R.id.appbar_layout);
-        appBarLayout.setExpanded(false);
-
+        progressBar = (ProgressBar) view.findViewById(R.id.dept_progressbar);
         return view;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-
-
+       headerText.setText(Html.fromHtml("Choose Department for <b>"+root.toLowerCase()+"</b>"));
+        appBarLayout.setExpanded(false);
+        getSchoolsFromServer();
 
     }
 
@@ -98,74 +102,7 @@ public class DeptFragment extends android.app.Fragment implements View.OnClickLi
         int id_fet = getActivity().findViewById(R.id.dept_code_fet).getId();
         int id_pme = getActivity().findViewById(R.id.dept_code_pme).getId();
         int id_che = getActivity().findViewById(R.id.dept_code_che).getId();
-        if(root.equals("TEACHER"))
-        {
-            if(id==id_cse)
-            {
-                FragmentManager manager = getFragmentManager();
-                TeacherFragment cseTeacherFragment = new TeacherFragment("CSE");
-                FragmentTransaction transaction = manager.beginTransaction();
-                transaction.replace(R.id.main_content_root,cseTeacherFragment,"cse_teacher_fragment");
-                transaction.addToBackStack("cse_teacher_fragment");
-                transaction.commit();
-            }
-
-            else if(id==id_eee)
-            {
-                FragmentManager manager = getFragmentManager();
-                TeacherFragment cseTeacherFragment = new TeacherFragment("EEE");
-                FragmentTransaction transaction = manager.beginTransaction();
-                transaction.replace(R.id.main_content_root,cseTeacherFragment,"eee_teacher_fragment");
-                transaction.addToBackStack("eee_teacher_fragment");
-                transaction.commit();
-
-            } else if(id==id_che)
-            {
-                FragmentManager manager = getFragmentManager();
-                TeacherFragment cseTeacherFragment = new TeacherFragment("CHE");
-                FragmentTransaction transaction = manager.beginTransaction();
-                transaction.replace(R.id.main_content_root,cseTeacherFragment,"che_teacher_fragment");
-                transaction.addToBackStack("che_teacher_fragment");
-                transaction.commit();
-
-            }
-            else if(id==id_ipe)
-            {
-                FragmentManager manager = getFragmentManager();
-                TeacherFragment cseTeacherFragment = new TeacherFragment("IPE");
-                FragmentTransaction transaction = manager.beginTransaction();
-                transaction.replace(R.id.main_content_root,cseTeacherFragment,"ipe_teacher_fragment");
-                transaction.addToBackStack("ipe_teacher_fragment");
-                transaction.commit();
-                Toast.makeText(getActivity().getApplicationContext(),"IPE",Toast.LENGTH_SHORT).show();
-            }
-            else if(id==id_cee)
-            {
-                Toast.makeText(getActivity().getApplicationContext(),"CEE",Toast.LENGTH_SHORT).show();
-            }
-            else if(id==id_cep)
-            {
-                FragmentManager manager = getFragmentManager();
-                TeacherFragment cseTeacherFragment = new TeacherFragment("CEP");
-                FragmentTransaction transaction = manager.beginTransaction();
-                transaction.replace(R.id.main_content_root,cseTeacherFragment,"cep_teacher_fragment");
-                transaction.addToBackStack("cep_teacher_fragment");
-                transaction.commit();
-            }
-            else if(id==id_mee)
-            {
-                Toast.makeText(getActivity().getApplicationContext(),"MEE",Toast.LENGTH_SHORT).show();
-            }
-            else if(id==id_fet)
-            {
-                Toast.makeText(getActivity().getApplicationContext(),"FET",Toast.LENGTH_SHORT).show();
-            }
-            else if(id==id_pme)
-            {
-                Toast.makeText(getActivity().getApplicationContext(),"PME",Toast.LENGTH_SHORT).show();
-            }
-        }
-        else if(root.equals("TEACHER_MANAGE"))
+        if(root.equals("TEACHER_MANAGE"))
         {
             if(id==id_cse)
             {
@@ -392,5 +329,36 @@ public class DeptFragment extends android.app.Fragment implements View.OnClickLi
 
 
         }
+    }
+
+    public void getSchoolsFromServer()
+    {
+        schoolList = new ArrayList<School>();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference().child("schools");
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot child : dataSnapshot.getChildren())
+                {
+                    School school= child.getValue(School.class);
+                    schoolList.add(school);
+                    Log.e("GettingData",school.getSchoolTitle());
+                }
+                progressBar.setVisibility(View.GONE);
+                schoolListAdapter = new SchoolListAdapter(schoolList,context,getFragmentManager());
+                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(context);
+                deptList.setLayoutManager(mLayoutManager);
+                deptList.setItemAnimator(new DefaultItemAnimator());
+                deptList.setAdapter(schoolListAdapter);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
     }
 }

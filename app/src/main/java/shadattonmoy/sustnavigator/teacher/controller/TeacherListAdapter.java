@@ -1,8 +1,6 @@
-package shadattonmoy.sustnavigator;
+package shadattonmoy.sustnavigator.teacher.controller;
 
-import android.app.FragmentManager;
 import android.content.Context;
-import android.database.Cursor;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,7 +11,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -21,18 +18,22 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import shadattonmoy.sustnavigator.R;
+import shadattonmoy.sustnavigator.teacher.model.Teacher;
+
 /**
  * Created by Shadat Tonmoy on 6/17/2017.
  */
 
-public class TeacherAdapter extends ArrayAdapter<Teacher>{
+public class TeacherListAdapter extends ArrayAdapter<Teacher>{
 
 
 
     private String dept=null;
     private Context context;
     private ImageView imageView;
-    public TeacherAdapter(Context context, int resource, int textViewResourceId, ArrayList<Teacher> objects,String dept) {
+    private boolean isAdmin = false;
+    public TeacherListAdapter(Context context, int resource, int textViewResourceId, ArrayList<Teacher> objects, String dept) {
         super(context, resource, textViewResourceId, objects);
         this.context = context;
         this.dept = dept;
@@ -56,7 +57,10 @@ public class TeacherAdapter extends ArrayAdapter<Teacher>{
         TextView teacherDesignation = (TextView) row.findViewById(R.id.teacher_designation);
         TextView teacherRoom = (TextView) row.findViewById(R.id.teacher_room);
         imageView = (ImageView) row.findViewById(R.id.contact_teacher);
-        imageView.setImageResource(R.drawable.edit_icon);
+        if(isAdmin)
+            imageView.setVisibility(View.VISIBLE);
+        else imageView.setVisibility(View.GONE);
+//        imageView.setImageResource(R.drawable.edit_icon);
         final PopupMenu popupMenu = new PopupMenu(getContext(),imageView,Gravity.LEFT);
         String name = currentTeacher.getName();
         String designation = currentTeacher.getDesignation();

@@ -12,6 +12,15 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="SelectableItemTheme">
+        <item name="colorControlHighlight">@color/colorPrimary</item>
+    </style>
+
+    <style name="SelectableItemBackground">
+        <item name="android:theme">@style/SelectableItemTheme</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+    </style>
+
     <style name="faculty_title">
         <item name="android:textColor">#ffffff</item>
         <item name="android:textSize">16sp</item>

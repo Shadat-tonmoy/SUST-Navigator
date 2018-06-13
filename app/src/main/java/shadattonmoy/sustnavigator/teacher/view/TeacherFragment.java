@@ -1,16 +1,13 @@
-package shadattonmoy.sustnavigator;
+package shadattonmoy.sustnavigator.teacher.view;
 
 import android.app.FragmentManager;
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -22,6 +19,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+
+import shadattonmoy.sustnavigator.R;
+import shadattonmoy.sustnavigator.SQLiteAdapter;
+import shadattonmoy.sustnavigator.teacher.controller.TeacherListAdapter;
+import shadattonmoy.sustnavigator.TeacherContactDialog;
+import shadattonmoy.sustnavigator.teacher.model.Teacher;
 
 
 public class TeacherFragment extends android.app.Fragment {
@@ -51,7 +54,7 @@ public class TeacherFragment extends android.app.Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_cseteacher, container, false);
+        view = inflater.inflate(R.layout.fragment_teacher, container, false);
         progressBar = (ProgressBar) view.findViewById(R.id.teacher_loading);
         return view;
     }
@@ -74,10 +77,8 @@ public class TeacherFragment extends android.app.Fragment {
                 {
                     Teacher currentTeachcer = child.getValue(Teacher.class);
                     teachers.add(currentTeachcer);
-
-
                     manager = getFragmentManager();
-                    TeacherAdapter adapter = new TeacherAdapter(getActivity().getApplicationContext(),R.layout.teacher_single_row,R.id.teacher_icon,teachers,dept);
+                    TeacherListAdapter adapter = new TeacherListAdapter(getActivity().getApplicationContext(),R.layout.teacher_single_row,R.id.teacher_icon,teachers,dept);
                     ListView teacherListView = (ListView) view.findViewById(R.id.teacherList);
                     teacherListView.setAdapter(adapter);
                     teacherListView.setOnItemClickListener(new detailListener(getActivity().getApplicationContext(),manager));
@@ -108,7 +109,6 @@ class detailListener implements AdapterView.OnItemClickListener{
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Teacher touchedTeacher;
         SQLiteAdapter adapter = new SQLiteAdapter(context);
-        ;
         touchedTeacher = (Teacher) parent.getItemAtPosition(position);
         String name = touchedTeacher.getName();
         String phone = touchedTeacher.getPhone();

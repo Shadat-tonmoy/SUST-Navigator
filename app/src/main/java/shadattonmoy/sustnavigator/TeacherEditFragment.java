@@ -15,6 +15,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import shadattonmoy.sustnavigator.teacher.model.Teacher;
+
 
 public class TeacherEditFragment extends android.app.Fragment {
 

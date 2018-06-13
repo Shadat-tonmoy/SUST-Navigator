@@ -1,4 +1,4 @@
-package shadattonmoy.sustnavigator;
+package shadattonmoy.sustnavigator.teacher.model;
 
 /**
  * Created by Shadat Tonmoy on 6/17/2017.
