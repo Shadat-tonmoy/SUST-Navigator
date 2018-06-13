@@ -23,6 +23,7 @@ import java.util.ArrayList;
 
 import shadattonmoy.sustnavigator.R;
 import shadattonmoy.sustnavigator.dept.model.Dept;
+import shadattonmoy.sustnavigator.dept.view.DeptFragment;
 import shadattonmoy.sustnavigator.teacher.model.Teacher;
 
 public class SessionListAdapter extends ArrayAdapter<String> {
@@ -49,7 +50,7 @@ public class SessionListAdapter extends ArrayAdapter<String> {
         ImageView checkIcon = (ImageView) row.findViewById(R.id.session_selected_icon);
         TextView sessionTitle = (TextView) row.findViewById(R.id.session_title);
         sessionTitle.setText(currentSession);
-        if(position==0)
+        if(position== DeptFragment.bottomSheetSelectedPosition)
         {
             try{
                 Glide.with(context).load(context.getResources()
@@ -61,6 +62,10 @@ public class SessionListAdapter extends ArrayAdapter<String> {
             {
                 e.printStackTrace();
             }
+        }
+        else
+        {
+//            checkIcon.setVisibility(View.HIDE);
         }
         return row;
     }

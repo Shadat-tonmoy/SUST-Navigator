@@ -7,25 +7,31 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import shadattonmoy.sustnavigator.R;
+import shadattonmoy.sustnavigator.dept.view.DeptFragment;
 
 public class SyllabusSessionBottomSheet extends BottomSheetDialogFragment {
 
     private ListView sessionList;
     private Context context;
-    private int position;
+    private TextView sessionTextView;
+    private Dialog dialog;
 
     public SyllabusSessionBottomSheet()
     {
 
     }
 
-    public SyllabusSessionBottomSheet(Context context)
+    public SyllabusSessionBottomSheet(Context context,TextView sessionTextView)
     {
         this.context = context;
+        this.sessionTextView = sessionTextView;
+
+
 
     }
     @Override
@@ -34,6 +40,7 @@ public class SyllabusSessionBottomSheet extends BottomSheetDialogFragment {
         initNodes(contentView);
         setNodesTouchListener();
         dialog.setContentView(contentView);
+        this.dialog = dialog;
     }
 
     /*
@@ -55,6 +62,14 @@ public class SyllabusSessionBottomSheet extends BottomSheetDialogFragment {
         sessionList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                int pos = adapterView.getSelectedItemPosition();
+                sessionTextView.setText(DummyValues.getSessions().get(i));
+                DeptFragment.bottomSheetSelectedPosition= i;
+                dialog.dismiss();
+
+
+
+
 
             }
         });

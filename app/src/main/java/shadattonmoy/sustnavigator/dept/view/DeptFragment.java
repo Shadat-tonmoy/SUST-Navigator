@@ -50,6 +50,8 @@ public class DeptFragment extends android.app.Fragment implements View.OnClickLi
     private List<School> schoolList;
     private ProgressBar progressBar;
     private FragmentActivity fragmentActivity;
+    public static int bottomSheetSelectedPosition=0;
+    private String selectedSession;
 
     public DeptFragment() {
 
@@ -86,7 +88,8 @@ public class DeptFragment extends android.app.Fragment implements View.OnClickLi
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        headerText.setText(Html.fromHtml("Choose Department for <b>"+ purpose.toLowerCase()+"</b>"));
+        StringBuilder stringBuilder = new StringBuilder(purpose);
+        headerText.setText(Html.fromHtml("Department for <b>"+ purpose.toUpperCase()+"</b>"));
         appBarLayout.setExpanded(false);
         getSchoolsFromServer(purpose);
 
@@ -316,7 +319,7 @@ public class DeptFragment extends android.app.Fragment implements View.OnClickLi
                     sessionText.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            SyllabusSessionBottomSheet syllabusSessionBottomSheet = new SyllabusSessionBottomSheet(context);
+                            SyllabusSessionBottomSheet syllabusSessionBottomSheet = new SyllabusSessionBottomSheet(context,sessionText);
                             syllabusSessionBottomSheet.show(fragmentActivity.getSupportFragmentManager(),"tag");
                         }
                     });
