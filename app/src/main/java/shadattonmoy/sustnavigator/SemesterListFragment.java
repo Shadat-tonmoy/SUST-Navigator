@@ -5,15 +5,19 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.common.math.DoubleMath;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -23,16 +27,23 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import shadattonmoy.sustnavigator.dept.model.Dept;
+
 
 public class SemesterListFragment extends android.app.Fragment {
     private ListView semesterList;
     private View view;
     //TextView debugView;
-    private String dept;
+    private Dept dept;
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
     private ArrayList<Semester> semesters = null;
     private ProgressBar progressBar;
+    private String purpose;
+    private boolean isSyllabusEditable;
+    private TextView fragmentHeader,nothingFoundText;
+    private ImageView nothingFoundImage;
+    private Context context;
 
 
 
@@ -40,13 +51,15 @@ public class SemesterListFragment extends android.app.Fragment {
     public SemesterListFragment() {
         // Required empty public constructor
     }
-    public SemesterListFragment(String dept)
+    public SemesterListFragment(Dept dept,String purpose)
     {
         this.dept = dept;
+        this.purpose = purpose;
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context = getActivity().getApplicationContext();
 
     }
 
@@ -57,6 +70,8 @@ public class SemesterListFragment extends android.app.Fragment {
         semesterList = (ListView) view.findViewById(R.id.semesterList);
         //debugView = (TextView) view.findViewById(R.id.debugView);
         progressBar = (ProgressBar) view.findViewById(R.id.semester_list_loading);
+        nothingFoundText = (TextView) view.findViewById(R.id.nothing_found_txt);
+        nothingFoundImage = (ImageView) view.findViewById(R.id.nothing_found_image);
         return view;
     }
 
@@ -64,10 +79,9 @@ public class SemesterListFragment extends android.app.Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         progressBar.setVisibility(View.VISIBLE);
-
         semesters = new ArrayList<Semester>();
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference().child("syllabus").child(dept);
+        databaseReference = firebaseDatabase.getReference().child("syllabus").child(dept.getDeptCode().trim().toLowerCase());
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -109,8 +123,29 @@ public class SemesterListFragment extends android.app.Fragment {
                         semesters.add(new Semester(totalCourseString,totalCreditString,"4th Year 2nd Semester","4/2"));
                     txt+="\n";
                 }
-                SemesterAdapter adapter = new SemesterAdapter(getActivity().getApplicationContext(),R.layout.semester_single_row,R.id.semester_icon,semesters);
-                semesterList.setAdapter(adapter);
+                Log.e("Semesters",txt);
+                if(semesters.size()>0)
+                {
+                    SemesterAdapter adapter = new SemesterAdapter(getActivity().getApplicationContext(),R.layout.semester_single_row,R.id.semester_icon,semesters);
+                    semesterList.setAdapter(adapter);
+                }
+                else
+                {
+                    nothingFoundImage.setVisibility(View.VISIBLE);
+                    nothingFoundText.setVisibility(View.VISIBLE);
+                    nothingFoundText.setText("OOOPS!!! No Records found for "+dept.getDeptTitle()+" Please Contact Admin ");
+                    try{
+                        Glide.with(context).load(context.getResources()
+                                .getIdentifier("nothing_found", "drawable", context.getPackageName())).thumbnail(0.5f)
+                                .crossFade()
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .into(nothingFoundImage);
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+
                 progressBar.setVisibility(View.GONE);
                 //debugView.setText(txt);
 
@@ -129,20 +164,43 @@ public class SemesterListFragment extends android.app.Fragment {
 //        semesters.add(new Semester("5","30","4th Year 1st Semester","4/2"));
 
 
-        semesterList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Semester currentSemester = (Semester) parent.getItemAtPosition(position);
-                String semesterCode = currentSemester.getSemesterCode();
+        if(purpose.equals("cgpa"))
+        {
+            semesterList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Semester currentSemester = (Semester) parent.getItemAtPosition(position);
+                    String semesterCode = currentSemester.getSemesterCode();
 
-                android.app.FragmentManager manager = getFragmentManager();
-                android.app.FragmentTransaction transaction = manager.beginTransaction();
-                CGPAFragment cgpaFragment = new CGPAFragment(dept,semesterCode);
-                transaction.replace(R.id.main_content_root,cgpaFragment);
-                transaction.addToBackStack("cgpa_fragment");
-                transaction.commit();
-            }
-        });
+                    android.app.FragmentManager manager = getFragmentManager();
+                    android.app.FragmentTransaction transaction = manager.beginTransaction();
+                    CGPAFragment cgpaFragment = new CGPAFragment(dept,semesterCode);
+                    transaction.replace(R.id.main_content_root,cgpaFragment);
+                    transaction.addToBackStack("cgpa_fragment");
+                    transaction.commit();
+                }
+            });
+        }
+        else if(purpose.equals("syllabus"))
+        {
+            semesterList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Semester currentSemester = (Semester) parent.getItemAtPosition(position);
+                    String semesterCode = currentSemester.getSemesterCode();
+                    android.app.FragmentManager manager = getFragmentManager();
+                    android.app.FragmentTransaction transaction = manager.beginTransaction();
+                    SyllabusFragment syllabusFragment = new SyllabusFragment(dept,semesterCode,isSyllabusEditable);
+                    transaction.replace(R.id.main_content_root,syllabusFragment);
+                    transaction.addToBackStack("syllabus_fragment");
+                    transaction.commit();
+                }
+            });
+        }
 
+    }
+
+    public void setSyllabusEditable(boolean syllabusEditable) {
+        isSyllabusEditable = syllabusEditable;
     }
 }

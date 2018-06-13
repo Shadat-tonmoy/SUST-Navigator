@@ -32,12 +32,15 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import shadattonmoy.sustnavigator.dept.model.Dept;
+
 
 public class CGPAFragment extends android.app.Fragment implements View.OnClickListener{
 
     private TextView deptTileView,cgpaLoadButton,cgpaCalculateButton,cgpaResetButton;
     private ListView courseList;
-    private String dept,semester;
+    private String semester;
+    private Dept dept;
     private ArrayList<Course> cgpaForCourse;
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
@@ -55,7 +58,7 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
 
     }
 
-    public CGPAFragment(String dept,String semester) {
+    public CGPAFragment(Dept dept,String semester) {
 
         this.dept = dept;
         if(semester.equals("1/1"))
@@ -116,7 +119,7 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
         manager = getFragmentManager();
         progressBar.setVisibility(View.VISIBLE);
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference().child("syllabus").child(dept).child(semester);
+        databaseReference = firebaseDatabase.getReference().child("syllabus").child(dept.getDeptCode().toLowerCase()).child(semester);
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -391,7 +394,7 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
         }
         else if(v.getId() == R.id.addFromCurrentFab)
         {
-            CourseAddForCGPADialog dialog = new CourseAddForCGPADialog(dept,semester);
+            CourseAddForCGPADialog dialog = new CourseAddForCGPADialog(dept.getDeptCode().toLowerCase(),semester);
             dialog.show(manager,"course_add_for_cgpa_dialog");
             floatingActionButton.startAnimation(rotateBackward);
             moreFab.startAnimation(fabClose);

@@ -140,16 +140,16 @@ public class MainActivity extends AppCompatActivity
             DeptFragment deptFragment = new DeptFragment();
             if(id == R.id.teacher)
             {
-                deptFragment.setRoot("TEACHER");
+                deptFragment.setPurpose("TEACHER");
                 fragment = deptFragment;
             }
             else if(id == R.id.syllabus)
             {
-                deptFragment.setRoot("SYLLABUS");
+                deptFragment.setPurpose("SYLLABUS");
                 fragment = deptFragment;
             }
             else if (id == R.id.CGPA) {
-                deptFragment.setRoot("CGPA");
+                deptFragment.setPurpose("CGPA");
                 fragment = deptFragment;
             }
         }
@@ -202,7 +202,7 @@ public class MainActivity extends AppCompatActivity
         FragmentManager manager = getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         DeptFragment deptFragment = new DeptFragment();
-        deptFragment.setRoot("TEACHER");
+        deptFragment.setPurpose("teacher");
         transaction.replace(R.id.main_content_root,deptFragment);
         transaction.addToBackStack("teacher_fragment");
         transaction.commit();
@@ -213,7 +213,7 @@ public class MainActivity extends AppCompatActivity
         FragmentManager manager = getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         DeptFragment deptFragment = new DeptFragment();
-        deptFragment.setRoot("SYLLABUS");
+        deptFragment.setPurpose("syllabus");
         transaction.replace(R.id.main_content_root,deptFragment);
         transaction.addToBackStack("syllabus_fragment");
         transaction.commit();
@@ -234,7 +234,7 @@ public class MainActivity extends AppCompatActivity
         FragmentManager manager = getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         DeptFragment deptFragment = new DeptFragment();
-        deptFragment.setRoot("CGPA");
+        deptFragment.setPurpose("cgpa");
         transaction.replace(R.id.main_content_root,deptFragment);
         transaction.addToBackStack("cgpa_fragment");
         transaction.commit();
@@ -245,7 +245,7 @@ public class MainActivity extends AppCompatActivity
         FragmentManager manager = getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         DeptFragment deptFragment = new DeptFragment();
-        deptFragment.setRoot("STAFF");
+        deptFragment.setPurpose("STAFF");
         transaction.replace(R.id.main_content_root,deptFragment);
         transaction.addToBackStack("staff_fragment");
         transaction.commit();
@@ -307,7 +307,7 @@ public class MainActivity extends AppCompatActivity
         FragmentManager manager = getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         DeptFragment deptFragment = new DeptFragment();
-        deptFragment.setRoot("TEACHER_MANAGE");
+        deptFragment.setPurpose("TEACHER_MANAGE");
         transaction.replace(R.id.main_content_root,deptFragment);
         transaction.addToBackStack("teacher_manage_fragment");
         transaction.commit();
@@ -319,7 +319,7 @@ public class MainActivity extends AppCompatActivity
         FragmentManager manager = getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         DeptFragment deptFragment = new DeptFragment();
-        deptFragment.setRoot("SYLLABUS_MANAGE");
+        deptFragment.setPurpose("SYLLABUS_MANAGE");
         transaction.replace(R.id.main_content_root,deptFragment);
         transaction.addToBackStack("syllabus_manage_fragment");
         transaction.commit();

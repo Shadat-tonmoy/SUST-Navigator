@@ -34,12 +34,11 @@ import shadattonmoy.sustnavigator.SyllabusManageFragment;
 import shadattonmoy.sustnavigator.TeacherManageFragment;
 import shadattonmoy.sustnavigator.school.controller.SchoolListAdapter;
 import shadattonmoy.sustnavigator.school.model.School;
-import shadattonmoy.sustnavigator.teacher.view.TeacherFragment;
 
 
 public class DeptFragment extends android.app.Fragment implements View.OnClickListener{
 
-    private String root;
+    private String purpose;
     private AppBarLayout appBarLayout;
     private RecyclerView deptList;
     private SchoolListAdapter schoolListAdapter;
@@ -55,12 +54,12 @@ public class DeptFragment extends android.app.Fragment implements View.OnClickLi
     }
 
 
-    public void setRoot(String root) {
-        this.root = root;
+    public void setPurpose(String purpose) {
+        this.purpose = purpose;
     }
 
-    public String getRoot() {
-        return root;
+    public String getPurpose() {
+        return purpose;
     }
 
     @Override
@@ -84,9 +83,9 @@ public class DeptFragment extends android.app.Fragment implements View.OnClickLi
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-       headerText.setText(Html.fromHtml("Choose Department for <b>"+root.toLowerCase()+"</b>"));
+        headerText.setText(Html.fromHtml("Choose Department for <b>"+ purpose.toLowerCase()+"</b>"));
         appBarLayout.setExpanded(false);
-        getSchoolsFromServer();
+        getSchoolsFromServer(purpose);
 
     }
 
@@ -102,7 +101,7 @@ public class DeptFragment extends android.app.Fragment implements View.OnClickLi
         int id_fet = getActivity().findViewById(R.id.dept_code_fet).getId();
         int id_pme = getActivity().findViewById(R.id.dept_code_pme).getId();
         int id_che = getActivity().findViewById(R.id.dept_code_che).getId();
-        if(root.equals("TEACHER_MANAGE"))
+        if(purpose.equals("TEACHER_MANAGE"))
         {
             if(id==id_cse)
             {
@@ -159,59 +158,16 @@ public class DeptFragment extends android.app.Fragment implements View.OnClickLi
                 Toast.makeText(getActivity().getApplicationContext(),"PME",Toast.LENGTH_SHORT).show();
             }
         }
-
-
-        else if(root.equals("SYLLABUS"))
+        else if(purpose.equals("SYLLABUS_MANAGE"))
         {
             if(id==id_cse)
             {
-                FragmentManager manager = getFragmentManager();
-                SyllabusManageFragment syllabusManageFragment = new SyllabusManageFragment("cse",getActivity().getApplicationContext(),false);
-                FragmentTransaction transaction = manager.beginTransaction();
-                transaction.replace(R.id.main_content_root, syllabusManageFragment,"syllabus_fragment");
-                transaction.addToBackStack("syllabus_fragment");
-                transaction.commit();
-            }
-
-            else if(id==id_eee)
-            {
-                Toast.makeText(getActivity().getApplicationContext(),"Syllabus EEE",Toast.LENGTH_SHORT).show();
-            }
-            else if(id==id_ipe)
-            {
-                Toast.makeText(getActivity().getApplicationContext(),"Syllabus IPE",Toast.LENGTH_SHORT).show();
-            }
-            else if(id==id_cee)
-            {
-                Toast.makeText(getActivity().getApplicationContext(),"Syllabus CEE",Toast.LENGTH_SHORT).show();
-            }
-            else if(id==id_cep)
-            {
-                Toast.makeText(getActivity().getApplicationContext(),"Syllabus CEP",Toast.LENGTH_SHORT).show();
-            }
-            else if(id==id_mee)
-            {
-                Toast.makeText(getActivity().getApplicationContext(),"Syllabus MEE",Toast.LENGTH_SHORT).show();
-            }
-            else if(id==id_fet)
-            {
-                Toast.makeText(getActivity().getApplicationContext(),"Syllabus FET",Toast.LENGTH_SHORT).show();
-            }
-            else if(id==id_pme)
-            {
-                Toast.makeText(getActivity().getApplicationContext(),"Syllabus PME",Toast.LENGTH_SHORT).show();
-            }
-        }
-        else if(root.equals("SYLLABUS_MANAGE"))
-        {
-            if(id==id_cse)
-            {
-                FragmentManager manager = getFragmentManager();
+                /*FragmentManager manager = getFragmentManager();
                 SyllabusManageFragment syllabusManageFragment= new SyllabusManageFragment("cse",getActivity().getApplicationContext(),true);
                 FragmentTransaction transaction = manager.beginTransaction();
                 transaction.replace(R.id.main_content_root,syllabusManageFragment,"syllabus_manage_fragment");
                 transaction.addToBackStack("syllabus_manage_fragment");
-                transaction.commit();
+                transaction.commit();*/
             }
 
             else if(id==id_eee)
@@ -244,16 +200,16 @@ public class DeptFragment extends android.app.Fragment implements View.OnClickLi
             }
         }
 
-        else if(root.equals("CGPA"))
+        else if(purpose.equals("CGPA"))
         {
             if(id==id_cse)
             {
-                FragmentManager manager = getFragmentManager();
+                /*FragmentManager manager = getFragmentManager();
                 SemesterListFragment semesterListFragment = new SemesterListFragment ("cse");
                 FragmentTransaction transaction = manager.beginTransaction();
                 transaction.replace(R.id.main_content_root,semesterListFragment,"semester_list_fragment");
                 transaction.addToBackStack("semester_list_fragment");
-                transaction.commit();
+                transaction.commit();*/
             }
 
             else if(id==id_eee)
@@ -285,7 +241,7 @@ public class DeptFragment extends android.app.Fragment implements View.OnClickLi
                 Toast.makeText(getActivity().getApplicationContext(),"CGPA PME",Toast.LENGTH_SHORT).show();
             }
         }
-        else if(root.equals("STAFF"))
+        else if(purpose.equals("STAFF"))
         {
 
             if(id==id_cse)
@@ -331,7 +287,7 @@ public class DeptFragment extends android.app.Fragment implements View.OnClickLi
         }
     }
 
-    public void getSchoolsFromServer()
+    public void getSchoolsFromServer(final String purpose)
     {
         schoolList = new ArrayList<School>();
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -346,7 +302,7 @@ public class DeptFragment extends android.app.Fragment implements View.OnClickLi
                     Log.e("GettingData",school.getSchoolTitle());
                 }
                 progressBar.setVisibility(View.GONE);
-                schoolListAdapter = new SchoolListAdapter(schoolList,context,getFragmentManager());
+                schoolListAdapter = new SchoolListAdapter(schoolList,context,getFragmentManager(),purpose);
                 RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(context);
                 deptList.setLayoutManager(mLayoutManager);
                 deptList.setItemAnimator(new DefaultItemAnimator());

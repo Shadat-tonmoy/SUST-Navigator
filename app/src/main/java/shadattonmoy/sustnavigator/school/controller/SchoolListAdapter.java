@@ -1,5 +1,6 @@
 package shadattonmoy.sustnavigator.school.controller;
 
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
@@ -15,6 +16,8 @@ import shadattonmoy.sustnavigator.R;
 
 import java.util.List;
 
+import shadattonmoy.sustnavigator.SemesterListFragment;
+import shadattonmoy.sustnavigator.SyllabusManageFragment;
 import shadattonmoy.sustnavigator.teacher.view.TeacherFragment;
 import shadattonmoy.sustnavigator.dept.model.Dept;
 import shadattonmoy.sustnavigator.school.model.School;
@@ -27,6 +30,7 @@ public class SchoolListAdapter extends RecyclerView.Adapter<SchoolListAdapter.My
     private FragmentActivity activity;
     private List<School> schools;
     private FragmentManager fragmentManager;
+    private String purpose;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView schoolTitle;
@@ -40,10 +44,11 @@ public class SchoolListAdapter extends RecyclerView.Adapter<SchoolListAdapter.My
     }
 
 
-    public SchoolListAdapter(List<School> schools, Context context, FragmentManager fragmentManager) {
+    public SchoolListAdapter(List<School> schools, Context context, FragmentManager fragmentManager,String purpose) {
         this.context = context;
         this.schools = schools;
         this.fragmentManager = fragmentManager;
+        this.purpose = purpose;
     }
 
     @Override
@@ -69,21 +74,52 @@ public class SchoolListAdapter extends RecyclerView.Adapter<SchoolListAdapter.My
             deptCode.setText(dept.getDeptCode());
             deptTitle.setText(dept.getDeptTitle());
             holder.deptList.addView(deptCell);
-            deptCell.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    FragmentManager manager = fragmentManager;
-                    TeacherFragment cseTeacherFragment = new TeacherFragment(dept);
-                    FragmentTransaction transaction = manager.beginTransaction();
-                    transaction.replace(R.id.main_content_root,cseTeacherFragment,"eee_teacher_fragment");
-                    transaction.addToBackStack(dept.getDeptCode()+" teacher fragment");
-                    transaction.commit();
-                }
-            });
+            if(purpose.equals("teacher"))
+            {
+                deptCell.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        loadFragment(new TeacherFragment(dept),"deptFragment");
+                    }
+                });
+            }
+            else if(purpose.equals("syllabus"))
+            {
+                deptCell.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        SemesterListFragment semesterListFragment = new SemesterListFragment(dept,purpose);
+                        semesterListFragment.setSyllabusEditable(false);
+                        loadFragment(semesterListFragment,"syllabusFragment");
+                    }
+                });
+            }
+            else if(purpose.equals("cgpa"))
+            {
+                deptCell.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        SemesterListFragment semesterListFragment = new SemesterListFragment(dept,purpose);
+                        semesterListFragment.setSyllabusEditable(false);
+                        loadFragment(semesterListFragment,"cgpaFragment");
+                    }
+                });
+            }
+
         }
         holder.schoolTitle.setText(schoolTitle);
     }
 
+    public void loadFragment(Fragment fragment,String tag)
+    {
+        FragmentManager manager = fragmentManager;
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.replace(R.id.main_content_root,fragment,tag);
+        transaction.addToBackStack(tag);
+        transaction.commit();
+
+
+    }
     @Override
     public int getItemCount() {
         return schools.size();

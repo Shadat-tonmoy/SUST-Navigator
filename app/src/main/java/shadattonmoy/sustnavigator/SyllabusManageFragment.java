@@ -21,10 +21,12 @@ import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
+import shadattonmoy.sustnavigator.dept.model.Dept;
+
 
 public class SyllabusManageFragment extends android.app.Fragment {
     private View view;
-    private String dept;
+    private Dept dept;
     private ListView semesterList;
     private Context context;
     private boolean isEditable;
@@ -33,7 +35,7 @@ public class SyllabusManageFragment extends android.app.Fragment {
     public SyllabusManageFragment() {
         super();
     }
-    public SyllabusManageFragment(String dept, Context context, boolean isEditable){
+    public SyllabusManageFragment(Dept dept, Context context, boolean isEditable){
         this.dept = dept;
         this.context = context;
         this.isEditable = isEditable;

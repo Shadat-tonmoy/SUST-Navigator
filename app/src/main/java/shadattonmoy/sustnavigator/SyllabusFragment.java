@@ -24,11 +24,14 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import shadattonmoy.sustnavigator.dept.model.Dept;
+
 
 public class SyllabusFragment extends android.app.Fragment {
 
     private View view;
-    private String dept,semester;
+    private String semester;
+    private Dept dept;
     private FloatingActionButton floatingActionButton;
     private ListView syllabusList;
     private ProgressBar syllabusLoadingProgress;
@@ -40,7 +43,7 @@ public class SyllabusFragment extends android.app.Fragment {
     public SyllabusFragment() {
         super();
     }
-    public SyllabusFragment(String dept,String semester,boolean isEditable)
+    public SyllabusFragment(Dept dept,String semester,boolean isEditable)
     {
         this.dept = dept;
         this.isEditable = isEditable;
@@ -85,7 +88,7 @@ public class SyllabusFragment extends android.app.Fragment {
         courses = new ArrayList<Course>();
 
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference().child("syllabus").child(dept.toLowerCase()).child(semester);
+        databaseReference = firebaseDatabase.getReference().child("syllabus").child(dept.getDeptCode().toLowerCase()).child(semester);
 
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -96,7 +99,7 @@ public class SyllabusFragment extends android.app.Fragment {
                     String pushId = child.getKey();
                     currentCourse.setCourse_id(pushId);
                     courses.add(currentCourse);
-                    adapter = new SyllabusAdapter(getActivity().getApplicationContext(),R.layout.fragment_syllabus2,R.id.course_code,courses,isEditable,getFragmentManager(),dept,semester);
+                    adapter = new SyllabusAdapter(getActivity().getApplicationContext(),R.layout.fragment_syllabus2,R.id.course_code,courses,isEditable,getFragmentManager(),dept.getDeptCode().toLowerCase(),semester);
                     syllabusList.setAdapter(adapter);
                     syllabusLoadingProgress.setVisibility(View.GONE);
                 }
@@ -123,7 +126,7 @@ public class SyllabusFragment extends android.app.Fragment {
                     Toast.makeText(getActivity().getApplicationContext(),"Add for "+dept+" in "+semester,Toast.LENGTH_SHORT).show();
                     android.app.FragmentManager manager = getFragmentManager();
                     android.app.FragmentTransaction transaction = manager.beginTransaction();
-                    SyllabusAddFragment syllabusAddFragment = new SyllabusAddFragment(getActivity().getApplicationContext(),dept,semester);
+                    SyllabusAddFragment syllabusAddFragment = new SyllabusAddFragment(getActivity().getApplicationContext(),dept.getDeptCode().toLowerCase(),semester);
                     transaction.replace(R.id.main_content_root,syllabusAddFragment);
                     transaction.addToBackStack("syllabus_add_fragment");
                     transaction.commit();
