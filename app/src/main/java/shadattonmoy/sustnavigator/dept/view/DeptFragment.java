@@ -28,9 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import shadattonmoy.sustnavigator.R;
-import shadattonmoy.sustnavigator.SemesterListFragment;
 import shadattonmoy.sustnavigator.StaffFragment;
-import shadattonmoy.sustnavigator.SyllabusManageFragment;
 import shadattonmoy.sustnavigator.TeacherManageFragment;
 import shadattonmoy.sustnavigator.school.controller.SchoolListAdapter;
 import shadattonmoy.sustnavigator.school.model.School;

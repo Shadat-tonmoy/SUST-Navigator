@@ -1,13 +1,10 @@
-package shadattonmoy.sustnavigator;
+package shadattonmoy.sustnavigator.syllabus.view;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,11 +16,14 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ThrowOnExtraProperties;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import shadattonmoy.sustnavigator.Course;
+import shadattonmoy.sustnavigator.R;
+import shadattonmoy.sustnavigator.syllabus.controller.SyllabusAdapter;
+import shadattonmoy.sustnavigator.SyllabusAddFragment;
 import shadattonmoy.sustnavigator.dept.model.Dept;
 
 
@@ -84,9 +84,14 @@ public class SyllabusFragment extends android.app.Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        getSyllabusFromServer();
+
+    }
+
+    public void getSyllabusFromServer()
+    {
         syllabusLoadingProgress.setVisibility(View.VISIBLE);
         courses = new ArrayList<Course>();
-
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference().child("syllabus").child(dept.getDeptCode().toLowerCase()).child(semester);
 
@@ -111,10 +116,6 @@ public class SyllabusFragment extends android.app.Fragment {
             }
         });
 
-
-
-
-
         if(isEditable)
         {
             floatingActionButton.setVisibility(View.VISIBLE);
@@ -137,5 +138,6 @@ public class SyllabusFragment extends android.app.Fragment {
         {
             floatingActionButton.setVisibility(View.GONE);
         }
+
     }
 }

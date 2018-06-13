@@ -16,8 +16,7 @@ import shadattonmoy.sustnavigator.R;
 
 import java.util.List;
 
-import shadattonmoy.sustnavigator.SemesterListFragment;
-import shadattonmoy.sustnavigator.SyllabusManageFragment;
+import shadattonmoy.sustnavigator.commons.view.SemesterListFragment;
 import shadattonmoy.sustnavigator.teacher.view.TeacherFragment;
 import shadattonmoy.sustnavigator.dept.model.Dept;
 import shadattonmoy.sustnavigator.school.model.School;

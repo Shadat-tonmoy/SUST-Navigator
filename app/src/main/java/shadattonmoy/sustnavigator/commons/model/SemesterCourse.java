@@ -1,6 +1,8 @@
-package shadattonmoy.sustnavigator;
+package shadattonmoy.sustnavigator.commons.model;
 
 import java.util.ArrayList;
+
+import shadattonmoy.sustnavigator.Course;
 
 /**
  * Created by Shadat Tonmoy on 6/19/2017.

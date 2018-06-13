@@ -1,27 +1,24 @@
 package shadattonmoy.sustnavigator;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 
+import shadattonmoy.sustnavigator.commons.controller.SemesterAdapter;
+import shadattonmoy.sustnavigator.commons.model.Semester;
 import shadattonmoy.sustnavigator.dept.model.Dept;
+import shadattonmoy.sustnavigator.syllabus.view.SyllabusFragment;
 
 
 public class SyllabusManageFragment extends android.app.Fragment {

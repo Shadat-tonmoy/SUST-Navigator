@@ -1,10 +1,8 @@
-package shadattonmoy.sustnavigator;
+package shadattonmoy.sustnavigator.commons.view;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,11 +12,9 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.google.common.math.DoubleMath;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,7 +23,13 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import shadattonmoy.sustnavigator.CGPAFragment;
+import shadattonmoy.sustnavigator.Course;
+import shadattonmoy.sustnavigator.R;
+import shadattonmoy.sustnavigator.commons.controller.SemesterAdapter;
+import shadattonmoy.sustnavigator.commons.model.Semester;
 import shadattonmoy.sustnavigator.dept.model.Dept;
+import shadattonmoy.sustnavigator.syllabus.view.SyllabusFragment;
 
 
 public class SemesterListFragment extends android.app.Fragment {

@@ -1,4 +1,4 @@
-package shadattonmoy.sustnavigator;
+package shadattonmoy.sustnavigator.commons.controller;
 
 import android.content.Context;
 import android.support.annotation.IdRes;
@@ -10,12 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
+
+import shadattonmoy.sustnavigator.R;
+import shadattonmoy.sustnavigator.commons.model.Semester;
 
 /**
  * Created by Shadat Tonmoy on 8/29/2017.

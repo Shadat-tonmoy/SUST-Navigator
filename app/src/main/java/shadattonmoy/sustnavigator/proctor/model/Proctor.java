@@ -1,4 +1,4 @@
-package shadattonmoy.sustnavigator;
+package shadattonmoy.sustnavigator.proctor.model;
 
 /**
  * Created by Shadat Tonmoy on 9/8/2017.

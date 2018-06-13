@@ -1,4 +1,4 @@
-package shadattonmoy.sustnavigator;
+package shadattonmoy.sustnavigator.proctor.controller;
 
 import android.app.Activity;
 import android.app.FragmentManager;
@@ -23,11 +23,18 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
+
+import shadattonmoy.sustnavigator.ProctorAddFragment;
+import shadattonmoy.sustnavigator.R;
+import shadattonmoy.sustnavigator.proctor.model.Proctor;
+import shadattonmoy.sustnavigator.proctor.view.ProctorialBodyFragment;
 
 /**
  * Created by Shadat Tonmoy on 9/8/2017.
@@ -74,7 +81,16 @@ public class ProctorAdapter extends ArrayAdapter<Proctor> {
         String iconText = String.valueOf(name.charAt(0));
         if(isEditable)
         {
-            imageView.setImageResource(R.drawable.edit_icon);
+            try{
+                Glide.with(context).load(context.getResources()
+                        .getIdentifier("edit_icon", "drawable", context.getPackageName())).thumbnail(0.5f)
+                        .crossFade()
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(imageView);
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
             final PopupMenu popupMenu = new PopupMenu(getContext(),imageView,Gravity.LEFT);
             popupMenu.inflate(R.menu.proctor_manage_menu);
             imageView.setOnClickListener(new View.OnClickListener() {
@@ -87,7 +103,17 @@ public class ProctorAdapter extends ArrayAdapter<Proctor> {
 
         }
         else {
-            imageView.setImageResource(R.drawable.phone_final);
+
+            try{
+                Glide.with(context).load(context.getResources()
+                        .getIdentifier("phone_final", "drawable", context.getPackageName())).thumbnail(0.5f)
+                        .crossFade()
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(imageView);
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
