@@ -73,7 +73,7 @@ public class SchoolListAdapter extends RecyclerView.Adapter<SchoolListAdapter.My
                 @Override
                 public void onClick(View view) {
                     FragmentManager manager = fragmentManager;
-                    TeacherFragment cseTeacherFragment = new TeacherFragment(dept.getDeptCode());
+                    TeacherFragment cseTeacherFragment = new TeacherFragment(dept);
                     FragmentTransaction transaction = manager.beginTransaction();
                     transaction.replace(R.id.main_content_root,cseTeacherFragment,"eee_teacher_fragment");
                     transaction.addToBackStack(dept.getDeptCode()+" teacher fragment");

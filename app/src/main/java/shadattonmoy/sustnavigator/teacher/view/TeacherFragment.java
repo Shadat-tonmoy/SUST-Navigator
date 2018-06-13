@@ -4,14 +4,23 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -22,6 +31,7 @@ import java.util.ArrayList;
 
 import shadattonmoy.sustnavigator.R;
 import shadattonmoy.sustnavigator.SQLiteAdapter;
+import shadattonmoy.sustnavigator.dept.model.Dept;
 import shadattonmoy.sustnavigator.teacher.controller.TeacherListAdapter;
 import shadattonmoy.sustnavigator.TeacherContactDialog;
 import shadattonmoy.sustnavigator.teacher.model.Teacher;
@@ -32,15 +42,18 @@ public class TeacherFragment extends android.app.Fragment {
     private ArrayList<Teacher> teachers = null;
     private View view = null;
     public FragmentManager manager = null;
-    private String dept;
+    private Dept dept;
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
     private ProgressBar progressBar;
+    private TextView fragmentHeader,nothingFoundText;
+    private ImageView nothingFoundImage;
+    private Context context;
     public TeacherFragment()
     {
 
     }
-    public TeacherFragment(String dept) {
+    public TeacherFragment(Dept dept) {
         this.dept = dept;
 
     }
@@ -48,6 +61,9 @@ public class TeacherFragment extends android.app.Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+        context = getActivity().getApplicationContext();
+
 
     }
 
@@ -56,19 +72,26 @@ public class TeacherFragment extends android.app.Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_teacher, container, false);
         progressBar = (ProgressBar) view.findViewById(R.id.teacher_loading);
+        fragmentHeader = (TextView) view.findViewById(R.id.teacher_fragment_title);
+        nothingFoundText = (TextView) view.findViewById(R.id.nothing_found_txt);
+        nothingFoundImage = (ImageView) view.findViewById(R.id.nothing_found_image);
         return view;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        Toast.makeText(getActivity().getApplicationContext(),dept,Toast.LENGTH_SHORT).show();
         super.onActivityCreated(savedInstanceState);
+        fragmentHeader.setText(dept.getDeptTitle());
+        getTeachersFromServer();
 
-//        progressDialog.show();
 
+    }
+
+    public void getTeachersFromServer()
+    {
         teachers = new ArrayList<Teacher>();
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference().child("teacher").child(dept.toLowerCase());
+        databaseReference = firebaseDatabase.getReference().child("teacher").child(dept.getDeptCode().toLowerCase());
 
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -77,13 +100,33 @@ public class TeacherFragment extends android.app.Fragment {
                 {
                     Teacher currentTeachcer = child.getValue(Teacher.class);
                     teachers.add(currentTeachcer);
+                }
+                if(teachers.size()>0)
+                {
                     manager = getFragmentManager();
                     TeacherListAdapter adapter = new TeacherListAdapter(getActivity().getApplicationContext(),R.layout.teacher_single_row,R.id.teacher_icon,teachers,dept);
                     ListView teacherListView = (ListView) view.findViewById(R.id.teacherList);
                     teacherListView.setAdapter(adapter);
                     teacherListView.setOnItemClickListener(new detailListener(getActivity().getApplicationContext(),manager));
-                    progressBar.setVisibility(View.GONE);
                 }
+                else
+                {
+                    nothingFoundImage.setVisibility(View.VISIBLE);
+                    nothingFoundText.setVisibility(View.VISIBLE);
+                    nothingFoundText.setText("OOOPS!!! No Records found for "+dept.getDeptTitle()+"Please Contact Admin");
+                    try{
+                        Glide.with(context).load(context.getResources()
+                                .getIdentifier("nothing_found", "drawable", context.getPackageName())).thumbnail(0.5f)
+                                .crossFade()
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .into(nothingFoundImage);
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+
+                }
+                progressBar.setVisibility(View.GONE);
             }
 
             @Override
@@ -91,7 +134,25 @@ public class TeacherFragment extends android.app.Fragment {
 
             }
         });
+    }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.teacher_fragment_menu, menu);
+        super.onCreateOptionsMenu(menu,inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.search_teacher:
+                Toast.makeText(getActivity(),
+                        "Search Teacher",
+                        Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
 

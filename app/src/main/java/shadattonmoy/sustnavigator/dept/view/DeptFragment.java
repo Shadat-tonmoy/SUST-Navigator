@@ -139,12 +139,12 @@ public class DeptFragment extends android.app.Fragment implements View.OnClickLi
             }
             else if(id==id_cep)
             {
-                FragmentManager manager = getFragmentManager();
+                /*FragmentManager manager = getFragmentManager();
                 TeacherFragment cseTeacherFragment = new TeacherFragment("CEP");
                 FragmentTransaction transaction = manager.beginTransaction();
                 transaction.replace(R.id.main_content_root,cseTeacherFragment,"cep_teacher_fragment");
                 transaction.addToBackStack("cep_teacher_fragment");
-                transaction.commit();
+                transaction.commit();*/
             }
             else if(id==id_mee)
             {

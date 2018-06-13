@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("SUST Navigator");
+        setSupportActionBar(toolbar);
 
 
 
@@ -116,7 +117,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        getMenuInflater().inflate(R.menu.main, menu);
+        /*getMenuInflater().inflate(R.menu.main, menu);*/
         return true;
     }
 
@@ -124,9 +125,9 @@ public class MainActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
+        /*if (id == R.id.action_settings) {
             return true;
-        }
+        }*/
         return super.onOptionsItemSelected(item);
     }
 

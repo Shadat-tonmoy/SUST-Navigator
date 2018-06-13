@@ -19,6 +19,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import shadattonmoy.sustnavigator.R;
+import shadattonmoy.sustnavigator.dept.model.Dept;
 import shadattonmoy.sustnavigator.teacher.model.Teacher;
 
 /**
@@ -29,11 +30,11 @@ public class TeacherListAdapter extends ArrayAdapter<Teacher>{
 
 
 
-    private String dept=null;
+    private Dept dept=null;
     private Context context;
     private ImageView imageView;
     private boolean isAdmin = false;
-    public TeacherListAdapter(Context context, int resource, int textViewResourceId, ArrayList<Teacher> objects, String dept) {
+    public TeacherListAdapter(Context context, int resource, int textViewResourceId, ArrayList<Teacher> objects, Dept dept) {
         super(context, resource, textViewResourceId, objects);
         this.context = context;
         this.dept = dept;
@@ -65,6 +66,8 @@ public class TeacherListAdapter extends ArrayAdapter<Teacher>{
         String name = currentTeacher.getName();
         String designation = currentTeacher.getDesignation();
         String room = currentTeacher.getRoom();
+        if(room.equals("N/A"))
+            room = "Room Not Available";
         String phone = currentTeacher.getPhone();
         String email = currentTeacher.getEmail();
         String fb = currentTeacher.getFb();
@@ -109,8 +112,6 @@ public class TeacherListAdapter extends ArrayAdapter<Teacher>{
             teacherIcon.setBackgroundResource(R.drawable.round_green2);
         else if(iconText.equals("M") || iconText.equals("N") || iconText.equals("S") || iconText.equals("Z"))
             teacherIcon.setBackgroundResource(R.drawable.round_green3);
-
-
         teacherIcon.setText(iconText);
         teacherName.setText(name);
         teacherDesignation.setText(designation);
