@@ -1,11 +1,13 @@
 package shadattonmoy.sustnavigator.dept.view;
 
+import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -32,6 +34,7 @@ import shadattonmoy.sustnavigator.StaffFragment;
 import shadattonmoy.sustnavigator.TeacherManageFragment;
 import shadattonmoy.sustnavigator.school.controller.SchoolListAdapter;
 import shadattonmoy.sustnavigator.school.model.School;
+import shadattonmoy.sustnavigator.utils.SyllabusSessionBottomSheet;
 
 
 public class DeptFragment extends android.app.Fragment implements View.OnClickListener{
@@ -41,11 +44,12 @@ public class DeptFragment extends android.app.Fragment implements View.OnClickLi
     private RecyclerView deptList;
     private SchoolListAdapter schoolListAdapter;
     private Context context;
-    private TextView headerText;
+    private TextView headerText,sessionText;
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
     private List<School> schoolList;
     private ProgressBar progressBar;
+    private FragmentActivity fragmentActivity;
 
     public DeptFragment() {
 
@@ -73,6 +77,7 @@ public class DeptFragment extends android.app.Fragment implements View.OnClickLi
         View view =inflater.inflate(R.layout.dept_fragment, container, false);
         deptList = (RecyclerView) view.findViewById(R.id.school_list);
         headerText = (TextView) view.findViewById(R.id.dept_header_msg);
+        sessionText = (TextView) view.findViewById(R.id.dept_session_msg);
         appBarLayout = (AppBarLayout) getActivity().findViewById(R.id.appbar_layout);
         progressBar = (ProgressBar) view.findViewById(R.id.dept_progressbar);
         return view;
@@ -305,6 +310,17 @@ public class DeptFragment extends android.app.Fragment implements View.OnClickLi
                 deptList.setLayoutManager(mLayoutManager);
                 deptList.setItemAnimator(new DefaultItemAnimator());
                 deptList.setAdapter(schoolListAdapter);
+                if(purpose.equals("syllabus"))
+                {
+                    sessionText.setVisibility(View.VISIBLE);
+                    sessionText.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            SyllabusSessionBottomSheet syllabusSessionBottomSheet = new SyllabusSessionBottomSheet(context);
+                            syllabusSessionBottomSheet.show(fragmentActivity.getSupportFragmentManager(),"tag");
+                        }
+                    });
+                }
             }
 
             @Override
@@ -314,5 +330,11 @@ public class DeptFragment extends android.app.Fragment implements View.OnClickLi
         });
 
 
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        fragmentActivity=(FragmentActivity) activity;
+        super.onAttach(activity);
     }
 }

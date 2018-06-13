@@ -70,4 +70,14 @@ public class DummyValues {
         schools.add(new School("School of Social Sciences",getDept("School of Social Sciences")));
         return schools;
     }
+
+    public static List<String> getSessions()
+    {
+        List<String> sessions = new ArrayList<>();
+        sessions.add("2017-18 (Current Session)");
+        sessions.add("2016-17");
+        sessions.add("2015-16");
+        sessions.add("2014-15");
+        return sessions;
+    }
 }
