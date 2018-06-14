@@ -43,14 +43,15 @@ public class CourseAddForCGPADialog extends DialogFragment{
     private DatabaseReference databaseReference;
     private ArrayList<Course> courses;
     static HashMap<Course,Boolean> checkTaken;
-
+    private String session;
 
     public CourseAddForCGPADialog(){
         super();
     }
-    public CourseAddForCGPADialog(String dept,String semester) {
+    public CourseAddForCGPADialog(String dept,String semester,String session) {
         this.dept = dept;
         this.semester = semester;
+        this.session = session;
     }
 
 
@@ -64,8 +65,24 @@ public class CourseAddForCGPADialog extends DialogFragment{
         allCourseList = (ListView) view.findViewById(R.id.all_course_list);
         progressBar = (ProgressBar) view.findViewById(R.id.all_course_list_loading);
         progressBar.setVisibility(View.VISIBLE);
+        getCoursesFromServer();
+        dialog.setView(view);
+        dialog.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+
+
+        return dialog.create();
+    }
+
+    public void getCoursesFromServer()
+    {
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference().child("syllabus").child(dept);
+        databaseReference = firebaseDatabase.getReference().child("syllabus").child(session).child(dept);
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -102,23 +119,7 @@ public class CourseAddForCGPADialog extends DialogFragment{
 
             }
         });
-
-        dialog.setView(view);
-
-        dialog.setNegativeButton("Close", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-
-
-
-        return dialog.create();
     }
-
-
-
 }
 class clickListener implements AdapterView.OnItemClickListener{
     private Context context;

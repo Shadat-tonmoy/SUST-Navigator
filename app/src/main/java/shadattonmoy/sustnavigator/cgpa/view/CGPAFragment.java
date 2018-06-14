@@ -92,7 +92,6 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view =inflater.inflate(R.layout.fragment_cgpa, container, false);
-        //deptTileView = (TextView) view.findViewById(R.id.deptTitle);
         courseList = (ListView) view.findViewById(R.id.courseList);
         cgpaLoadButton = (TextView) view.findViewById(R.id.cgpa_load_button);
         cgpaCalculateButton = (TextView) view.findViewById(R.id.cgpa_calculate_button);
@@ -186,7 +185,6 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
     public void onClick(View v) {
         if(v.getId()==cgpaLoadButton.getId())
         {
-            Toast.makeText(getActivity().getApplicationContext(),"Will Load the save data",Toast.LENGTH_SHORT).show();
             SQLiteAdapter sqLiteAdapter = new SQLiteAdapter(getActivity().getApplicationContext());
             String[] semesters = {semester};
             Cursor cursor = sqLiteAdapter.getGPARecord(semesters);
@@ -212,7 +210,6 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
                     course.setLocal_id(id);
                     cgpaForCourse.add(course);
                     CGPAAdapter.record.put(code,grade);
-                    //Toast.makeText(getActivity().getApplicationContext(),"Id : "+id+" semester : "+semester+" code : "+code+" title : "+title+" credit : "+credit+" grade : "+grade,Toast.LENGTH_SHORT).show();
                     count++;
                 }
                 if(count==0)
@@ -410,7 +407,7 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
         }
         else if(v.getId() == R.id.addFromCurrentFab)
         {
-            CourseAddForCGPADialog dialog = new CourseAddForCGPADialog(dept.getDeptCode().toLowerCase(),semester);
+            CourseAddForCGPADialog dialog = new CourseAddForCGPADialog(dept.getDeptCode().toLowerCase(),semester,session);
             dialog.show(manager,"course_add_for_cgpa_dialog");
             floatingActionButton.startAnimation(rotateBackward);
             moreFab.startAnimation(fabClose);

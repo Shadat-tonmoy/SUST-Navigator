@@ -97,7 +97,7 @@ public class CGPAAdapter extends ArrayAdapter<Course> {
             cgpaListView.setAdapter(adapter);
             courseCodeView.setText(courseCode);
             courseTitleView.setText(courseTitle);
-            courseCreditView.setText(courseCredit);
+            courseCreditView.setText(courseCredit+" Credits");
 
             if(record.get(courseCode)!=null)
             {

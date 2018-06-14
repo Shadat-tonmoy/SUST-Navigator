@@ -5,15 +5,6 @@
     android:layout_height="match_parent">
 
 
-    <ListView
-        android:layout_marginTop="45dp"
-        android:id="@+id/all_course_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true" />
-
     <TextView
         android:id="@+id/all_course_list_dialog_header"
         android:layout_width="match_parent"
@@ -23,7 +14,15 @@
         android:textAlignment="center"
         android:textColor="#ffffff"
         android:background="@color/colorPrimaryDark"
-        android:padding="10dp"/>
+        android:padding="16dp"/>
+
+    <ListView
+        android:id="@+id/all_course_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/all_course_list_dialog_header"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
 
     <ProgressBar
         android:id="@+id/all_course_list_loading"
