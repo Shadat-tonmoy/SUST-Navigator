@@ -46,6 +46,7 @@ public class SemesterListFragment extends android.app.Fragment {
     private TextView fragmentHeader,nothingFoundText;
     private ImageView nothingFoundImage;
     private Context context;
+    private double subTotalCredit = 0.0;
 
 
 
@@ -91,6 +92,7 @@ public class SemesterListFragment extends android.app.Fragment {
 
 
                 String txt = "";
+                subTotalCredit=0;
                 for(DataSnapshot child : dataSnapshot.getChildren())
                 {
                     txt+="\n Key : "+child.getKey()+"\n";
@@ -103,6 +105,7 @@ public class SemesterListFragment extends android.app.Fragment {
                         double credit = Double.parseDouble(courseCredit);
                         totalCredit+=credit;
                         totalCourse++;
+                        subTotalCredit+=credit;
 
                     }
                     String totalCreditString = String.valueOf(totalCredit);
@@ -125,6 +128,7 @@ public class SemesterListFragment extends android.app.Fragment {
                     else if(key.equals("4_2"))
                         semesters.add(new Semester(totalCourseString,totalCreditString,"4th Year 2nd Semester","4/2"));
                     txt+="\n";
+                    Log.e("TotalCredit",subTotalCredit+"");
                 }
                 Log.e("Semesters",txt);
                 if(semesters.size()>0)
@@ -177,7 +181,7 @@ public class SemesterListFragment extends android.app.Fragment {
 
                     android.app.FragmentManager manager = getFragmentManager();
                     android.app.FragmentTransaction transaction = manager.beginTransaction();
-                    CGPAFragment cgpaFragment = new CGPAFragment(dept,semesterCode,session);
+                    CGPAFragment cgpaFragment = new CGPAFragment(dept,semesterCode,session,subTotalCredit);
                     transaction.replace(R.id.main_content_root,cgpaFragment);
                     transaction.addToBackStack("cgpa_fragment");
                     transaction.commit();

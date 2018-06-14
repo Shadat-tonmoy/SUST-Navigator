@@ -1,14 +1,19 @@
 package shadattonmoy.sustnavigator.cgpa.view;
 
 import android.app.FragmentManager;
+import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.ArrayList;
 
@@ -19,12 +24,14 @@ import shadattonmoy.sustnavigator.SQLiteAdapter;
 
 public class CGPAShowFragment extends android.app.Fragment implements View.OnClickListener {
 
-    private TextView gpaFinalView,cgpaFinalView,passedCreditView,totalCreditView,cgpaViewBackButton,debugView,cgpaViewSaveButton,extraCreditView,totalTakenCreditView;
+    private TextView gpaFinalView,cgpaFinalView,passedCreditView,totalCreditView,cgpaViewBackButton,cgpaViewSaveButton;
+    private ImageView fragmentBg;
     private String finalCGPA,finalGPA,totalCredit,passedCredit,extraCredit,totalTakenCredit;
     private FragmentManager manager;
     private ArrayList<Course> courseList;
-    private String semester;
-    public CGPAShowFragment(String finalGPA,String finalCGPA,FragmentManager manager,String semester,String passedCredit,String totalCredit,String extraCredit) {
+    private String semester,subTotalCredit;
+    private Context context;
+    public CGPAShowFragment(String finalGPA,String finalCGPA,FragmentManager manager,String semester,String passedCredit,String totalCredit,String extraCredit,String subTotalCredit) {
         this.finalGPA = finalGPA;
         this.manager = manager;
         this.semester = semester;
@@ -32,12 +39,14 @@ public class CGPAShowFragment extends android.app.Fragment implements View.OnCli
         this.passedCredit = passedCredit;
         this.totalCredit = totalCredit;
         this.extraCredit = extraCredit;
+        this.subTotalCredit = subTotalCredit;
     }
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context = getActivity().getApplicationContext();
 
     }
 
@@ -50,9 +59,9 @@ public class CGPAShowFragment extends android.app.Fragment implements View.OnCli
         cgpaViewSaveButton = (TextView) view.findViewById(R.id.cgpa_view_save_button);
         //debugView = (TextView) view.findViewById(R.id.debugView);
         //extraCreditView = (TextView) view.findViewById(R.id.extra_credit_view);
-        //totalTakenCreditView = (TextView) view.findViewById(R.id.total_taken_credit_view);
+        fragmentBg = (ImageView) view.findViewById(R.id.cgpa_show_bg);
         gpaFinalView = (TextView) view.findViewById(R.id.final_cgpa_view2);
-        //totalCreditView = (TextView) view.findViewById(R.id.final_total_credit_view);
+        totalCreditView = (TextView) view.findViewById(R.id.total_credit_view);
         passedCreditView = (TextView) view.findViewById(R.id.final_passed_credit_view);
         return view;
     }
@@ -61,13 +70,20 @@ public class CGPAShowFragment extends android.app.Fragment implements View.OnCli
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        //totalTakenCredit = Float.toString((Float.parseFloat(totalCredit) + Float.parseFloat(extraCredit)));
         cgpaFinalView.setText(finalCGPA);
         gpaFinalView.setText(finalGPA);
         passedCreditView.setText(passedCredit);
-        //totalCreditView.setText(totalCredit);
-        //extraCreditView.setText(extraCredit);
-        //totalTakenCreditView.setText(totalCredit);
+        totalCreditView.setText(subTotalCredit);
+        try{
+            Glide.with(context).load(context.getResources()
+                    .getIdentifier("cgpa_show_bg", "drawable", context.getPackageName())).thumbnail(0.5f)
+                    .crossFade()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(fragmentBg);
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
         float finalCGPAVal = Float.parseFloat(finalCGPA);
         float finalGPAVal = Float.parseFloat(finalGPA);
         float finalTotalCredit = Float.parseFloat(totalCredit);
@@ -87,10 +103,6 @@ public class CGPAShowFragment extends android.app.Fragment implements View.OnCli
         {
             gpaFinalView.setBackgroundResource(R.drawable.round_yellow);
         }
-
-        //cgpaFinalView.setBackground(R.drawable.round_red);
-
-        //manager = getActivity().getFragmentManager();
         cgpaViewBackButton.setOnClickListener(this);
         cgpaViewSaveButton.setOnClickListener(this);
 
@@ -105,14 +117,14 @@ public class CGPAShowFragment extends android.app.Fragment implements View.OnCli
         }
         else if(v.getId()==R.id.cgpa_view_save_button)
         {
-            Toast.makeText(getActivity().getApplicationContext(),"Save ",Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getActivity().getApplicationContext(),"Save ",Toast.LENGTH_SHORT).show();
             String txt = "Grades : \n";
             SQLiteAdapter sqLiteAdapter = new SQLiteAdapter(getActivity().getApplicationContext());
             String[] semesters = {semester};
             Cursor record = sqLiteAdapter.getGPARecord(semesters);
             if(record.getCount()>0)
             {
-                Toast.makeText(getActivity().getApplicationContext(),"Record is available",Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity().getApplicationContext(),"Record is available",Toast.LENGTH_SHORT).show();
                 sqLiteAdapter.delete(semester);
                 for(int i=0;i<courseList.size();i++)
                 {
@@ -130,7 +142,7 @@ public class CGPAShowFragment extends android.app.Fragment implements View.OnCli
             }
             else
             {
-                Toast.makeText(getActivity().getApplicationContext(),"Will save as new data",Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity().getApplicationContext(),"Will save as new data",Toast.LENGTH_SHORT).show();
                 for(int i=0;i<courseList.size();i++)
                 {
                     Course course = courseList.get(i);

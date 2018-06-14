@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,15 +53,17 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
     private Animation fabOpen,fabClose,rotateForward,rotateBackward;
     private boolean isFabOpen =false;
     String session;
+    private double subTotalCredit;
 
     public CGPAFragment() {
 
     }
 
-    public CGPAFragment(Dept dept,String semester,String session) {
+    public CGPAFragment(Dept dept,String semester,String session,double subTotalCredit) {
 
         this.dept = dept;
         this.session = session;
+        this.subTotalCredit = subTotalCredit;
         if(semester.equals("1/1"))
             this.semester = "1_1";
         else if(semester.equals("1/2"))
@@ -105,7 +108,6 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-//        deptTileView.setText(dept);
         fabOpen = AnimationUtils.loadAnimation(getActivity().getApplicationContext(),R.anim.fab_open);
         fabClose = AnimationUtils.loadAnimation(getActivity().getApplicationContext(),R.anim.fab_close);
         rotateForward = AnimationUtils.loadAnimation(getActivity().getApplicationContext(),R.anim.rotate_forward);
@@ -141,14 +143,12 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 if(mLastFirstVisibleItem<firstVisibleItem)
                 {
-                    //Log.i("SCROLLING DOWN","TRUE");
                     floatingActionButton.setAnimation(fabClose);
                     floatingActionButton.setVisibility(View.GONE);
                     moreFab.setVisibility(View.GONE);
                 }
                 if(mLastFirstVisibleItem>firstVisibleItem)
                 {
-                    //Log.i("SCROLLING UP","TRUE");
                     floatingActionButton.setAnimation(fabOpen);
                     floatingActionButton.setVisibility(View.VISIBLE);
                 }
@@ -284,7 +284,9 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
                 passedCredit+=creditValue;
                 totalGPA+=(gpaValue*creditValue);
             }
-            finalGPA = (float) totalGPA/passedCredit;
+            if(passedCredit>0)
+                finalGPA = (float) totalGPA/passedCredit;
+            else finalGPA=0;
             finalCGPA = (float) totalGPA/passedCredit;
             SQLiteAdapter sqLiteAdapter = new SQLiteAdapter(getActivity().getApplicationContext());
             String[] arr={};
@@ -366,7 +368,8 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
                 FragmentManager manager = getFragmentManager();
                 FragmentTransaction transaction = manager.beginTransaction();
                 transaction.addToBackStack("cgpa_final_show");
-                CGPAShowFragment cgpaShowFragment = new CGPAShowFragment(String.format("%.2f", finalGPA),String.format("%.2f", finalCGPA),manager,semester,String.format("%.2f", passedCredit),String.format("%.2f", totalCredit),String.format("%.2f",extraCredit));
+
+                CGPAShowFragment cgpaShowFragment = new CGPAShowFragment(String.format("%.2f", finalGPA),String.format("%.2f", finalCGPA),manager,semester,String.format("%.2f", passedCredit),String.format("%.2f", totalCredit),String.format("%.2f",extraCredit),String.format("%.2f",subTotalCredit));
                 cgpaShowFragment.setCourseList(cgpaForCourse);
                 transaction.replace(R.id.main_content_root,cgpaShowFragment,"cgpa_final_show");
                 transaction.commit();

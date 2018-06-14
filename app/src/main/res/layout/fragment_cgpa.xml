@@ -4,20 +4,7 @@
     android:layout_height="match_parent"
 
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="shadattonmoy.sustnavigator.dept.view.DeptFragment">
-
-    <!--<TextView-->
-        <!--android:id="@+id/deptTitle"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_marginLeft="10dp"-->
-        <!--android:layout_marginRight="10dp"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:textSize="16sp"-->
-        <!--android:background="@drawable/rectangle"-->
-        <!--android:padding="10dp"-->
-        <!--android:textColor="#ffffff"-->
-        <!--android:layout_marginTop="10dp"-->
-        <!--android:text="Computer Science and Engineering" />-->
+    tools:context="shadattonmoy.sustnavigator.cgpa.view.CGPAFragment">
 
     <ListView
         android:id="@+id/courseList"
@@ -39,23 +26,13 @@
 
 
         <TextView
-            android:id="@+id/cgpa_reset_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textSize="18sp"
-            android:padding="20dp"
-            android:textColor="#ffffff"
-            android:textAlignment="center"
-            android:text="Reset" />
-
-        <TextView
             android:id="@+id/cgpa_load_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textSize="18sp"
             android:padding="20dp"
+            android:drawableLeft="@drawable/cached_white_24"
             android:textColor="#ffffff"
             android:textAlignment="center"
             android:text="Load" />
@@ -70,6 +47,20 @@
             android:textColor="#ffffff"
             android:textAlignment="center"
             android:text="Calculate" />
+
+        <TextView
+            android:id="@+id/cgpa_reset_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="18sp"
+            android:drawableLeft="@drawable/clear_white_24"
+            android:padding="20dp"
+            android:textColor="#ffffff"
+            android:textAlignment="center"
+            android:text="Reset" />
+
+
     </LinearLayout>
 
 
