@@ -1,4 +1,4 @@
-package shadattonmoy.sustnavigator;
+package shadattonmoy.sustnavigator.cgpa.view;
 
 import android.app.FragmentManager;
 import android.database.Cursor;
@@ -11,6 +11,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+
+import shadattonmoy.sustnavigator.Course;
+import shadattonmoy.sustnavigator.R;
+import shadattonmoy.sustnavigator.SQLiteAdapter;
 
 
 public class CGPAShowFragment extends android.app.Fragment implements View.OnClickListener {

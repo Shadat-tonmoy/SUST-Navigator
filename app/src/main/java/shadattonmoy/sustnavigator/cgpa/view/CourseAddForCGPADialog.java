@@ -1,4 +1,4 @@
-package shadattonmoy.sustnavigator;
+package shadattonmoy.sustnavigator.cgpa.view;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -6,12 +6,9 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -26,6 +23,11 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import shadattonmoy.sustnavigator.AllCourseListAdapter;
+import shadattonmoy.sustnavigator.cgpa.controller.CGPAAdapter;
+import shadattonmoy.sustnavigator.Course;
+import shadattonmoy.sustnavigator.R;
 
 /**
  * Created by Shadat Tonmoy on 9/5/2017.

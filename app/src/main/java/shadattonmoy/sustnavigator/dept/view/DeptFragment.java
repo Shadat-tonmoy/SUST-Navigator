@@ -314,7 +314,7 @@ public class DeptFragment extends android.app.Fragment implements View.OnClickLi
                 deptList.setLayoutManager(mLayoutManager);
                 deptList.setItemAnimator(new DefaultItemAnimator());
                 deptList.setAdapter(schoolListAdapter);
-                if(purpose.equals("syllabus"))
+                if(purpose.equals("syllabus") || purpose.equals("cgpa"))
                 {
                     sessionText.setVisibility(View.VISIBLE);
                     sessionText.setText(Values.getSessions().get(0));

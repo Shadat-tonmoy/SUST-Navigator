@@ -1,20 +1,14 @@
-package shadattonmoy.sustnavigator;
+package shadattonmoy.sustnavigator.cgpa.view;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
@@ -32,6 +26,10 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import shadattonmoy.sustnavigator.cgpa.controller.CGPAAdapter;
+import shadattonmoy.sustnavigator.Course;
+import shadattonmoy.sustnavigator.R;
+import shadattonmoy.sustnavigator.SQLiteAdapter;
 import shadattonmoy.sustnavigator.dept.model.Dept;
 
 
@@ -47,20 +45,22 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
     private FloatingActionButton floatingActionButton,addFromCurrentFab,addFromCustomFab;
     private FragmentManager manager;
     private ProgressBar progressBar;
-    static CGPAAdapter adapter;
-    static float removedCredit;
-    static float extraCredit;
+    public static CGPAAdapter adapter;
+    public static float removedCredit;
+    public static float extraCredit;
     private LinearLayout moreFab;
     private Animation fabOpen,fabClose,rotateForward,rotateBackward;
     private boolean isFabOpen =false;
+    String session;
 
     public CGPAFragment() {
 
     }
 
-    public CGPAFragment(Dept dept,String semester) {
+    public CGPAFragment(Dept dept,String semester,String session) {
 
         this.dept = dept;
+        this.session = session;
         if(semester.equals("1/1"))
             this.semester = "1_1";
         else if(semester.equals("1/2"))
@@ -118,26 +118,9 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
         cgpaForCourse=new ArrayList<Course>();
         manager = getFragmentManager();
         progressBar.setVisibility(View.VISIBLE);
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference().child("syllabus").child(dept.getDeptCode().toLowerCase()).child(semester);
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot child : dataSnapshot.getChildren())
-                {
-                    Course course = child.getValue(Course.class);
-                    cgpaForCourse.add(course);
-                }
-                adapter = new CGPAAdapter(getActivity().getApplicationContext(),R.layout.fragment_cgpa,R.id.cgpa_calculate_button,cgpaForCourse);
-                courseList.setAdapter(adapter);
-                progressBar.setVisibility(View.GONE);
-                CGPAAdapter.record.clear();
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
 
-            }
-        });
+        getCoursesFromServer();
+
 
         CGPAAdapter.isReset = false;
         cgpaLoadButton.setOnClickListener(this);
@@ -170,6 +153,30 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
                     floatingActionButton.setVisibility(View.VISIBLE);
                 }
                 mLastFirstVisibleItem=firstVisibleItem;
+
+            }
+        });
+    }
+
+    public void getCoursesFromServer()
+    {
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference().child("syllabus").child(session).child(dept.getDeptCode().toLowerCase()).child(semester);
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot child : dataSnapshot.getChildren())
+                {
+                    Course course = child.getValue(Course.class);
+                    cgpaForCourse.add(course);
+                }
+                adapter = new CGPAAdapter(getActivity().getApplicationContext(),R.layout.fragment_cgpa,R.id.cgpa_calculate_button,cgpaForCourse);
+                courseList.setAdapter(adapter);
+                progressBar.setVisibility(View.GONE);
+                CGPAAdapter.record.clear();
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
             }
         });

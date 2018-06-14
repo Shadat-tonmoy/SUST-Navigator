@@ -52,6 +52,15 @@ public class SQLiteAdapter {
         SQLiteDatabase db = sqLiteHelper.getReadableDatabase();
         String selection = SQLiteHelper.SEMESTER+"=?";
         String[] selectionArgs = semesters;
+        if(semesters.length>1)
+        {
+            for(int i=1;i<=semesters.length-1;i++)
+            {
+                selection+=" OR "+sqLiteHelper.SEMESTER+"=?";
+            }
+        }
+        for(String selectionarg:selectionArgs)
+            Log.e("Selections",selectionarg);
         Cursor cursor = db.query(SQLiteHelper.TABLE_NAME,columns,selection,selectionArgs,null,null,null);
 
         return cursor;

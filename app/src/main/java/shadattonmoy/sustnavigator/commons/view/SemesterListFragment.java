@@ -23,7 +23,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-import shadattonmoy.sustnavigator.CGPAFragment;
+import shadattonmoy.sustnavigator.cgpa.view.CGPAFragment;
 import shadattonmoy.sustnavigator.Course;
 import shadattonmoy.sustnavigator.R;
 import shadattonmoy.sustnavigator.commons.controller.SemesterAdapter;
@@ -177,7 +177,7 @@ public class SemesterListFragment extends android.app.Fragment {
 
                     android.app.FragmentManager manager = getFragmentManager();
                     android.app.FragmentTransaction transaction = manager.beginTransaction();
-                    CGPAFragment cgpaFragment = new CGPAFragment(dept,semesterCode);
+                    CGPAFragment cgpaFragment = new CGPAFragment(dept,semesterCode,session);
                     transaction.replace(R.id.main_content_root,cgpaFragment);
                     transaction.addToBackStack("cgpa_fragment");
                     transaction.commit();

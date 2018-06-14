@@ -1,4 +1,4 @@
-package shadattonmoy.sustnavigator;
+package shadattonmoy.sustnavigator.cgpa.view;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -8,9 +8,12 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewDebug;
 import android.widget.Button;
 import android.widget.EditText;
+
+import shadattonmoy.sustnavigator.Course;
+import shadattonmoy.sustnavigator.R;
+import shadattonmoy.sustnavigator.cgpa.view.CGPAFragment;
 
 /**
  * Created by Shadat Tonmoy on 9/28/2017.

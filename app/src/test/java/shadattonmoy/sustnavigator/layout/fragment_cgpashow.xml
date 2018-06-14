@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="shadattonmoy.sustnavigator.CGPAShowFragment">
+    tools:context="shadattonmoy.sustnavigator.cgpa.view.CGPAShowFragment">
 
     <TextView
         android:id="@+id/final_cgpa_view"

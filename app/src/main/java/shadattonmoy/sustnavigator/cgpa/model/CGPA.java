@@ -1,4 +1,4 @@
-package shadattonmoy.sustnavigator;
+package shadattonmoy.sustnavigator.cgpa.model;
 
 import android.widget.Spinner;
 
