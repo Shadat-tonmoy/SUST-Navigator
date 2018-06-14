@@ -190,37 +190,45 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
             SQLiteAdapter sqLiteAdapter = new SQLiteAdapter(getActivity().getApplicationContext());
             String[] semesters = {semester};
             Cursor cursor = sqLiteAdapter.getGPARecord(semesters);
-            int count = 0;
-            cgpaForCourse.clear();
-            CGPAAdapter.record.clear();
-            while (cursor.moveToNext())
+            if(cursor.getCount()>0)
             {
-                String id = cursor.getString(0);
-                String semester = cursor.getString(1);
-                String code = cursor.getString(2);
-                String title = cursor.getString(3);
-                String credit = cursor.getString(4);
-                String grade = cursor.getString(5);
-                int isAdded = cursor.getInt(6);
-                Course course = new Course(code,title,credit);
-                if(isAdded>0)
-                    course.setAdded(true);
-                else course.setAdded(false);
-                course.setGrade(grade);
-                course.setLocal_id(id);
-                cgpaForCourse.add(course);
-                CGPAAdapter.record.put(code,grade);
-                //Toast.makeText(getActivity().getApplicationContext(),"Id : "+id+" semester : "+semester+" code : "+code+" title : "+title+" credit : "+credit+" grade : "+grade,Toast.LENGTH_SHORT).show();
-                count++;
+                int count = 0;
+                cgpaForCourse.clear();
+                CGPAAdapter.record.clear();
+                while (cursor.moveToNext())
+                {
+                    String id = cursor.getString(0);
+                    String semester = cursor.getString(1);
+                    String code = cursor.getString(2);
+                    String title = cursor.getString(3);
+                    String credit = cursor.getString(4);
+                    String grade = cursor.getString(5);
+                    int isAdded = cursor.getInt(6);
+                    Course course = new Course(code,title,credit);
+                    if(isAdded>0)
+                        course.setAdded(true);
+                    else course.setAdded(false);
+                    course.setGrade(grade);
+                    course.setLocal_id(id);
+                    cgpaForCourse.add(course);
+                    CGPAAdapter.record.put(code,grade);
+                    //Toast.makeText(getActivity().getApplicationContext(),"Id : "+id+" semester : "+semester+" code : "+code+" title : "+title+" credit : "+credit+" grade : "+grade,Toast.LENGTH_SHORT).show();
+                    count++;
+                }
+                if(count==0)
+                    Toast.makeText(getActivity().getApplicationContext(),"Sorry!! No Records Found",Toast.LENGTH_SHORT).show();
+                else
+                {
+                    adapter = new CGPAAdapter(getActivity().getApplicationContext(),R.layout.fragment_cgpa,R.id.cgpa_calculate_button,cgpaForCourse);
+                    courseList.setAdapter(adapter);
+
+                }
             }
-            if(count==0)
-                Toast.makeText(getActivity().getApplicationContext(),"Nothing Found",Toast.LENGTH_SHORT).show();
             else
             {
-                adapter = new CGPAAdapter(getActivity().getApplicationContext(),R.layout.fragment_cgpa,R.id.cgpa_calculate_button,cgpaForCourse);
-                courseList.setAdapter(adapter);
-
+                Toast.makeText(getActivity().getApplicationContext(),"Sorry!! No Records Found",Toast.LENGTH_SHORT).show();
             }
+
 
         }
         else if(v.getId()==cgpaCalculateButton.getId())
@@ -373,7 +381,6 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
                 cgpaShowFragment.setCourseList(cgpaForCourse);
                 transaction.replace(R.id.main_content_root,cgpaShowFragment,"cgpa_final_show");
                 transaction.commit();
-               //Toast.makeText(getActivity().getApplicationContext(),"Your CGPA is : "+String.format("%.2f", finalCGPA),Toast.LENGTH_LONG).show();
             }
         }
         else if(v.getId()==R.id.cgpa_reset_button)
@@ -382,7 +389,6 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
             CGPAAdapter.isReset = true;
             CGPAAdapter.record.clear();
             courseList.setAdapter(new CGPAAdapter(getActivity().getApplicationContext(),R.layout.fragment_cgpa,R.id.cgpa_calculate_button,cgpaForCourse));
-            //Toast.makeText(getActivity().getApplicationContext(),"Reset "+count+" isReset = "+CGPAAdapter.isReset,Toast.LENGTH_SHORT).show();
         }
         else if(v.getId()==R.id.add_in_cgpa_fab)
         {

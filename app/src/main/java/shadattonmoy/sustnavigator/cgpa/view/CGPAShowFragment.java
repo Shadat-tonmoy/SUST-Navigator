@@ -57,8 +57,6 @@ public class CGPAShowFragment extends android.app.Fragment implements View.OnCli
         cgpaFinalView = (TextView)view.findViewById(R.id.final_cgpa_view);
         cgpaViewBackButton = (TextView) view.findViewById(R.id.cgpa_view_back_button);
         cgpaViewSaveButton = (TextView) view.findViewById(R.id.cgpa_view_save_button);
-        //debugView = (TextView) view.findViewById(R.id.debugView);
-        //extraCreditView = (TextView) view.findViewById(R.id.extra_credit_view);
         fragmentBg = (ImageView) view.findViewById(R.id.cgpa_show_bg);
         gpaFinalView = (TextView) view.findViewById(R.id.final_cgpa_view2);
         totalCreditView = (TextView) view.findViewById(R.id.total_credit_view);
@@ -87,6 +85,8 @@ public class CGPAShowFragment extends android.app.Fragment implements View.OnCli
         float finalCGPAVal = Float.parseFloat(finalCGPA);
         float finalGPAVal = Float.parseFloat(finalGPA);
         float finalTotalCredit = Float.parseFloat(totalCredit);
+        float finalSubTotalCredit = Float.parseFloat(subTotalCredit);
+        float creditPercent = ((finalTotalCredit/finalSubTotalCredit)*100);
         if(finalCGPAVal<(float)3.00)
         {
             cgpaFinalView.setBackgroundResource(R.drawable.round_red);
@@ -103,9 +103,16 @@ public class CGPAShowFragment extends android.app.Fragment implements View.OnCli
         {
             gpaFinalView.setBackgroundResource(R.drawable.round_yellow);
         }
+        if(creditPercent<(float)50.00)
+        {
+            passedCreditView.setBackgroundResource(R.drawable.round_red);
+        }
+        else if(finalGPAVal<(float)75.00)
+        {
+            passedCreditView.setBackgroundResource(R.drawable.round_yellow);
+        }
         cgpaViewBackButton.setOnClickListener(this);
         cgpaViewSaveButton.setOnClickListener(this);
-
     }
 
     @Override

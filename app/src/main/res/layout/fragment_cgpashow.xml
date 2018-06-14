@@ -86,10 +86,9 @@
                                     android:layout_marginBottom="5dp"
                                     android:background="@color/textBlack"
                                     android:padding="4dp"
-                                    android:text="CGPA (Total) : "
+                                    android:text="CGPA (Total)"
                                     android:textAlignment="center"
-                                    android:textColor="#ffffff"
-                                    android:textSize="16sp" />
+                                    android:textColor="#ffffff"/>
 
                                 <TextView
                                     android:id="@+id/final_cgpa_view"
@@ -134,10 +133,9 @@
                                     android:layout_marginBottom="5dp"
                                     android:background="@color/textBlack"
                                     android:padding="4dp"
-                                    android:text="GPA : "
+                                    android:text="GPA (Current Semester)"
                                     android:textAlignment="center"
-                                    android:textColor="#ffffff"
-                                    android:textSize="16sp" />
+                                    android:textColor="#ffffff"/>
 
                                 <TextView
                                     android:id="@+id/final_cgpa_view2"
@@ -197,10 +195,9 @@
                                     android:layout_marginBottom="5dp"
                                     android:background="@color/textBlack"
                                     android:padding="4dp"
-                                    android:text="Total Credit : "
+                                    android:text="Total Credit"
                                     android:textAlignment="center"
-                                    android:textColor="#ffffff"
-                                    android:textSize="16sp" />
+                                    android:textColor="#ffffff"/>
 
                                 <TextView
                                     android:id="@+id/total_credit_view"
@@ -244,10 +241,9 @@
                                     android:layout_marginBottom="5dp"
                                     android:background="@color/textBlack"
                                     android:padding="4dp"
-                                    android:text="Passed Credit : "
+                                    android:text="Passed Credit"
                                     android:textAlignment="center"
-                                    android:textColor="#ffffff"
-                                    android:textSize="16sp" />
+                                    android:textColor="#ffffff"/>
 
                                 <TextView
                                     android:id="@+id/final_passed_credit_view"
