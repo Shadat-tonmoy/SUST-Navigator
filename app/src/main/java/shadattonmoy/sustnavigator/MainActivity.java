@@ -30,8 +30,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.List;
 
 import shadattonmoy.sustnavigator.dept.view.DeptFragment;
+import shadattonmoy.sustnavigator.holiday.view.HolidaysFragment;
 import shadattonmoy.sustnavigator.proctor.view.ProctorialBodyFragment;
-import shadattonmoy.sustnavigator.school.model.School;
 import shadattonmoy.sustnavigator.utils.DummyValues;
 
 public class MainActivity extends AppCompatActivity

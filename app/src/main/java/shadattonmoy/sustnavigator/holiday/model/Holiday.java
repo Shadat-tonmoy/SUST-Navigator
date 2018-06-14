@@ -1,4 +1,4 @@
-package shadattonmoy.sustnavigator;
+package shadattonmoy.sustnavigator.holiday.model;
 
 /**
  * Created by Shadat Tonmoy on 6/21/2017.

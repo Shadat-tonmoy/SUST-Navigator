@@ -5,6 +5,8 @@ import java.util.Calendar;
 import java.util.List;
 
 public class Values {
+    public static String[] months = new String[]{"January","February","March","April","May","June","July","August","September","October","November","December"};
+    public static String[] days = new String[]{"Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
     public static List<String> getSessions()
     {
         List<String> sessions = new ArrayList<>();
