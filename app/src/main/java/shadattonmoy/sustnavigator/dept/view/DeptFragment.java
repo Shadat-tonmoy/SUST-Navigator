@@ -35,6 +35,7 @@ import shadattonmoy.sustnavigator.TeacherManageFragment;
 import shadattonmoy.sustnavigator.school.controller.SchoolListAdapter;
 import shadattonmoy.sustnavigator.school.model.School;
 import shadattonmoy.sustnavigator.utils.SyllabusSessionBottomSheet;
+import shadattonmoy.sustnavigator.utils.Values;
 
 
 public class DeptFragment extends android.app.Fragment implements View.OnClickListener{
@@ -316,13 +317,17 @@ public class DeptFragment extends android.app.Fragment implements View.OnClickLi
                 if(purpose.equals("syllabus"))
                 {
                     sessionText.setVisibility(View.VISIBLE);
+                    sessionText.setText(Values.getSessions().get(0));
                     sessionText.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             SyllabusSessionBottomSheet syllabusSessionBottomSheet = new SyllabusSessionBottomSheet(context,sessionText);
+                            syllabusSessionBottomSheet.setSchoolListAdapter(schoolListAdapter);
                             syllabusSessionBottomSheet.show(fragmentActivity.getSupportFragmentManager(),"tag");
+
                         }
                     });
+                    schoolListAdapter.setSession(sessionText.getText().toString());
                 }
             }
 

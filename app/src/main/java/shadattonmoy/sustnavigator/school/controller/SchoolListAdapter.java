@@ -29,7 +29,7 @@ public class SchoolListAdapter extends RecyclerView.Adapter<SchoolListAdapter.My
     private FragmentActivity activity;
     private List<School> schools;
     private FragmentManager fragmentManager;
-    private String purpose;
+    private String purpose,session;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView schoolTitle;
@@ -48,6 +48,7 @@ public class SchoolListAdapter extends RecyclerView.Adapter<SchoolListAdapter.My
         this.schools = schools;
         this.fragmentManager = fragmentManager;
         this.purpose = purpose;
+
     }
 
     @Override
@@ -87,7 +88,7 @@ public class SchoolListAdapter extends RecyclerView.Adapter<SchoolListAdapter.My
                 deptCell.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        SemesterListFragment semesterListFragment = new SemesterListFragment(dept,purpose);
+                        SemesterListFragment semesterListFragment = new SemesterListFragment(dept,purpose,session);
                         semesterListFragment.setSyllabusEditable(false);
                         loadFragment(semesterListFragment,"syllabusFragment");
                     }
@@ -98,7 +99,7 @@ public class SchoolListAdapter extends RecyclerView.Adapter<SchoolListAdapter.My
                 deptCell.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        SemesterListFragment semesterListFragment = new SemesterListFragment(dept,purpose);
+                        SemesterListFragment semesterListFragment = new SemesterListFragment(dept,purpose,session);
                         semesterListFragment.setSyllabusEditable(false);
                         loadFragment(semesterListFragment,"cgpaFragment");
                     }
@@ -124,7 +125,9 @@ public class SchoolListAdapter extends RecyclerView.Adapter<SchoolListAdapter.My
         return schools.size();
     }
 
-
+    public void setSession(String session) {
+        this.session = session;
+    }
 
     private class DeptClickListener implements View.OnClickListener{
 

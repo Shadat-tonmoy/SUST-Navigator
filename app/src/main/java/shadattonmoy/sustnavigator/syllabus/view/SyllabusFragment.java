@@ -40,13 +40,15 @@ public class SyllabusFragment extends android.app.Fragment {
     private boolean isEditable;
     private ArrayList<Course> courses;
     public static SyllabusAdapter adapter;
+    private String session;
     public SyllabusFragment() {
         super();
     }
-    public SyllabusFragment(Dept dept,String semester,boolean isEditable)
+    public SyllabusFragment(Dept dept,String semester,boolean isEditable,String session)
     {
         this.dept = dept;
         this.isEditable = isEditable;
+        this.session = session;
         if(semester.equals("1/1"))
             this.semester = "1_1";
         else if(semester.equals("1/2"))
@@ -80,7 +82,7 @@ public class SyllabusFragment extends android.app.Fragment {
         return view;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -93,7 +95,7 @@ public class SyllabusFragment extends android.app.Fragment {
         syllabusLoadingProgress.setVisibility(View.VISIBLE);
         courses = new ArrayList<Course>();
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference().child("syllabus").child(dept.getDeptCode().toLowerCase()).child(semester);
+        databaseReference = firebaseDatabase.getReference().child("syllabus").child(session).child(dept.getDeptCode().toLowerCase()).child(semester);
 
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

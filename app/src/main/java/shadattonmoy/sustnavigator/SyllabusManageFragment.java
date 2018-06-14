@@ -74,7 +74,7 @@ public class SyllabusManageFragment extends android.app.Fragment {
                 String semesterCode = currentSemester.getSemesterCode();
                 android.app.FragmentManager manager = getFragmentManager();
                 android.app.FragmentTransaction transaction = manager.beginTransaction();
-                SyllabusFragment syllabusFragment = new SyllabusFragment(dept,semesterCode,isEditable);
+                SyllabusFragment syllabusFragment = new SyllabusFragment(dept,semesterCode,isEditable,"2014-15");
                 transaction.replace(R.id.main_content_root,syllabusFragment);
                 transaction.addToBackStack("syllabus_fragment");
                 transaction.commit();

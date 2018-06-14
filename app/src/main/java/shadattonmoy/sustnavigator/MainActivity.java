@@ -100,8 +100,7 @@ public class MainActivity extends AppCompatActivity
             editor.putBoolean("firstTime", true);
             editor.commit();
         }
-//        addFaculty();
-//        addSchools();
+//        addCourse();
     }
     /*end of onCreate Method*/
 
@@ -420,17 +419,41 @@ public class MainActivity extends AppCompatActivity
 
     }*/
 
-    public void addSchools()
+    public void addCourse()
     {
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference().child("schools");
-        List<School> schools = DummyValues.getSchools();
-        for(School school:schools)
+        databaseReference = firebaseDatabase.getReference().child("syllabus").child("2014-15").child("cse").child("1_1");
+        List<Course> courses= DummyValues.getCourses("1_1");
+        for(Course course:courses)
         {
-            databaseReference.push().setValue(school).addOnCompleteListener(new OnCompleteListener<Void>() {
+            databaseReference.push().setValue(course).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
-                    Log.e("schoolAdded","For Dept CHE");
+                    Log.e("syllabusAdded","For Dept CHE");
+                }
+            });
+
+        }
+        databaseReference = firebaseDatabase.getReference().child("syllabus").child("2014-15").child("cse").child("1_2");
+        courses= DummyValues.getCourses("1_2");
+        for(Course course:courses)
+        {
+            databaseReference.push().setValue(course).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    Log.e("syllabusAdded","For Dept CHE");
+                }
+            });
+
+        }
+        databaseReference = firebaseDatabase.getReference().child("syllabus").child("2014-15").child("cse").child("2_1");
+        courses= DummyValues.getCourses("2_1");
+        for(Course course:courses)
+        {
+            databaseReference.push().setValue(course).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    Log.e("syllabusAdded","For Dept CHE");
                 }
             });
 

@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 import shadattonmoy.sustnavigator.R;
 import shadattonmoy.sustnavigator.dept.view.DeptFragment;
+import shadattonmoy.sustnavigator.school.controller.SchoolListAdapter;
 
 public class SyllabusSessionBottomSheet extends BottomSheetDialogFragment {
 
@@ -20,6 +21,7 @@ public class SyllabusSessionBottomSheet extends BottomSheetDialogFragment {
     private Context context;
     private TextView sessionTextView;
     private Dialog dialog;
+    private SchoolListAdapter schoolListAdapter;
 
     public SyllabusSessionBottomSheet()
     {
@@ -50,7 +52,7 @@ public class SyllabusSessionBottomSheet extends BottomSheetDialogFragment {
     public void initNodes(View view)
     {
         sessionList = (ListView) view.findViewById(R.id.session_list);
-        SessionListAdapter sessionListAdapter = new SessionListAdapter(context,R.layout.session_single_row,R.id.session_title,(ArrayList<String>) DummyValues.getSessions());
+        SessionListAdapter sessionListAdapter = new SessionListAdapter(context,R.layout.session_single_row,R.id.session_title,(ArrayList<String>) Values.getSessions());
         sessionList.setAdapter(sessionListAdapter);
     }
 
@@ -63,8 +65,11 @@ public class SyllabusSessionBottomSheet extends BottomSheetDialogFragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 int pos = adapterView.getSelectedItemPosition();
-                sessionTextView.setText(DummyValues.getSessions().get(i));
+                String session = Values.getSessions().get(i);
+                session = session.replaceAll("[a-zA-Z()\" \"]+","");
+                sessionTextView.setText(session);
                 DeptFragment.bottomSheetSelectedPosition= i;
+                schoolListAdapter.setSession(session);
                 dialog.dismiss();
 
 
@@ -76,5 +81,7 @@ public class SyllabusSessionBottomSheet extends BottomSheetDialogFragment {
 
     }
 
-
+    public void setSchoolListAdapter(SchoolListAdapter schoolListAdapter) {
+        this.schoolListAdapter = schoolListAdapter;
+    }
 }

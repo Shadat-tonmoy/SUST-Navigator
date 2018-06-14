@@ -3,6 +3,7 @@ package shadattonmoy.sustnavigator.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import shadattonmoy.sustnavigator.Course;
 import shadattonmoy.sustnavigator.dept.model.Dept;
 import shadattonmoy.sustnavigator.school.model.School;
 
@@ -71,13 +72,48 @@ public class DummyValues {
         return schools;
     }
 
-    public static List<String> getSessions()
+
+
+    public static List<Course> getCourses(String semester)
     {
-        List<String> sessions = new ArrayList<>();
-        sessions.add("2017-18 (Current Session)");
-        sessions.add("2016-17");
-        sessions.add("2015-16");
-        sessions.add("2014-15");
-        return sessions;
+        List<Course> courses = new ArrayList<>();
+        if(semester.equals("1_1"))
+        {
+            courses.add(new Course("CSE 133", "Structured Programming Language", "3"));
+            courses.add(new Course("CSE 134", "Structured Programming Language Lab", "3"));
+            courses.add(new Course("CSE 143", "Discrete Mathematics", "3"));
+            courses.add(new Course("CSE 144", "Discrete Mathematics Lab", "1.5"));
+            courses.add(new Course("EEE 109","Electrical Circuits" ,"3"));
+            courses.add(new Course("EEE 110", "Electrical Circuits LAB", "1.5"));
+            courses.add(new Course("MAT 102D", "Matrices, Vector Analysis and Geometry", "3"));
+            courses.add(new Course("ENG 101D", "English Language I", "2"));
+            courses.add(new Course("ENG 102D", "English Language I Lab", "1"));
+
+        }
+        else if(semester.equals("1_2"))
+        {
+            courses.add(new Course("CSE 137" ,"Data Structure", "3"));
+            courses.add(new Course("CSE 138" ,"Data Structure Lab", "2"));
+            courses.add(new Course("EEE 111" ,"Electronic Devices and Circuits", "3"));
+            courses.add(new Course("EEE 112" ,"Electronic Devices and Circuits LAB", "1.5"));
+            courses.add(new Course("IPE 106" ,"Engineering Graphics", "1.5"));
+            courses.add(new Course("IPE 108" ,"Workshop Practice", "1"));
+            courses.add(new Course("PHY 103D" ,"Mechanics, Wave, Heat & Thermodynamics", "3"));
+            courses.add(new Course("MAT 103D","Calculus", "3"));
+            courses.add(new Course("CSE 150" ,"Project Work I", "1"));
+
+        }
+        else if(semester.equals("2_1"))
+        {
+            courses.add(new Course("EEE 201","Digital Logic Design","3"));
+            courses.add(new Course("EEE 202","Digital Logic Design Lab","2"));
+            courses.add(new Course("CSE 237","Algorithm Design & Analysis","3"));
+            courses.add(new Course("CSE 328","Algorithm Design & Analysis Lab ","1.5"));
+            courses.add(new Course("BUS 203","Cost and Management Accounting","3" ));
+            courses.add(new Course("PHY 207D","Electromagnetism, Optics & Modern Physics","3"));
+            courses.add(new Course("PHY 202D","Basic Physics Lab","1.5"));
+            courses.add(new Course("STA 202D","Basic Statistics & Probability","3" ));
+        }
+        return courses;
     }
 }

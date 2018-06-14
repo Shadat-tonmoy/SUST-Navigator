@@ -41,7 +41,7 @@ public class SemesterListFragment extends android.app.Fragment {
     private DatabaseReference databaseReference;
     private ArrayList<Semester> semesters = null;
     private ProgressBar progressBar;
-    private String purpose;
+    private String purpose,session;
     private boolean isSyllabusEditable;
     private TextView fragmentHeader,nothingFoundText;
     private ImageView nothingFoundImage;
@@ -53,10 +53,11 @@ public class SemesterListFragment extends android.app.Fragment {
     public SemesterListFragment() {
         // Required empty public constructor
     }
-    public SemesterListFragment(Dept dept,String purpose)
+    public SemesterListFragment(Dept dept,String purpose,String session)
     {
         this.dept = dept;
         this.purpose = purpose;
+        this.session = session;
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -83,7 +84,7 @@ public class SemesterListFragment extends android.app.Fragment {
         progressBar.setVisibility(View.VISIBLE);
         semesters = new ArrayList<Semester>();
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference().child("syllabus").child(dept.getDeptCode().trim().toLowerCase());
+        databaseReference = firebaseDatabase.getReference().child("syllabus").child(session).child(dept.getDeptCode().trim().toLowerCase());
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -135,7 +136,7 @@ public class SemesterListFragment extends android.app.Fragment {
                 {
                     nothingFoundImage.setVisibility(View.VISIBLE);
                     nothingFoundText.setVisibility(View.VISIBLE);
-                    nothingFoundText.setText("OOOPS!!! No Records found for "+dept.getDeptTitle()+" Please Contact Admin ");
+                    nothingFoundText.setText("OOOPS!!! No Records found for "+dept.getDeptTitle()+"  of "+session+" Session. Please Contact Admin");
                     try{
                         Glide.with(context).load(context.getResources()
                                 .getIdentifier("nothing_found", "drawable", context.getPackageName())).thumbnail(0.5f)
@@ -192,7 +193,7 @@ public class SemesterListFragment extends android.app.Fragment {
                     String semesterCode = currentSemester.getSemesterCode();
                     android.app.FragmentManager manager = getFragmentManager();
                     android.app.FragmentTransaction transaction = manager.beginTransaction();
-                    SyllabusFragment syllabusFragment = new SyllabusFragment(dept,semesterCode,isSyllabusEditable);
+                    SyllabusFragment syllabusFragment = new SyllabusFragment(dept,semesterCode,isSyllabusEditable,session);
                     transaction.replace(R.id.main_content_root,syllabusFragment);
                     transaction.addToBackStack("syllabus_fragment");
                     transaction.commit();
