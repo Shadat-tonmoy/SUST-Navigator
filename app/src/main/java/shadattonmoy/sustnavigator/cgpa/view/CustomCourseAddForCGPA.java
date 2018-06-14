@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import shadattonmoy.sustnavigator.Course;
 import shadattonmoy.sustnavigator.R;
@@ -27,7 +28,7 @@ public class CustomCourseAddForCGPA extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
+        final AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = (LayoutInflater) getActivity().getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         view = inflater.inflate(R.layout.custom_course_dialog_layout,null);
         courseCode = (EditText) view.findViewById(R.id.custom_course_code);
@@ -46,6 +47,8 @@ public class CustomCourseAddForCGPA extends DialogFragment {
             @Override
             public void onClick(View v) {
                 grabValue();
+                dismiss();
+                Toast.makeText(getActivity().getApplicationContext(),"Custom Course Added",Toast.LENGTH_SHORT).show();
             }
         });
         return dialog.create();
