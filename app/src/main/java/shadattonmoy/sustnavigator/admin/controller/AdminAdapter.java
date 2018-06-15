@@ -1,20 +1,16 @@
-package shadattonmoy.sustnavigator;
+package shadattonmoy.sustnavigator.admin.controller;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -29,7 +25,8 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
-import static shadattonmoy.sustnavigator.R.id.imageView;
+import shadattonmoy.sustnavigator.R;
+import shadattonmoy.sustnavigator.admin.model.Admin;
 
 /**
  * Created by Shadat Tonmoy on 10/2/2017.

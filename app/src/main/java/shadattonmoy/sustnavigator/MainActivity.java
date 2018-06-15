@@ -29,6 +29,9 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
+import shadattonmoy.sustnavigator.admin.view.AdminFragment;
+import shadattonmoy.sustnavigator.admin.view.AdminManage;
+import shadattonmoy.sustnavigator.admin.view.AdminPanelFragment;
 import shadattonmoy.sustnavigator.dept.view.DeptFragment;
 import shadattonmoy.sustnavigator.holiday.view.HolidaysFragment;
 import shadattonmoy.sustnavigator.proctor.view.ProctorialBodyFragment;

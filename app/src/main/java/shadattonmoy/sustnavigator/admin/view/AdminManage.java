@@ -1,10 +1,7 @@
-package shadattonmoy.sustnavigator;
+package shadattonmoy.sustnavigator.admin.view;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +17,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.List;
+
+import shadattonmoy.sustnavigator.R;
+import shadattonmoy.sustnavigator.admin.controller.AdminAdapter;
+import shadattonmoy.sustnavigator.admin.model.Admin;
 
 
 public class AdminManage extends android.app.Fragment {

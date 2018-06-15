@@ -1,30 +1,27 @@
-package shadattonmoy.sustnavigator;
+package shadattonmoy.sustnavigator.admin.view;
 
 import android.app.FragmentTransaction;
-import android.content.Context;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+
+import shadattonmoy.sustnavigator.R;
 
 
 public class AdminFragment extends android.app.Fragment {
@@ -46,7 +43,7 @@ public class AdminFragment extends android.app.Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_admin, container, false);
+        View view = inflater.inflate(R.layout.fragment_admin_login, container, false);
         loginEmail = (EditText) view.findViewById(R.id.loginemail);
         loginPassword = (EditText) view.findViewById(R.id.loginpassword);
         loginButton = (Button) view.findViewById(R.id.loginbutton);
