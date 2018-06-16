@@ -58,4 +58,8 @@ public class Holiday {
     public void setHoliayId(String holiayId) {
         this.holiayId = holiayId;
     }
+
+    public void setHolidayDays(String holidayDays) {
+        this.holidayDays = holidayDays;
+    }
 }

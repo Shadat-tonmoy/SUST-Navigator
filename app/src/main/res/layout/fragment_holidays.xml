@@ -60,6 +60,17 @@
             android:visibility="gone"
             android:text="TextView" />
 
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/add_holiday_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_margin="16dp"
+            android:visibility="gone"
+            android:src="@drawable/ic_add_white_24dp"
+            />
+
 
     </RelativeLayout>
 

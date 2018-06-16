@@ -1,10 +1,12 @@
 package shadattonmoy.sustnavigator.holiday.view;
 
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +26,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import shadattonmoy.sustnavigator.HolidayAddFragment;
 import shadattonmoy.sustnavigator.holiday.controller.HolidayAdapter;
 import shadattonmoy.sustnavigator.R;
 import shadattonmoy.sustnavigator.holiday.model.Holiday;
@@ -46,7 +49,16 @@ public class HolidaysFragment extends android.app.Fragment {
     private FragmentManager manager;
     private Context context;
     private AppBarLayout appBarLayout;
+    private FloatingActionButton addHolidayFab;
+    private boolean isAdmin;
+
+
     public HolidaysFragment() {
+
+    }
+
+    public HolidaysFragment(boolean isAdmin) {
+        this.isAdmin = isAdmin;
 
     }
 
@@ -72,6 +84,8 @@ public class HolidaysFragment extends android.app.Fragment {
         progressBar = (ProgressBar) view.findViewById(R.id.holiday_loading);
         noHolidayFoundImage = (ImageView) view.findViewById(R.id.nothing_found_image);
         appBarLayout = (AppBarLayout) getActivity().findViewById(R.id.appbar_layout);
+        addHolidayFab = (FloatingActionButton) view.findViewById(R.id.add_holiday_fab);
+
         return view;
     }
 
@@ -89,6 +103,8 @@ public class HolidaysFragment extends android.app.Fragment {
         appBarLayout.setExpanded(false);
 
 
+
+
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference().child("holiday").child(String.valueOf(year));
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -104,7 +120,9 @@ public class HolidaysFragment extends android.app.Fragment {
                 }
                 if(numOfHolidays==0)
                 {
-                    noHolidayFoundView.setText("Sorry!! No Holiday found for "+year+". Please contact admin");
+                    if(isAdmin)
+                        noHolidayFoundView.setText("Sorry!! No Holiday found for "+year+". Tap '+' to add a new Holiday");
+                    else noHolidayFoundView.setText("Sorry!! No Holiday found for "+year+". Please contact admin");
                     try{
                         Glide.with(context).load(context.getResources()
                                 .getIdentifier("nothing_found", "drawable", context.getPackageName())).thumbnail(0.5f)
@@ -125,6 +143,21 @@ public class HolidaysFragment extends android.app.Fragment {
                     holidayList.setAdapter(adapter);
                 }
                 progressBar.setVisibility(View.GONE);
+                if(isAdmin)
+                {
+                    addHolidayFab.setVisibility(View.VISIBLE);
+                    addHolidayFab.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            FragmentManager manager = getFragmentManager();
+                            FragmentTransaction transaction = manager.beginTransaction();
+                            HolidayAddFragment holidayAddFragment = new HolidayAddFragment(String.valueOf(year));
+                            transaction.replace(R.id.main_content_root,holidayAddFragment);
+                            transaction.addToBackStack("holiday_add_fragment");
+                            transaction.commit();
+                        }
+                    });
+                }
 
             }
 

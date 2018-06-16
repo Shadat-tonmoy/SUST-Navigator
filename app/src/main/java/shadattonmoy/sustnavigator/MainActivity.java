@@ -226,7 +226,7 @@ public class MainActivity extends AppCompatActivity
     {
         FragmentManager manager = getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
-        HolidaysFragment holidaysFragment = new HolidaysFragment();
+        HolidaysFragment holidaysFragment = new HolidaysFragment(false);
         transaction.replace(R.id.main_content_root,holidaysFragment);
         transaction.addToBackStack("holiday_fragment");
         transaction.commit();
@@ -333,7 +333,7 @@ public class MainActivity extends AppCompatActivity
     {
         FragmentManager manager = getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
-        HolidayManageFragment holidayManageFragment = new HolidayManageFragment();
+        HolidaysFragment holidayManageFragment = new HolidaysFragment(true);
         transaction.replace(R.id.main_content_root,holidayManageFragment);
         transaction.addToBackStack("holiday_manage_fragment");
         transaction.commit();

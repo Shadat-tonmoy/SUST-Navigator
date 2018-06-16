@@ -11,6 +11,8 @@ import android.widget.Toast;
 
 import java.util.Calendar;
 
+import shadattonmoy.sustnavigator.utils.Values;
+
 /**
  * Created by Shadat Tonmoy on 9/7/2017.
  */
@@ -23,8 +25,7 @@ public class DatepickerDialog extends DialogFragment implements DatePickerDialog
         this.editField = editField;
 
     }
-    String[] months = {"January","February","March","April","May","June","July","August","September","October","November","December"};
-    String[] days = {"Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
@@ -45,19 +46,21 @@ public class DatepickerDialog extends DialogFragment implements DatePickerDialog
     public void onDateSet(DatePicker view, int year, int month, int date) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(year,month,date);
+        long timeStamps = calendar.getTimeInMillis();
         int day = calendar.get(Calendar.DAY_OF_WEEK)-1;
-
-        String chosen = date+"/"+months[month].substring(0,3)+"/"+year;
+        String chosen = date+"/"+ Values.months[month].substring(0,3)+"/"+year;
 
         if(editField.equals("holidayStart"))
         {
             HolidayAddFragment.holidayStart.setText(chosen);
-            HolidayAddFragment.startDay = days[day];
+            HolidayAddFragment.startDay = Values.days[day];
+            HolidayAddFragment.holidayStartTime = timeStamps;
         }
         else if(editField.equals("holidayEnd"))
         {
             HolidayAddFragment.holidayEnd.setText(chosen);
-            HolidayAddFragment.endDay= days[day];
+            HolidayAddFragment.endDay= Values.days[day];
+            HolidayAddFragment.holidayEndTime = timeStamps;
         }
 
     }

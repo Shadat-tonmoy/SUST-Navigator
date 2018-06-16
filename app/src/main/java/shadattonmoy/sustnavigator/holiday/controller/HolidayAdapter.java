@@ -66,7 +66,7 @@ public class HolidayAdapter extends ArrayAdapter<Holiday>{
 
         String holidayDesc = holidayStart+" - "+holidayEnd;
 
-        String holidayDays = "Number of days";
+        String holidayDays = currentHoliday.getHolidayDays()+" Days";
         TextView holidayNameView = (TextView) row.findViewById(R.id.holiday_name);
         TextView holidayDateView = (TextView) row.findViewById(R.id.holiday_date);
         TextView holidayDaysView = (TextView) row.findViewById(R.id.holiday_days);
