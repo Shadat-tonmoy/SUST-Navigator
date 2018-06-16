@@ -37,13 +37,16 @@ public class FacultyAddConfirmationDialog extends DialogFragment {
     private View view,viewForSnackbar;
     private Context context;
     private FragmentManager fragmentManager;
-    public FacultyAddConfirmationDialog(Context context,String warningMsg,String dept, Teacher teacher, View view,FragmentManager manager){
+    private boolean isUpdate;
+    private String facultyIdToUpdate;
+    public FacultyAddConfirmationDialog(Context context,String warningMsg,String dept, Teacher teacher, View view,FragmentManager manager,boolean isUpdate){
         this.warningMsg = warningMsg;
         this.dept = dept;
         this.teacher = teacher;
         this.context = context;
         this.viewForSnackbar = view;
         this.fragmentManager = manager;
+        this.isUpdate = isUpdate;
     }
 
     @Override
@@ -55,7 +58,10 @@ public class FacultyAddConfirmationDialog extends DialogFragment {
         TextView textView = (TextView) view.findViewById(R.id.confirmation_dialog_msg);
         if(warningMsg.equals("OK"))
         {
-            textView.setText("Are you sure to add this Faculty Member?");
+            if(isUpdate)
+                textView.setText("Are You Sure to Update Record of Faculty Member?");
+            else
+                textView.setText("Are You Sure to Add This Faculty Member?");
             textView.setBackgroundColor(getResources().getColor(R.color.warningGreen));
         }
         else {
@@ -72,7 +78,9 @@ public class FacultyAddConfirmationDialog extends DialogFragment {
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                addFaculty();
+                if(isUpdate)
+                    updateFaculty(facultyIdToUpdate);
+                else addFaculty();
             }
         });
         return builder.create();
@@ -108,11 +116,44 @@ public class FacultyAddConfirmationDialog extends DialogFragment {
                     snackbar.show();
 
                 } catch (Exception e){
-                    //textView.setText(e.getMessage().toString());
-
 
                 }
             }
         });
+    }
+
+    public void updateFaculty(String facultyId)
+    {
+        final ProgressDialog dialog;
+        dialog = new ProgressDialog(getActivity());
+        dialog.setTitle("Updating Record");
+        dialog.setMessage("Please Wait....");
+        dialog.show();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference().child("teacher").child(dept.toLowerCase()).child(facultyId);
+        databaseReference.setValue(teacher).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                try{
+                    dialog.dismiss();
+                    Snackbar snackbar = Snackbar.make(viewForSnackbar,"Record Updated",Snackbar.LENGTH_INDEFINITE).setAction("Back", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            fragmentManager.popBackStack();
+
+                        }
+                    }).setActionTextColor(context.getResources().getColor(R.color.blue));
+
+                    snackbar.show();
+
+                } catch (Exception e){
+
+                }
+            }
+        });
+    }
+
+    public void setFacultyIdToUpdate(String facultyIdToUpdate) {
+        this.facultyIdToUpdate = facultyIdToUpdate;
     }
 }

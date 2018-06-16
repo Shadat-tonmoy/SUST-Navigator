@@ -42,9 +42,13 @@ public class TeacherAddFragment extends android.app.Fragment {
     private static Spinner designationField;
     private CharSequence designation;
     private FragmentManager fragmentManager;
+    private boolean isEditing = false;
+    private String facultyIdToUpdate;
+
     public TeacherAddFragment() {
 
     }
+
     public TeacherAddFragment(String dept) {
         this.dept = dept;
     }
@@ -61,7 +65,7 @@ public class TeacherAddFragment extends android.app.Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_faculty_add, container, false);
         addFacultyTitle = (TextView) view.findViewById(R.id.add_faculty_header);
-        addFacultyTitle.setText("Fill the form to add faculty for "+dept+" Dept");
+        addFacultyTitle.setText("Fill the form to add faculty for " + dept + " Dept");
         nameField = (EditText) view.findViewById(R.id.teacher_add_name_field);
         designationField = (Spinner) view.findViewById(R.id.teacher_add_designation_field);
         emailField = (EditText) view.findViewById(R.id.teacher_add_email_field);
@@ -69,6 +73,32 @@ public class TeacherAddFragment extends android.app.Fragment {
         roomField = (EditText) view.findViewById(R.id.teacher_add_room_no_field);
         fbField = (EditText) view.findViewById(R.id.teacher_add_fb_field);
         teacherAddSubmitButton = (Button) view.findViewById(R.id.teacher_add_submit_btn);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity().getApplicationContext(), R.array.designation, R.layout.spinner_layout);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        designationField.setAdapter(adapter);
+
+        Bundle args = getArguments();
+        isEditing = false;
+        if (args != null) {
+            isEditing = getArguments().getBoolean("isEditing", false);
+            if (isEditing) {
+                nameField.setText(args.getString("name"));
+                emailField.setText(args.getString("email"));
+                phoneField.setText(args.getString("phone"));
+                roomField.setText(args.getString("room"));
+                fbField.setText(args.getString("fb"));
+                String designation = args.getString("designation");
+                facultyIdToUpdate = args.getString("id");
+                String[] designationArray = getActivity().getResources().getStringArray(R.array.designation);
+                for (int i = 0; i < designationArray.length; i++) {
+                    if (designationArray[i].equals(designation)) {
+                        designationField.setSelection(i);
+                        break;
+                    }
+                }
+                teacherAddSubmitButton.setText("Update");
+            }
+        } else designationField.setSelection(0);
         return view;
     }
 
@@ -78,19 +108,13 @@ public class TeacherAddFragment extends android.app.Fragment {
         fragmentManager = getFragmentManager();
         firebaseDatabase = FirebaseDatabase.getInstance();
         awesomeValidation = new AwesomeValidation(ValidationStyle.BASIC);
-        awesomeValidation.addValidation(getActivity(),R.id.teacher_add_name_field,"^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$",R.string.name_error);
-        awesomeValidation.addValidation(getActivity(),R.id.teacher_add_email_field, Patterns.EMAIL_ADDRESS,R.string.email_error);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity().getApplicationContext(),R.array.designation,R.layout.spinner_layout);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        designationField.setAdapter(adapter);
-        designationField.setSelection(0);
-
-
+        awesomeValidation.addValidation(getActivity(), R.id.teacher_add_name_field, "^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$", R.string.name_error);
+        awesomeValidation.addValidation(getActivity(), R.id.teacher_add_email_field, Patterns.EMAIL_ADDRESS, R.string.email_error);
         designationField.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 designation = (CharSequence) parent.getItemAtPosition(position);
-                if(position == 0)
+                if (position == 0)
                     designation = "N/A";
             }
 
@@ -99,70 +123,55 @@ public class TeacherAddFragment extends android.app.Fragment {
 
             }
         });
-
-
-
-
-
         teacherAddSubmitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(awesomeValidation.validate())
-                {
-
+                if (awesomeValidation.validate()) {
                     String name = nameField.getText().toString();
                     String email = emailField.getText().toString();
                     String phone = phoneField.getText().toString();
                     String room = roomField.getText().toString();
                     String fb = fbField.getText().toString();
                     String warning_msg = "";
-                   // Toast.makeText(getActivity().getApplicationContext(),"Details : \n" + name + "\n" + designation.toString() + "\n" + email,Toast.LENGTH_LONG).show();
-                    if(phone.trim().equals("") || room.trim().equals("") || fb.trim().equals(""))
-                    {
+                    if (phone.trim().equals("") || room.trim().equals("") || fb.trim().equals("")) {
                         warning_msg = "Please notice you have not added ";
-                        if(phone.trim().equals(""))
-                        {
-                            warning_msg += "Phone";
+                        if (phone.trim().equals("")) {
+                            warning_msg += "Phone ";
                             phone = "N/A";
-                            if(room.trim().equals(""))
+                            if (room.trim().equals(""))
                                 warning_msg += ",";
                         }
-                        if(room.trim().equals(""))
-                        {
-                            warning_msg += "Room No";
+                        if (room.trim().equals("")) {
+                            warning_msg += "Room No ";
                             room = "N/A";
-                            if(fb.trim().equals(""))
+                            if (fb.trim().equals(""))
                                 warning_msg += ",";
                         }
-                        if(fb.trim().equals(""))
-                        {
-                            warning_msg += "Facebook ID";
+                        if (fb.trim().equals("")) {
+                            warning_msg += "Facebook ID ";
                             fb = "N/A";
-                            if(designation.toString().trim().equals("N/A"))
+                            if (designation.toString().trim().equals("N/A"))
                                 warning_msg += ",";
                         }
-                        if(designation.toString().trim().equals("N/A"))
-                        {
-                            warning_msg += "Designation";
+                        if (designation.toString().trim().equals("N/A")) {
+                            warning_msg += "Designation ";
                         }
                         warning_msg += ". Do You want to continue?";
-                    }
-                    else warning_msg = "OK";
-                    Teacher teacherToAdd = new Teacher(name,designation.toString(),room,phone,email,fb);
+                    } else warning_msg = "OK";
 
-                    Teacher teacher = new Teacher(name,designation.toString(),room,phone,email,fb);
-                    FacultyAddConfirmationDialog dialog = new FacultyAddConfirmationDialog(getActivity().getApplicationContext(),warning_msg,dept,teacher,view,fragmentManager);
-                    dialog.show(getFragmentManager(),"faculty_add_confirmation");
+                    Teacher teacher = new Teacher(name, designation.toString(), room, phone, email, fb);
+                    FacultyAddConfirmationDialog dialog = new FacultyAddConfirmationDialog(getActivity().getApplicationContext(), warning_msg, dept, teacher, view, fragmentManager,isEditing);
+                    if(isEditing)
+                        dialog.setFacultyIdToUpdate(facultyIdToUpdate);
+                    dialog.show(getFragmentManager(), "faculty_add_confirmation");
 
                 }
-//                databaseReference = firebaseDatabase.getReference().child("teacher").child(dept);
-//                databaseReference.push().setValue(new Teacher(name,designation,room,phone,email,fb));
             }
         });
 
     }
 
-    public static void reset(){
+    public static void reset() {
         nameField.setText("");
         emailField.setText("");
         phoneField.setText("");

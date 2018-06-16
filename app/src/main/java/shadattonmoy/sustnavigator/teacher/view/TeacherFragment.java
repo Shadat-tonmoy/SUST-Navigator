@@ -11,6 +11,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -109,6 +110,11 @@ public class TeacherFragment extends android.app.Fragment {
                 {
                     manager = getFragmentManager();
                     TeacherListAdapter adapter = new TeacherListAdapter(getActivity().getApplicationContext(),R.layout.teacher_single_row,R.id.teacher_icon,teachers,dept);
+                    adapter.setFragmentManager(getFragmentManager());
+
+                    ListView teacherListView = (ListView) view.findViewById(R.id.teacherList);
+                    teacherListView.setAdapter(adapter);
+                    teacherListView.setOnItemClickListener(new detailListener(getActivity().getApplicationContext(),manager));
                     if(isAdmin)
                     {
                         adapter.setAdmin(isAdmin);
@@ -124,10 +130,27 @@ public class TeacherFragment extends android.app.Fragment {
                                 transaction.commit();
                             }
                         });
+                        /*teacherListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+
+                            @Override
+                            public void onScrollStateChanged(AbsListView absListView, int scrollState) {
+                                if(scrollState == SCROLL_STATE_IDLE){
+                                    addMoreTeacherFab.animate().cancel();
+                                    addMoreTeacherFab.setVisibility(View.GONE);
+                                }else{
+                                    addMoreTeacherFab.animate().cancel();
+                                    addMoreTeacherFab.setVisibility(View.VISIBLE);
+                                }
+                            }
+
+                            @Override
+                            public void onScroll(AbsListView absListView, int i, int i1, int i2) {
+
+                            }
+                        });*/
+
                     }
-                    ListView teacherListView = (ListView) view.findViewById(R.id.teacherList);
-                    teacherListView.setAdapter(adapter);
-                    teacherListView.setOnItemClickListener(new detailListener(getActivity().getApplicationContext(),manager));
+
                 }
                 else
                 {
