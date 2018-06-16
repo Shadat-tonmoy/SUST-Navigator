@@ -3,7 +3,6 @@ package shadattonmoy.sustnavigator.proctor.view;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -27,7 +26,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 import shadattonmoy.sustnavigator.proctor.controller.ProctorAdapter;
-import shadattonmoy.sustnavigator.ProctorAddFragment;
+import shadattonmoy.sustnavigator.admin.view.ProctorAddFragment;
 import shadattonmoy.sustnavigator.R;
 import shadattonmoy.sustnavigator.proctor.model.Proctor;
 

@@ -25,17 +25,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
-import shadattonmoy.sustnavigator.ProctorAddFragment;
+import shadattonmoy.sustnavigator.admin.view.ProctorAddFragment;
 import shadattonmoy.sustnavigator.R;
 import shadattonmoy.sustnavigator.proctor.model.Proctor;
 import shadattonmoy.sustnavigator.proctor.view.ProctorialBodyFragment;
@@ -180,7 +177,6 @@ class clickHandlerProctor implements PopupMenu.OnMenuItemClickListener{
         int id = item.getItemId();
         if (id == R.id.edit_proctor_menu)
         {
-            Toast.makeText(context,"Edit "+proctor.getProctorId(),Toast.LENGTH_SHORT).show();
             ProctorAddFragment proctorAddFragment = new ProctorAddFragment(true);
             proctorAddFragment.setProctor(proctor);
             FragmentTransaction transaction = manager.beginTransaction();
