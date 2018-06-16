@@ -48,6 +48,7 @@ tools:context="shadattonmoy.sustnavigator.proctor.view.ProctorialBodyFragment">
         android:layout_height="wrap_content"
         android:src="@drawable/ic_add_white_24dp"
         android:layout_margin="@dimen/fab_margin"
+        android:visibility="gone"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"/>
 

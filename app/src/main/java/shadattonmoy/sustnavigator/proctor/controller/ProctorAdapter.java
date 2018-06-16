@@ -81,16 +81,7 @@ public class ProctorAdapter extends ArrayAdapter<Proctor> {
         String iconText = String.valueOf(name.charAt(0));
         if(isEditable)
         {
-            try{
-                Glide.with(context).load(context.getResources()
-                        .getIdentifier("edit_icon", "drawable", context.getPackageName())).thumbnail(0.5f)
-                        .crossFade()
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .into(imageView);
-            }catch (Exception e)
-            {
-                e.printStackTrace();
-            }
+            imageView.setBackgroundResource(R.drawable.more_vert_black);
             final PopupMenu popupMenu = new PopupMenu(getContext(),imageView,Gravity.LEFT);
             popupMenu.inflate(R.menu.proctor_manage_menu);
             imageView.setOnClickListener(new View.OnClickListener() {
@@ -103,17 +94,7 @@ public class ProctorAdapter extends ArrayAdapter<Proctor> {
 
         }
         else {
-
-            try{
-                Glide.with(context).load(context.getResources()
-                        .getIdentifier("phone_final", "drawable", context.getPackageName())).thumbnail(0.5f)
-                        .crossFade()
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .into(imageView);
-            }catch (Exception e)
-            {
-                e.printStackTrace();
-            }
+            imageView.setBackgroundResource(R.drawable.phone_black_24);
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

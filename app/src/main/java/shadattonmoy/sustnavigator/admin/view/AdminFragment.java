@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.CardView;
@@ -34,6 +35,7 @@ public class AdminFragment extends android.app.Fragment {
     private boolean isValid;
     private CardView loginErrorMsg;
     private TextView notAnAdminView;
+    private AppBarLayout appBarLayout;
 
     public AdminFragment() {
 
@@ -51,6 +53,7 @@ public class AdminFragment extends android.app.Fragment {
         passwordLayout = (TextInputLayout) view.findViewById(R.id.login_password_layout);
         loginErrorMsg = (CardView) view.findViewById(R.id.login_error_msg);
         notAnAdminView = (TextView) view.findViewById(R.id.not_an_admint_btn);
+        appBarLayout = (AppBarLayout) getActivity().findViewById(R.id.appbar_layout);
         return view;
     }
 
@@ -58,6 +61,7 @@ public class AdminFragment extends android.app.Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         firebaseAuth = FirebaseAuth.getInstance();
+        appBarLayout.setExpanded(false);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

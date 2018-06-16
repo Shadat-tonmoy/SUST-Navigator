@@ -72,24 +72,6 @@ public class ProctorialBodyFragment extends android.app.Fragment {
         nothingFoundImage = (ImageView) view.findViewById(R.id.nothing_found_image);
         nothingFoundText = (TextView) view.findViewById(R.id.nothing_found_txt);
         appBarLayout = (AppBarLayout) getActivity().findViewById(R.id.appbar_layout);
-        if(isEditable)
-        {
-            floatingActionButton.setVisibility(View.VISIBLE);
-            floatingActionButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    FragmentManager manager = getFragmentManager();
-                    FragmentTransaction transaction = manager.beginTransaction();
-                    ProctorAddFragment proctorAddFragment = new ProctorAddFragment(false);
-                    transaction.replace(R.id.main_content_root,proctorAddFragment);
-                    transaction.addToBackStack("proctor_add_fragment");
-                    transaction.commit();
-                }
-            });
-        }
-
-        else floatingActionButton.setVisibility(View.GONE);
-
         return view;
     }
 
@@ -130,7 +112,9 @@ public class ProctorialBodyFragment extends android.app.Fragment {
 
                     nothingFoundImage.setVisibility(View.VISIBLE);
                     nothingFoundText.setVisibility(View.VISIBLE);
-                    nothingFoundText.setText("OOOPS!!! No Records found for Proctorial Body Please Contact Admin");
+                    if(isEditable)
+                        nothingFoundText.setText("OOOPS!!! No Records found for Proctorial Body. Tap '+' to Add");
+                    else nothingFoundText.setText("OOOPS!!! No Records found for Proctorial Body Please Contact Admin");
                     try{
                         Glide.with(context).load(context.getResources()
                                 .getIdentifier("nothing_found", "drawable", context.getPackageName())).thumbnail(0.5f)
@@ -142,7 +126,21 @@ public class ProctorialBodyFragment extends android.app.Fragment {
                         e.printStackTrace();
                     }
                 }
-
+                if(isEditable)
+                {
+                    floatingActionButton.setVisibility(View.VISIBLE);
+                    floatingActionButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            FragmentManager manager = getFragmentManager();
+                            FragmentTransaction transaction = manager.beginTransaction();
+                            ProctorAddFragment proctorAddFragment = new ProctorAddFragment(false);
+                            transaction.replace(R.id.main_content_root,proctorAddFragment);
+                            transaction.addToBackStack("proctor_add_fragment");
+                            transaction.commit();
+                        }
+                    });
+                }
                 progressBar.setVisibility(View.GONE);
             }
 
