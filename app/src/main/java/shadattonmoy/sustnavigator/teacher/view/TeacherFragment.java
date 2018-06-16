@@ -4,7 +4,7 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,7 +17,6 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -29,6 +28,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import shadattonmoy.sustnavigator.admin.view.TeacherAddFragment;
 import shadattonmoy.sustnavigator.R;
 import shadattonmoy.sustnavigator.SQLiteAdapter;
 import shadattonmoy.sustnavigator.dept.model.Dept;
@@ -49,6 +49,8 @@ public class TeacherFragment extends android.app.Fragment {
     private TextView fragmentHeader,nothingFoundText;
     private ImageView nothingFoundImage;
     private Context context;
+    private boolean isAdmin;
+    private FloatingActionButton addMoreTeacherFab;
     public TeacherFragment()
     {
 
@@ -75,6 +77,7 @@ public class TeacherFragment extends android.app.Fragment {
         fragmentHeader = (TextView) view.findViewById(R.id.teacher_fragment_title);
         nothingFoundText = (TextView) view.findViewById(R.id.nothing_found_txt);
         nothingFoundImage = (ImageView) view.findViewById(R.id.nothing_found_image);
+        addMoreTeacherFab = (FloatingActionButton) view.findViewById(R.id.add_more_teacher_fab);
         return view;
     }
 
@@ -99,12 +102,29 @@ public class TeacherFragment extends android.app.Fragment {
                 for (DataSnapshot child : dataSnapshot.getChildren())
                 {
                     Teacher currentTeachcer = child.getValue(Teacher.class);
+                    currentTeachcer.setId(child.getKey());
                     teachers.add(currentTeachcer);
                 }
                 if(teachers.size()>0)
                 {
                     manager = getFragmentManager();
                     TeacherListAdapter adapter = new TeacherListAdapter(getActivity().getApplicationContext(),R.layout.teacher_single_row,R.id.teacher_icon,teachers,dept);
+                    if(isAdmin)
+                    {
+                        adapter.setAdmin(isAdmin);
+                        addMoreTeacherFab.setVisibility(View.VISIBLE);
+                        addMoreTeacherFab.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                android.app.FragmentManager manager = getFragmentManager();
+                                android.app.FragmentTransaction transaction = manager.beginTransaction();
+                                TeacherAddFragment teacherAddFragment = new TeacherAddFragment(dept.getDeptCode());
+                                transaction.replace(R.id.main_content_root, teacherAddFragment);
+                                transaction.addToBackStack("teacher_add_fragment");
+                                transaction.commit();
+                            }
+                        });
+                    }
                     ListView teacherListView = (ListView) view.findViewById(R.id.teacherList);
                     teacherListView.setAdapter(adapter);
                     teacherListView.setOnItemClickListener(new detailListener(getActivity().getApplicationContext(),manager));
@@ -153,6 +173,10 @@ public class TeacherFragment extends android.app.Fragment {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void setAdmin(boolean admin) {
+        isAdmin = admin;
     }
 }
 

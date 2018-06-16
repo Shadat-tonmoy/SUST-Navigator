@@ -29,6 +29,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import shadattonmoy.sustnavigator.admin.view.TeacherAddFragment;
 import shadattonmoy.sustnavigator.teacher.model.Teacher;
 
 
@@ -100,8 +101,8 @@ public class TeacherManageFragment extends android.app.Fragment {
             public void onClick(View v) {
                 android.app.FragmentManager manager = getFragmentManager();
                 android.app.FragmentTransaction transaction = manager.beginTransaction();
-                FacultyAddFragment facultyAddFragment = new FacultyAddFragment(deptToManage);
-                transaction.replace(R.id.main_content_root,facultyAddFragment);
+                TeacherAddFragment teacherAddFragment = new TeacherAddFragment(deptToManage);
+                transaction.replace(R.id.main_content_root, teacherAddFragment);
                 transaction.addToBackStack("teacher_add_fragment");
                 transaction.commit();
             }

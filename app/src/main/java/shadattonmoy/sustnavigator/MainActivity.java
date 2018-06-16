@@ -310,7 +310,7 @@ public class MainActivity extends AppCompatActivity
         FragmentManager manager = getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         DeptFragment deptFragment = new DeptFragment();
-        deptFragment.setPurpose("TEACHER_MANAGE");
+        deptFragment.setPurpose("teacher_manage");
         transaction.replace(R.id.main_content_root,deptFragment);
         transaction.addToBackStack("teacher_manage_fragment");
         transaction.commit();

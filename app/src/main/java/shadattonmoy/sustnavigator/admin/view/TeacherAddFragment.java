@@ -1,4 +1,4 @@
-package shadattonmoy.sustnavigator;
+package shadattonmoy.sustnavigator.admin.view;
 
 import android.app.FragmentManager;
 import android.os.Bundle;
@@ -20,10 +20,12 @@ import com.basgeekball.awesomevalidation.ValidationStyle;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import shadattonmoy.sustnavigator.FacultyAddConfirmationDialog;
+import shadattonmoy.sustnavigator.R;
 import shadattonmoy.sustnavigator.teacher.model.Teacher;
 
 
-public class FacultyAddFragment extends android.app.Fragment {
+public class TeacherAddFragment extends android.app.Fragment {
     private String dept;
     private View view;
     private TextView addFacultyTitle;
@@ -40,10 +42,10 @@ public class FacultyAddFragment extends android.app.Fragment {
     private static Spinner designationField;
     private CharSequence designation;
     private FragmentManager fragmentManager;
-    public FacultyAddFragment() {
+    public TeacherAddFragment() {
 
     }
-    public FacultyAddFragment(String dept) {
+    public TeacherAddFragment(String dept) {
         this.dept = dept;
     }
 
@@ -67,7 +69,6 @@ public class FacultyAddFragment extends android.app.Fragment {
         roomField = (EditText) view.findViewById(R.id.teacher_add_room_no_field);
         fbField = (EditText) view.findViewById(R.id.teacher_add_fb_field);
         teacherAddSubmitButton = (Button) view.findViewById(R.id.teacher_add_submit_btn);
-        teacherAddLoading = (ProgressBar) view.findViewById(R.id.teacher_add_loading);
         return view;
     }
 
@@ -75,7 +76,6 @@ public class FacultyAddFragment extends android.app.Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         fragmentManager = getFragmentManager();
-        teacherAddLoading.setVisibility(View.GONE);
         firebaseDatabase = FirebaseDatabase.getInstance();
         awesomeValidation = new AwesomeValidation(ValidationStyle.BASIC);
         awesomeValidation.addValidation(getActivity(),R.id.teacher_add_name_field,"^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$",R.string.name_error);
@@ -92,8 +92,6 @@ public class FacultyAddFragment extends android.app.Fragment {
                 designation = (CharSequence) parent.getItemAtPosition(position);
                 if(position == 0)
                     designation = "N/A";
-
-
             }
 
             @Override

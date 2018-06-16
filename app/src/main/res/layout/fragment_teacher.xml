@@ -1,7 +1,12 @@
-<android.support.v7.widget.CardView
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+<android.support.v7.widget.CardView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginLeft="8dp"
@@ -59,10 +64,16 @@
             android:textColor="@color/blue"
             android:visibility="gone"
             android:text="TextView" />
-
-
     </RelativeLayout>
-
-
 </android.support.v7.widget.CardView>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/add_more_teacher_fab"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:src="@drawable/add"
+        />
 
+</android.support.design.widget.CoordinatorLayout>

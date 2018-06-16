@@ -5,6 +5,7 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -15,6 +16,9 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.ArrayList;
 
@@ -58,8 +62,22 @@ public class TeacherListAdapter extends ArrayAdapter<Teacher>{
         TextView teacherDesignation = (TextView) row.findViewById(R.id.teacher_designation);
         TextView teacherRoom = (TextView) row.findViewById(R.id.teacher_room);
         imageView = (ImageView) row.findViewById(R.id.contact_teacher);
+
         if(isAdmin)
+        {
             imageView.setVisibility(View.VISIBLE);
+            imageView.setBackgroundResource(R.drawable.more_vert_black);
+            /*try{
+                Glide.with(context).load(context.getResources()
+                        .getIdentifier("more_vert_black", "drawable", context.getPackageName())).thumbnail(0.5f)
+                        .crossFade()
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(imageView);
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }*/
+        }
         else imageView.setVisibility(View.GONE);
 //        imageView.setImageResource(R.drawable.edit_icon);
         final PopupMenu popupMenu = new PopupMenu(getContext(),imageView,Gravity.LEFT);
@@ -120,5 +138,9 @@ public class TeacherListAdapter extends ArrayAdapter<Teacher>{
 
 
         return row;
+    }
+
+    public void setAdmin(boolean admin) {
+        isAdmin = admin;
     }
 }

@@ -83,6 +83,17 @@ public class SchoolListAdapter extends RecyclerView.Adapter<SchoolListAdapter.My
                     }
                 });
             }
+            else if(purpose.equals("teacher_manage"))
+            {
+                deptCell.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        TeacherFragment teacherFragment = new TeacherFragment(dept);
+                        teacherFragment.setAdmin(true);
+                        loadFragment(teacherFragment,"deptFragment");
+                    }
+                });
+            }
             else if(purpose.equals("syllabus"))
             {
                 deptCell.setOnClickListener(new View.OnClickListener() {

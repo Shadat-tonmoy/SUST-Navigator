@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import shadattonmoy.sustnavigator.admin.view.TeacherAddFragment;
 import shadattonmoy.sustnavigator.teacher.model.Teacher;
 
 /**
@@ -64,14 +66,12 @@ public class FacultyAddConfirmationDialog extends DialogFragment {
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(getActivity(),"Negative was clicked",Toast.LENGTH_SHORT).show();
                 dismiss();
             }
         });
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(getActivity(),"Positive was clicked",Toast.LENGTH_SHORT).show();
                 addFaculty();
             }
         });
@@ -80,20 +80,30 @@ public class FacultyAddConfirmationDialog extends DialogFragment {
 
     public void addFaculty()
     {
+        final ProgressDialog dialog;
+        dialog = new ProgressDialog(getActivity());
+        dialog.setTitle("Adding Record");
+        dialog.setMessage("Please Wait....");
+        dialog.show();
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference().child("teacher").child(dept.toLowerCase());
         databaseReference.push().setValue(teacher).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 try{
-
+                    dialog.dismiss();
                     Snackbar snackbar = Snackbar.make(viewForSnackbar,"Faculty Added",Snackbar.LENGTH_INDEFINITE).setAction("Back", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             fragmentManager.popBackStack();
 
                         }
-                    });
+                    }).setAction("Add New Record", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            TeacherAddFragment.reset();
+                        }
+                    }).setActionTextColor(context.getResources().getColor(R.color.blue));
 
                     snackbar.show();
 
