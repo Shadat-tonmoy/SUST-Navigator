@@ -20,7 +20,6 @@ import com.basgeekball.awesomevalidation.ValidationStyle;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import shadattonmoy.sustnavigator.FacultyAddConfirmationDialog;
 import shadattonmoy.sustnavigator.R;
 import shadattonmoy.sustnavigator.teacher.model.Teacher;
 

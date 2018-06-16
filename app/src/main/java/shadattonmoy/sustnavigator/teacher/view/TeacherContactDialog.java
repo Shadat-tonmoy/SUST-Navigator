@@ -1,4 +1,4 @@
-package shadattonmoy.sustnavigator;
+package shadattonmoy.sustnavigator.teacher.view;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -9,12 +9,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import shadattonmoy.sustnavigator.R;
 
 /**
  * Created by Shadat Tonmoy on 6/18/2017.
@@ -53,7 +54,7 @@ public class TeacherContactDialog extends DialogFragment{
         builder.setNegativeButton("Okay", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(getActivity(),"Negative was clicked",Toast.LENGTH_SHORT).show();
+
                 dismiss();
 
             }

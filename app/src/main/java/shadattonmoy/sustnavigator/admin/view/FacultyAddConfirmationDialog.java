@@ -1,4 +1,4 @@
-package shadattonmoy.sustnavigator;
+package shadattonmoy.sustnavigator.admin.view;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -21,6 +21,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import shadattonmoy.sustnavigator.R;
 import shadattonmoy.sustnavigator.admin.view.TeacherAddFragment;
 import shadattonmoy.sustnavigator.teacher.model.Teacher;
 

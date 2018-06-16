@@ -31,7 +31,6 @@ import java.util.List;
 
 import shadattonmoy.sustnavigator.R;
 import shadattonmoy.sustnavigator.StaffFragment;
-import shadattonmoy.sustnavigator.TeacherManageFragment;
 import shadattonmoy.sustnavigator.school.controller.SchoolListAdapter;
 import shadattonmoy.sustnavigator.school.model.School;
 import shadattonmoy.sustnavigator.utils.SyllabusSessionBottomSheet;
@@ -108,64 +107,7 @@ public class DeptFragment extends android.app.Fragment implements View.OnClickLi
         int id_fet = getActivity().findViewById(R.id.dept_code_fet).getId();
         int id_pme = getActivity().findViewById(R.id.dept_code_pme).getId();
         int id_che = getActivity().findViewById(R.id.dept_code_che).getId();
-        if(purpose.equals("TEACHER_MANAGE"))
-        {
-            if(id==id_cse)
-            {
-                FragmentManager manager = getFragmentManager();
-                TeacherManageFragment cseTeacherManageFragment = new TeacherManageFragment("CSE");
-                FragmentTransaction transaction = manager.beginTransaction();
-                transaction.replace(R.id.main_content_root,cseTeacherManageFragment,"cse_teacher_fragment");
-                transaction.addToBackStack("cse_teacher_manage_fragment");
-                transaction.commit();
-            }
-
-            else if(id==id_eee)
-            {
-                FragmentManager manager = getFragmentManager();
-                TeacherManageFragment eeeTeacherManageFragment = new TeacherManageFragment("EEE");
-                FragmentTransaction transaction = manager.beginTransaction();
-                transaction.replace(R.id.main_content_root,eeeTeacherManageFragment,"eee_teacher_fragment");
-                transaction.addToBackStack("eee_teacher_manage_fragment");
-                transaction.commit();
-
-            }
-            else if(id==id_ipe)
-            {
-                FragmentManager manager = getFragmentManager();
-                TeacherManageFragment ipeTeacherManageFragment = new TeacherManageFragment("IPE");
-                FragmentTransaction transaction = manager.beginTransaction();
-                transaction.replace(R.id.main_content_root,ipeTeacherManageFragment,"ipe_teacher_fragment");
-                transaction.addToBackStack("ipe_teacher_manage_fragment");
-                transaction.commit();
-            }
-            else if(id==id_cee)
-            {
-                Toast.makeText(getActivity().getApplicationContext(),"CEE",Toast.LENGTH_SHORT).show();
-            }
-            else if(id==id_cep)
-            {
-                /*FragmentManager manager = getFragmentManager();
-                TeacherFragment cseTeacherFragment = new TeacherFragment("CEP");
-                FragmentTransaction transaction = manager.beginTransaction();
-                transaction.replace(R.id.main_content_root,cseTeacherFragment,"cep_teacher_fragment");
-                transaction.addToBackStack("cep_teacher_fragment");
-                transaction.commit();*/
-            }
-            else if(id==id_mee)
-            {
-                Toast.makeText(getActivity().getApplicationContext(),"MEE",Toast.LENGTH_SHORT).show();
-            }
-            else if(id==id_fet)
-            {
-                Toast.makeText(getActivity().getApplicationContext(),"FET",Toast.LENGTH_SHORT).show();
-            }
-            else if(id==id_pme)
-            {
-                Toast.makeText(getActivity().getApplicationContext(),"PME",Toast.LENGTH_SHORT).show();
-            }
-        }
-        else if(purpose.equals("SYLLABUS_MANAGE"))
+        if(purpose.equals("SYLLABUS_MANAGE"))
         {
             if(id==id_cse)
             {

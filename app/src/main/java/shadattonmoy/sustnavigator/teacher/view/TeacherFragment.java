@@ -11,7 +11,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -34,7 +33,6 @@ import shadattonmoy.sustnavigator.R;
 import shadattonmoy.sustnavigator.SQLiteAdapter;
 import shadattonmoy.sustnavigator.dept.model.Dept;
 import shadattonmoy.sustnavigator.teacher.controller.TeacherListAdapter;
-import shadattonmoy.sustnavigator.TeacherContactDialog;
 import shadattonmoy.sustnavigator.teacher.model.Teacher;
 
 
@@ -118,6 +116,8 @@ public class TeacherFragment extends android.app.Fragment {
                     if(isAdmin)
                     {
                         adapter.setAdmin(isAdmin);
+                        adapter.setView(view);
+                        adapter.setActivity(getActivity());
                         addMoreTeacherFab.setVisibility(View.VISIBLE);
                         addMoreTeacherFab.setOnClickListener(new View.OnClickListener() {
                             @Override

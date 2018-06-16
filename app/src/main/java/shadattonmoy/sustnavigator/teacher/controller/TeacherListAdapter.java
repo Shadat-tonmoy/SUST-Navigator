@@ -1,12 +1,15 @@
 package shadattonmoy.sustnavigator.teacher.controller;
 
+import android.app.Activity;
 import android.app.FragmentManager;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -21,6 +24,9 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
@@ -42,6 +48,9 @@ public class TeacherListAdapter extends ArrayAdapter<Teacher>{
     private ImageView imageView;
     private boolean isAdmin = false;
     private FragmentManager fragmentManager;
+    private FirebaseDatabase firebaseDatabase;
+    private View view;
+    private Activity activity;
     public TeacherListAdapter(Context context, int resource, int textViewResourceId, ArrayList<Teacher> objects, Dept dept) {
         super(context, resource, textViewResourceId, objects);
         this.context = context;
@@ -71,19 +80,8 @@ public class TeacherListAdapter extends ArrayAdapter<Teacher>{
         {
             imageView.setVisibility(View.VISIBLE);
             imageView.setBackgroundResource(R.drawable.more_vert_black);
-            /*try{
-                Glide.with(context).load(context.getResources()
-                        .getIdentifier("more_vert_black", "drawable", context.getPackageName())).thumbnail(0.5f)
-                        .crossFade()
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .into(imageView);
-            }catch (Exception e)
-            {
-                e.printStackTrace();
-            }*/
         }
         else imageView.setVisibility(View.GONE);
-//        imageView.setImageResource(R.drawable.edit_icon);
         final PopupMenu popupMenu = new PopupMenu(getContext(),imageView,Gravity.LEFT);
         final String name = currentTeacher.getName();
         final String designation = currentTeacher.getDesignation();
@@ -127,7 +125,21 @@ public class TeacherListAdapter extends ArrayAdapter<Teacher>{
                         }
                         else if ( id == R.id.remove_faculty_menu)
                         {
-                            Toast.makeText(context,"Remove "+teacherId,Toast.LENGTH_SHORT).show();
+                            firebaseDatabase = FirebaseDatabase.getInstance();
+                            final ProgressDialog dialog;
+                            dialog = new ProgressDialog(activity);
+                            dialog.setTitle("Deleting Record");
+                            dialog.setMessage("Please Wait....");
+                            dialog.show();
+                            firebaseDatabase.getReference().child("teacher").child(dept.getDeptCode().toLowerCase()).child(teacherId).removeValue(new DatabaseReference.CompletionListener() {
+                                @Override
+                                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                    dialog.dismiss();
+                                    Snackbar snackbar = Snackbar.make(view,"Faculty is Removed",Snackbar.LENGTH_LONG);
+                                    snackbar.show();
+                                    remove(currentTeacher);
+                                }
+                            });
                             return true;
                         }
                         return false;
@@ -165,5 +177,13 @@ public class TeacherListAdapter extends ArrayAdapter<Teacher>{
 
     public void setAdmin(boolean admin) {
         isAdmin = admin;
+    }
+
+    public void setView(View view) {
+        this.view = view;
+    }
+
+    public void setActivity(Activity activity) {
+        this.activity = activity;
     }
 }
