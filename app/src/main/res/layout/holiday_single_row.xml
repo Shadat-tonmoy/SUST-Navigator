@@ -56,12 +56,13 @@
 
     <ImageView
         android:id="@+id/holiday_edit_icon"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/holiday_desc"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        app:srcCompat="@drawable/edit_icon" />
+        android:layout_marginRight="8dp"
+        android:padding="8dp"
+        app:srcCompat="@drawable/more_vert_black"
+        android:layout_marginEnd="8dp" />
 </RelativeLayout>

@@ -30,26 +30,27 @@ public class HolidayAdapter extends ArrayAdapter<Holiday>{
     private boolean isEditable;
     private ImageView editIcon;
     private Context context;
-    private View row;
+    private View row,view;
     private android.app.FragmentManager manager;
-    public HolidayAdapter(Context context, int resource, int textViewResourceId, ArrayList<Holiday> objects, boolean isEditable, android.app.FragmentManager manager) {
+    public HolidayAdapter(Context context, int resource, int textViewResourceId, ArrayList<Holiday> objects, boolean isEditable, android.app.FragmentManager manager,View view) {
         super(context, resource, textViewResourceId, objects);
         this.isEditable = isEditable;
         this.context = context;
         this.manager = manager;
+        this.view = view;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    public View getView(int position, @Nullable final View convertView, @NonNull ViewGroup parent) {
         row = convertView;
         if(row==null)
         {
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             row = inflater.inflate(R.layout.holiday_single_row,parent,false);;
         }
-        Holiday currentHoliday = getItem(position);
+        final Holiday currentHoliday = getItem(position);
         String holidayName = currentHoliday.getHolidayTitle();
         String holidayStart = currentHoliday.getStartingDate();
         String holidayEnd = currentHoliday.getEndingDate();
@@ -74,13 +75,15 @@ public class HolidayAdapter extends ArrayAdapter<Holiday>{
         if(isEditable)
         {
             editIcon = (ImageView) row.findViewById(R.id.holiday_edit_icon);
-            editIcon.setImageResource(R.drawable.edit_icon);
+            editIcon.setImageResource(R.drawable.more_vert_black);
             final PopupMenu popupMenu = new PopupMenu(context,editIcon, Gravity.LEFT);
             popupMenu.inflate(R.menu.holiday_manage_menu);
             editIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     popupMenu.show();
+                    ClickHandler clickHandler = new ClickHandler(context,manager,currentHoliday,view);
+                    popupMenu.setOnMenuItemClickListener(clickHandler);
                 }
             });
 
@@ -97,19 +100,18 @@ public class HolidayAdapter extends ArrayAdapter<Holiday>{
         return row;
     }
 }
-class clickHandler implements PopupMenu.OnMenuItemClickListener{
+class ClickHandler implements PopupMenu.OnMenuItemClickListener{
 
     private Context context;
     private Course course;
     private android.app.FragmentManager manager;
     private String holidayTitle,holidayStart,holidayEnd;
+    private Holiday holiday;
     private View view;
-    clickHandler(Context context,android.app.FragmentManager manager,String holidayTitle,String holidayStart,String holidayEnd,View view){
+    ClickHandler(Context context,android.app.FragmentManager manager,Holiday holiday,View view){
         this.context = context;
         this.manager = manager;
-        this.holidayTitle = holidayTitle;
-        this.holidayStart = holidayStart;
-        this.holidayEnd = holidayEnd;
+        this.holiday = holiday;
         this.view = view;
     }
     @Override
@@ -117,12 +119,12 @@ class clickHandler implements PopupMenu.OnMenuItemClickListener{
         int id = item.getItemId();
         if(id == R.id.edit_holiday_menu)
         {
-            Toast.makeText(context,"Edit holiday",Toast.LENGTH_SHORT).show();
+            Toast.makeText(context,"Edit holiday "+holiday.getHoliayId(),Toast.LENGTH_SHORT).show();
             return true;
         }
         else if (id == R.id.remove_holiday_menu)
         {
-            Toast.makeText(context,"Remove holiday",Toast.LENGTH_SHORT).show();
+            Toast.makeText(context,"Remove holiday "+holiday.getHoliayId(),Toast.LENGTH_SHORT).show();
 //            FirebaseDatabase database = FirebaseDatabase.getInstance();
 //            DatabaseReference databaseReference = database.getReference().child("syllabus").child(dept).child(semester).child(course.getCourse_id());
 //            databaseReference.removeValue(new DatabaseReference.CompletionListener() {

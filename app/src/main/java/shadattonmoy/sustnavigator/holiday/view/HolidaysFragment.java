@@ -51,6 +51,7 @@ public class HolidaysFragment extends android.app.Fragment {
     private AppBarLayout appBarLayout;
     private FloatingActionButton addHolidayFab;
     private boolean isAdmin;
+    private View view;
 
 
     public HolidaysFragment() {
@@ -74,7 +75,7 @@ public class HolidaysFragment extends android.app.Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view =inflater.inflate(R.layout.fragment_holidays, container, false);
+        view =inflater.inflate(R.layout.fragment_holidays, container, false);
         holidayTitle = (TextView) view.findViewById(R.id.holiday_title);
         noHolidayFoundView = (TextView) view.findViewById(R.id.nothing_found_txt);
         holidayName = (TextView)view.findViewById(R.id.holiday_name);
@@ -115,6 +116,7 @@ public class HolidaysFragment extends android.app.Fragment {
                 {
                     String key = child.getKey();
                     Holiday holiday = child.getValue(Holiday.class);
+                    holiday.setHoliayId(key);
                     holidays.add(holiday);
                     numOfHolidays++;
                 }
@@ -139,7 +141,7 @@ public class HolidaysFragment extends android.app.Fragment {
                 }
                 else
                 {
-                    HolidayAdapter adapter = new HolidayAdapter(getActivity().getApplicationContext(),R.layout.holiday_single_row,R.id.holiday_desc,holidays,false,manager);
+                    HolidayAdapter adapter = new HolidayAdapter(getActivity().getApplicationContext(),R.layout.holiday_single_row,R.id.holiday_desc,holidays,isAdmin,manager,view);
                     holidayList.setAdapter(adapter);
                 }
                 progressBar.setVisibility(View.GONE);
