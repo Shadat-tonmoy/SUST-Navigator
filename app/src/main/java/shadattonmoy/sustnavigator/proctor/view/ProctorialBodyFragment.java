@@ -105,6 +105,7 @@ public class ProctorialBodyFragment extends android.app.Fragment {
                 {
                     adapter = new ProctorAdapter(context,R.layout.teacher_single_row,R.id.teacher_icon,proctors,isEditable,getFragmentManager());
                     adapter.setActivity(getActivity());
+                    adapter.setView(view);
                     proctorList.setAdapter(adapter);
                 }
                 else
