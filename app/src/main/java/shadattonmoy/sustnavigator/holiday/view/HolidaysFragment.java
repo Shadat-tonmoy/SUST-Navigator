@@ -143,6 +143,7 @@ public class HolidaysFragment extends android.app.Fragment {
                 {
                     HolidayAdapter adapter = new HolidayAdapter(getActivity().getApplicationContext(),R.layout.holiday_single_row,R.id.holiday_desc,holidays,isAdmin,manager,view);
                     holidayList.setAdapter(adapter);
+                    adapter.setActivity(getActivity());
                 }
                 progressBar.setVisibility(View.GONE);
                 if(isAdmin)
