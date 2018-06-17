@@ -1,12 +1,15 @@
 package shadattonmoy.sustnavigator.holiday.model;
 
+import java.io.Serializable;
+
 /**
  * Created by Shadat Tonmoy on 6/21/2017.
  */
 
-public class Holiday {
+public class Holiday implements Serializable{
     private String holidayName,holidayDate,holidayDays,holidayDesc;
     private String holidayTitle,startingDate,endingDate,holiayId;
+    private long startTimeStamp,endTimeStamp;
     public Holiday(){
         super();
     }
@@ -61,5 +64,21 @@ public class Holiday {
 
     public void setHolidayDays(String holidayDays) {
         this.holidayDays = holidayDays;
+    }
+
+    public void setStartTimeStamp(long startTimeStamp) {
+        this.startTimeStamp = startTimeStamp;
+    }
+
+    public void setEndTimeStamp(long endTimeStamp) {
+        this.endTimeStamp = endTimeStamp;
+    }
+
+    public long getStartTimeStamp() {
+        return startTimeStamp;
+    }
+
+    public long getEndTimeStamp() {
+        return endTimeStamp;
     }
 }

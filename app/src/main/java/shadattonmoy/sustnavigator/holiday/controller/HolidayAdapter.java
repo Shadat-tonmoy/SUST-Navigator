@@ -1,7 +1,10 @@
 package shadattonmoy.sustnavigator.holiday.controller;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
@@ -17,8 +20,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import shadattonmoy.sustnavigator.Course;
+import shadattonmoy.sustnavigator.HolidayAddFragment;
 import shadattonmoy.sustnavigator.R;
 import shadattonmoy.sustnavigator.holiday.model.Holiday;
 
@@ -119,7 +124,17 @@ class ClickHandler implements PopupMenu.OnMenuItemClickListener{
         int id = item.getItemId();
         if(id == R.id.edit_holiday_menu)
         {
-            Toast.makeText(context,"Edit holiday "+holiday.getHoliayId(),Toast.LENGTH_SHORT).show();
+            Calendar calendar = Calendar.getInstance();
+            int year = calendar.get(Calendar.YEAR);
+            FragmentTransaction transaction = manager.beginTransaction();
+            HolidayAddFragment holidayAddFragment = new HolidayAddFragment(String.valueOf(year));
+            Bundle args = new Bundle();
+            args.putBoolean("isEditing",true);
+            args.putSerializable("holiday",holiday);
+            holidayAddFragment.setArguments(args);
+            transaction.replace(R.id.main_content_root,holidayAddFragment);
+            transaction.addToBackStack("holiday_edit_fragment");
+            transaction.commit();
             return true;
         }
         else if (id == R.id.remove_holiday_menu)
