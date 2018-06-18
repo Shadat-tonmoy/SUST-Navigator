@@ -3,6 +3,7 @@ package shadattonmoy.sustnavigator;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -34,6 +35,7 @@ import shadattonmoy.sustnavigator.admin.view.AdminManage;
 import shadattonmoy.sustnavigator.admin.view.AdminPanelFragment;
 import shadattonmoy.sustnavigator.dept.view.DeptFragment;
 import shadattonmoy.sustnavigator.holiday.view.HolidaysFragment;
+import shadattonmoy.sustnavigator.mlkit.CameraActivity;
 import shadattonmoy.sustnavigator.proctor.view.ProctorialBodyFragment;
 import shadattonmoy.sustnavigator.utils.DummyValues;
 
@@ -354,6 +356,16 @@ public class MainActivity extends AppCompatActivity
     public void openBusManageFragment(View view)
     {
         Toast.makeText(getBaseContext(),"Bus Manage",Toast.LENGTH_SHORT).show();
+
+    }
+
+    public void openMLKit(View view)
+    {
+        Intent intent = new Intent(MainActivity.this,CameraActivity.class);
+        startActivity(intent);
+
+
+
 
     }
 
