@@ -324,7 +324,7 @@ public class MainActivity extends AppCompatActivity
         FragmentManager manager = getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         DeptFragment deptFragment = new DeptFragment();
-        deptFragment.setPurpose("SYLLABUS_MANAGE");
+        deptFragment.setPurpose("syllabus_manage");
         transaction.replace(R.id.main_content_root,deptFragment);
         transaction.addToBackStack("syllabus_manage_fragment");
         transaction.commit();

@@ -20,21 +20,22 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 
-public class SyllabusAddFragment extends android.app.Fragment {
+public class CourseAddFragment extends android.app.Fragment {
     private String dept,semester,courseCode,courseTitle,courseCredit;
     private View view;
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
     private EditText courseCodeField, courseTitleField, courseCreditField;
-    private Button courseAddSubmitBtn,courseAddResetBtn;
+    private Button courseAddSubmitBtn;
+    private TextView courseAddResetBtn;
     private Context context;
 
 
-    public SyllabusAddFragment() {
+    public CourseAddFragment() {
         super();
 
     }
-    public SyllabusAddFragment(Context context,String dept,String semester)
+    public CourseAddFragment(Context context, String dept, String semester)
     {
         this.dept = dept;
         this.context = context;
@@ -51,7 +52,7 @@ public class SyllabusAddFragment extends android.app.Fragment {
         courseTitleField = (EditText) view.findViewById(R.id.course_title_field);
         courseCreditField = (EditText) view.findViewById(R.id.course_credit_field);
         courseAddSubmitBtn = (Button) view.findViewById(R.id.course_add_submit_btn);
-        courseAddResetBtn = (Button) view.findViewById(R.id.course_add_reset_btn);
+        courseAddResetBtn = (TextView) view.findViewById(R.id.course_add_reset_btn);
         return view;
     }
 

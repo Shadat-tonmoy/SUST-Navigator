@@ -77,7 +77,8 @@ public class SyllabusAdapter extends ArrayAdapter<Course>{
         courseCreditView.setText(courseCredit + " Credits");
         if(isEditable)
         {
-            courseEditIcon.setImageResource(R.drawable.edit_icon);
+            courseEditIcon.setVisibility(View.VISIBLE);
+            courseEditIcon.setImageResource(R.drawable.more_vert_black);
             final PopupMenu popupMenu = new PopupMenu(getContext(),courseEditIcon, Gravity.LEFT);
             popupMenu.inflate(R.menu.course_manage_menu);
             courseEditIcon.setOnClickListener(new View.OnClickListener() {

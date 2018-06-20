@@ -99,98 +99,7 @@ public class DeptFragment extends android.app.Fragment implements View.OnClickLi
     public void onClick(View v) {
         int id = v.getId();
         int id_cse = getActivity().findViewById(R.id.dept_code_cse).getId();
-        int id_eee = getActivity().findViewById(R.id.dept_code_eee).getId();
-        int id_ipe = getActivity().findViewById(R.id.dept_code_ipe).getId();
-        int id_cee = getActivity().findViewById(R.id.dept_code_cee).getId();
-        int id_cep = getActivity().findViewById(R.id.dept_code_cep).getId();
-        int id_mee = getActivity().findViewById(R.id.dept_code_mee).getId();
-        int id_fet = getActivity().findViewById(R.id.dept_code_fet).getId();
-        int id_pme = getActivity().findViewById(R.id.dept_code_pme).getId();
-        int id_che = getActivity().findViewById(R.id.dept_code_che).getId();
-        if(purpose.equals("SYLLABUS_MANAGE"))
-        {
-            if(id==id_cse)
-            {
-                /*FragmentManager manager = getFragmentManager();
-                SyllabusManageFragment syllabusManageFragment= new SyllabusManageFragment("cse",getActivity().getApplicationContext(),true);
-                FragmentTransaction transaction = manager.beginTransaction();
-                transaction.replace(R.id.main_content_root,syllabusManageFragment,"syllabus_manage_fragment");
-                transaction.addToBackStack("syllabus_manage_fragment");
-                transaction.commit();*/
-            }
-
-            else if(id==id_eee)
-            {
-                Toast.makeText(getActivity().getApplicationContext(),"Syllabus EEE",Toast.LENGTH_SHORT).show();
-            }
-            else if(id==id_ipe)
-            {
-                Toast.makeText(getActivity().getApplicationContext(),"Syllabus IPE",Toast.LENGTH_SHORT).show();
-            }
-            else if(id==id_cee)
-            {
-                Toast.makeText(getActivity().getApplicationContext(),"Syllabus CEE",Toast.LENGTH_SHORT).show();
-            }
-            else if(id==id_cep)
-            {
-                Toast.makeText(getActivity().getApplicationContext(),"Syllabus CEP",Toast.LENGTH_SHORT).show();
-            }
-            else if(id==id_mee)
-            {
-                Toast.makeText(getActivity().getApplicationContext(),"Syllabus MEE",Toast.LENGTH_SHORT).show();
-            }
-            else if(id==id_fet)
-            {
-                Toast.makeText(getActivity().getApplicationContext(),"Syllabus FET",Toast.LENGTH_SHORT).show();
-            }
-            else if(id==id_pme)
-            {
-                Toast.makeText(getActivity().getApplicationContext(),"Syllabus PME",Toast.LENGTH_SHORT).show();
-            }
-        }
-
-        else if(purpose.equals("CGPA"))
-        {
-            if(id==id_cse)
-            {
-                /*FragmentManager manager = getFragmentManager();
-                SemesterListFragment semesterListFragment = new SemesterListFragment ("cse");
-                FragmentTransaction transaction = manager.beginTransaction();
-                transaction.replace(R.id.main_content_root,semesterListFragment,"semester_list_fragment");
-                transaction.addToBackStack("semester_list_fragment");
-                transaction.commit();*/
-            }
-
-            else if(id==id_eee)
-            {
-                Toast.makeText(getActivity().getApplicationContext(),"CGPA EEE",Toast.LENGTH_SHORT).show();
-            }
-            else if(id==id_ipe)
-            {
-                Toast.makeText(getActivity().getApplicationContext(),"CGPA IPE",Toast.LENGTH_SHORT).show();
-            }
-            else if(id==id_cee)
-            {
-                Toast.makeText(getActivity().getApplicationContext(),"CGPA CEE",Toast.LENGTH_SHORT).show();
-            }
-            else if(id==id_cep)
-            {
-                Toast.makeText(getActivity().getApplicationContext(),"CGPA CEP",Toast.LENGTH_SHORT).show();
-            }
-            else if(id==id_mee)
-            {
-                Toast.makeText(getActivity().getApplicationContext(),"CGPA MEE",Toast.LENGTH_SHORT).show();
-            }
-            else if(id==id_fet)
-            {
-                Toast.makeText(getActivity().getApplicationContext(),"CGPA FET",Toast.LENGTH_SHORT).show();
-            }
-            else if(id==id_pme)
-            {
-                Toast.makeText(getActivity().getApplicationContext(),"CGPA PME",Toast.LENGTH_SHORT).show();
-            }
-        }
-        else if(purpose.equals("STAFF"))
+        if(purpose.equals("STAFF"))
         {
 
             if(id==id_cse)
@@ -201,35 +110,6 @@ public class DeptFragment extends android.app.Fragment implements View.OnClickLi
                 transaction.replace(R.id.main_content_root,staffFragment,"staff_fragment");
                 transaction.addToBackStack("staff_fragment");
                 transaction.commit();
-            }
-
-            else if(id==id_eee)
-            {
-                Toast.makeText(getActivity().getApplicationContext(),"Staff EEE",Toast.LENGTH_SHORT).show();
-            }
-            else if(id==id_ipe)
-            {
-                Toast.makeText(getActivity().getApplicationContext(),"Staff IPE",Toast.LENGTH_SHORT).show();
-            }
-            else if(id==id_cee)
-            {
-                Toast.makeText(getActivity().getApplicationContext(),"Staff CEE",Toast.LENGTH_SHORT).show();
-            }
-            else if(id==id_cep)
-            {
-                Toast.makeText(getActivity().getApplicationContext(),"Staff CEP",Toast.LENGTH_SHORT).show();
-            }
-            else if(id==id_mee)
-            {
-                Toast.makeText(getActivity().getApplicationContext(),"Staff MEE",Toast.LENGTH_SHORT).show();
-            }
-            else if(id==id_fet)
-            {
-                Toast.makeText(getActivity().getApplicationContext(),"Staff FET",Toast.LENGTH_SHORT).show();
-            }
-            else if(id==id_pme)
-            {
-                Toast.makeText(getActivity().getApplicationContext(),"Staff PME",Toast.LENGTH_SHORT).show();
             }
 
 
@@ -256,7 +136,7 @@ public class DeptFragment extends android.app.Fragment implements View.OnClickLi
                 deptList.setLayoutManager(mLayoutManager);
                 deptList.setItemAnimator(new DefaultItemAnimator());
                 deptList.setAdapter(schoolListAdapter);
-                if(purpose.equals("syllabus") || purpose.equals("cgpa"))
+                if(purpose.equals("syllabus") || purpose.equals("cgpa") || purpose.equals("syllabus_manage"))
                 {
                     sessionText.setVisibility(View.VISIBLE);
                     sessionText.setText(Values.getSessions().get(0));

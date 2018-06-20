@@ -1,9 +1,7 @@
 package shadattonmoy.sustnavigator.syllabus.view;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +21,7 @@ import java.util.ArrayList;
 import shadattonmoy.sustnavigator.Course;
 import shadattonmoy.sustnavigator.R;
 import shadattonmoy.sustnavigator.syllabus.controller.SyllabusAdapter;
-import shadattonmoy.sustnavigator.SyllabusAddFragment;
+import shadattonmoy.sustnavigator.CourseAddFragment;
 import shadattonmoy.sustnavigator.dept.model.Dept;
 
 
@@ -106,10 +104,11 @@ public class SyllabusFragment extends android.app.Fragment {
                     String pushId = child.getKey();
                     currentCourse.setCourse_id(pushId);
                     courses.add(currentCourse);
-                    adapter = new SyllabusAdapter(getActivity().getApplicationContext(),R.layout.fragment_syllabus2,R.id.course_code,courses,isEditable,getFragmentManager(),dept.getDeptCode().toLowerCase(),semester);
-                    syllabusList.setAdapter(adapter);
-                    syllabusLoadingProgress.setVisibility(View.GONE);
                 }
+
+                adapter = new SyllabusAdapter(getActivity().getApplicationContext(),R.layout.fragment_syllabus2,R.id.course_code,courses,isEditable,getFragmentManager(),dept.getDeptCode().toLowerCase(),semester);
+                syllabusList.setAdapter(adapter);
+                syllabusLoadingProgress.setVisibility(View.GONE);
             }
 
             @Override
@@ -129,8 +128,8 @@ public class SyllabusFragment extends android.app.Fragment {
                     Toast.makeText(getActivity().getApplicationContext(),"Add for "+dept+" in "+semester,Toast.LENGTH_SHORT).show();
                     android.app.FragmentManager manager = getFragmentManager();
                     android.app.FragmentTransaction transaction = manager.beginTransaction();
-                    SyllabusAddFragment syllabusAddFragment = new SyllabusAddFragment(getActivity().getApplicationContext(),dept.getDeptCode().toLowerCase(),semester);
-                    transaction.replace(R.id.main_content_root,syllabusAddFragment);
+                    CourseAddFragment courseAddFragment = new CourseAddFragment(getActivity().getApplicationContext(),dept.getDeptCode().toLowerCase(),semester);
+                    transaction.replace(R.id.main_content_root, courseAddFragment);
                     transaction.addToBackStack("syllabus_add_fragment");
                     transaction.commit();
                 }

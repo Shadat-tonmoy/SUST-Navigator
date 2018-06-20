@@ -25,7 +25,8 @@ public class CourseEditFragment extends android.app.Fragment {
     private String courseCode,courseTitle,courseCredit,courseId,dept,semester;
     private EditText courseCodeEdit,courseTitleEdit,courseCreditEdit;
     private TextView editHeader;
-    private Button courseEditSubmitBtn,courseEditResetBtn;
+    private Button courseEditSubmitBtn;
+    private TextView courseEditResetBtn;
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
     private View view;
@@ -49,12 +50,12 @@ public class CourseEditFragment extends android.app.Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view =inflater.inflate(R.layout.fragment_course_edit, container, false);
-        courseCodeEdit = (EditText) view.findViewById(R.id.course_code_edit);
-        courseTitleEdit = (EditText) view.findViewById(R.id.course_title_edit);
-        courseCreditEdit = (EditText) view.findViewById(R.id.course_credit_edit);
-        courseEditSubmitBtn = (Button) view.findViewById(R.id.course_edit_submit_btn);
-        courseEditResetBtn = (Button) view.findViewById(R.id.course_edit_reset_btn);
+        view =inflater.inflate(R.layout.fragment_syllabus_add, container, false);
+        courseCodeEdit = (EditText) view.findViewById(R.id.course_code_field);
+        courseTitleEdit = (EditText) view.findViewById(R.id.course_title_field);
+        courseCreditEdit = (EditText) view.findViewById(R.id.course_credit_field);
+        courseEditSubmitBtn = (Button) view.findViewById(R.id.course_add_submit_btn);
+        courseEditResetBtn = (TextView) view.findViewById(R.id.course_add_reset_btn);
         return view;
     }
 

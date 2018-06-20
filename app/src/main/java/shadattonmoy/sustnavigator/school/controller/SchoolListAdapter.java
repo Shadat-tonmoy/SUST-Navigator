@@ -105,6 +105,17 @@ public class SchoolListAdapter extends RecyclerView.Adapter<SchoolListAdapter.My
                     }
                 });
             }
+            else if(purpose.equals("syllabus_manage"))
+            {
+                deptCell.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        SemesterListFragment semesterListFragment = new SemesterListFragment(dept,purpose,session);
+                        semesterListFragment.setSyllabusEditable(true);
+                        loadFragment(semesterListFragment,"syllabusManageFragment");
+                    }
+                });
+            }
             else if(purpose.equals("cgpa"))
             {
                 deptCell.setOnClickListener(new View.OnClickListener() {

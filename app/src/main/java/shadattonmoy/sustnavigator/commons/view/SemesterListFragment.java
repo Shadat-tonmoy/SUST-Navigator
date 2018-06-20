@@ -163,13 +163,6 @@ public class SemesterListFragment extends android.app.Fragment {
 
             }
         });
-//        semesters.add(new Semester("5","30","2nd Year 1st Semester","2/1"));
-//        semesters.add(new Semester("5","30","2nd Year 2nd Semester","2/2"));
-//        semesters.add(new Semester("5","30","3rd Year 1st Semester","3/1"));
-//        semesters.add(new Semester("5","30","3rd Year 2nd Semester","3/2"));
-//        semesters.add(new Semester("5","30","4th Year 1st Semester","4/1"));
-//        semesters.add(new Semester("5","30","4th Year 1st Semester","4/2"));
-
 
         if(purpose.equals("cgpa"))
         {
@@ -200,6 +193,23 @@ public class SemesterListFragment extends android.app.Fragment {
                     SyllabusFragment syllabusFragment = new SyllabusFragment(dept,semesterCode,isSyllabusEditable,session);
                     transaction.replace(R.id.main_content_root,syllabusFragment);
                     transaction.addToBackStack("syllabus_fragment");
+                    transaction.commit();
+                }
+            });
+        }
+        else if(purpose.equals("syllabus_manage"))
+        {
+            Log.e("Purpose","syllabus_manage");
+            semesterList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Semester currentSemester = (Semester) parent.getItemAtPosition(position);
+                    String semesterCode = currentSemester.getSemesterCode();
+                    android.app.FragmentManager manager = getFragmentManager();
+                    android.app.FragmentTransaction transaction = manager.beginTransaction();
+                    SyllabusFragment syllabusFragment = new SyllabusFragment(dept,semesterCode,isSyllabusEditable,session);
+                    transaction.replace(R.id.main_content_root,syllabusFragment);
+                    transaction.addToBackStack("syllabus_manage_fragment");
                     transaction.commit();
                 }
             });

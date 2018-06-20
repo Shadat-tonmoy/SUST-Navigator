@@ -57,11 +57,13 @@
 
     <ImageView
         android:id="@+id/edit_course_icon1"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
         android:layout_marginRight="20dp"
-        app:srcCompat="@drawable/edit_icon"
+        app:srcCompat="@drawable/more_vert_black"
         android:layout_marginEnd="20dp"
+        android:visibility="gone"
         android:layout_above="@+id/course_credit"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
