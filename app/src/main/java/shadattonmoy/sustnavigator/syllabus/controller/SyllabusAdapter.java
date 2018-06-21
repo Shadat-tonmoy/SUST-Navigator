@@ -1,6 +1,9 @@
 package shadattonmoy.sustnavigator.syllabus.controller;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
@@ -8,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -41,14 +45,16 @@ public class SyllabusAdapter extends ArrayAdapter<Course>{
     private String courseCode,courseTitle,courseCredit,courseId,dept,semester,session;
     private ImageView courseEditIcon;
     private boolean isEditable;
+    private Activity activity;
     private android.app.FragmentManager manager;
-    public SyllabusAdapter(@NonNull Context context, @LayoutRes int resource, @IdRes int textViewResourceId, @NonNull ArrayList<Course> objects,boolean isEditable,android.app.FragmentManager manager,String dept, String semester,String session) {
+    public SyllabusAdapter(@NonNull Context context, @LayoutRes int resource, @IdRes int textViewResourceId, @NonNull ArrayList<Course> objects,boolean isEditable,android.app.FragmentManager manager,String dept, String semester,String session,Activity activity) {
         super(context, resource, textViewResourceId, objects);
         this.isEditable = isEditable;
         this.manager = manager;
         this.dept = dept;
         this.semester = semester;
         this.session = session;
+        this.activity = activity;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -89,7 +95,7 @@ public class SyllabusAdapter extends ArrayAdapter<Course>{
                 }
             });
 
-            popupMenu.setOnMenuItemClickListener(new menuItemClickHandler(getContext(),manager,currentCourse,dept,semester,row,session));
+            popupMenu.setOnMenuItemClickListener(new menuItemClickHandler(getContext(),manager,currentCourse,dept,semester,row,session,activity));
         }
 
         return row;
@@ -102,7 +108,8 @@ class menuItemClickHandler implements PopupMenu.OnMenuItemClickListener{
     private android.app.FragmentManager manager;
     private String dept,semester,session;
     private View view;
-    menuItemClickHandler(Context context,android.app.FragmentManager manager,Course course,String dept, String semester,View view,String session){
+    private Activity activity;
+    menuItemClickHandler(Context context,android.app.FragmentManager manager,Course course,String dept, String semester,View view,String session,Activity activity){
         this.context = context;
         this.manager = manager;
         this.course = course;
@@ -110,6 +117,7 @@ class menuItemClickHandler implements PopupMenu.OnMenuItemClickListener{
         this.semester = semester;
         this.view = view;
         this.session = session;
+        this.activity =activity;
     }
     @Override
     public boolean onMenuItemClick(MenuItem item) {
@@ -129,22 +137,42 @@ class menuItemClickHandler implements PopupMenu.OnMenuItemClickListener{
         }
         else if (id == R.id.remove_course_menu)
         {
-            //Toast.makeText(context,"Remove course" + courseId,Toast.LENGTH_SHORT).show();
-            FirebaseDatabase database = FirebaseDatabase.getInstance();
-            DatabaseReference databaseReference = database.getReference().child("syllabus").child(dept).child(semester).child(course.getCourse_id());
-            databaseReference.removeValue(new DatabaseReference.CompletionListener() {
+            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+            builder.setTitle("Please Notice");
+            builder.setMessage("Are you sure to permanently remove this Course Information From Record? Once you delete you will not be able to restore again.");
+            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                 @Override
-                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                    if(databaseError==null)
-                    {
-                        Snackbar snackbar = Snackbar.make(view,"Course has been removed",Snackbar.LENGTH_LONG);
-                        snackbar.show();
-                        SyllabusFragment.adapter.remove(course);
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    final ProgressDialog progressDialog;
+                    progressDialog = new ProgressDialog(activity);
+                    progressDialog.setTitle("Deleting Record");
+                    progressDialog.setMessage("Please Wait....");
+                    progressDialog.show();
+                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    DatabaseReference databaseReference = database.getReference().child("syllabus").child(session).child(dept).child(semester).child(course.getCourse_id());
+                    databaseReference.removeValue(new DatabaseReference.CompletionListener() {
+                        @Override
+                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                            if(databaseError==null)
+                            {
+                                Snackbar snackbar = Snackbar.make(view,"Course has been removed",Snackbar.LENGTH_LONG);
+                                snackbar.show();
+                                progressDialog.dismiss();
+                                SyllabusFragment.adapter.remove(course);
 
-                    }
+                            }
+                        }
+                    });
                 }
             });
 
+            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                }
+            });
+            builder.show();
             return true;
 
         }

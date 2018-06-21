@@ -1,5 +1,6 @@
 package shadattonmoy.sustnavigator.syllabus.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -49,6 +50,7 @@ public class SyllabusFragment extends android.app.Fragment {
     private TextView nothingFoundText;
     private ImageView nothingFoundImage;
     private Context context;
+    private Activity activity;
     public SyllabusFragment() {
         super();
     }
@@ -79,6 +81,7 @@ public class SyllabusFragment extends android.app.Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity().getApplicationContext();
+        activity= getActivity();
     }
 
     @Override
@@ -121,7 +124,7 @@ public class SyllabusFragment extends android.app.Fragment {
 
                 if(courses.size()>0)
                 {
-                    adapter = new SyllabusAdapter(getActivity().getApplicationContext(),R.layout.fragment_syllabus2,R.id.course_code,courses,isEditable,getFragmentManager(),dept.getDeptCode().toLowerCase(),semester,session);
+                    adapter = new SyllabusAdapter(getActivity().getApplicationContext(),R.layout.fragment_syllabus2,R.id.course_code,courses,isEditable,getFragmentManager(),dept.getDeptCode().toLowerCase(),semester,session,activity);
                     syllabusList.setAdapter(adapter);
                 }
                 else
