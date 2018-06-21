@@ -1,15 +1,21 @@
 package shadattonmoy.sustnavigator.syllabus.view;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -20,6 +26,7 @@ import java.util.ArrayList;
 
 import shadattonmoy.sustnavigator.Course;
 import shadattonmoy.sustnavigator.R;
+import shadattonmoy.sustnavigator.commons.controller.SemesterAdapter;
 import shadattonmoy.sustnavigator.syllabus.controller.SyllabusAdapter;
 import shadattonmoy.sustnavigator.admin.view.CourseAddFragment;
 import shadattonmoy.sustnavigator.dept.model.Dept;
@@ -39,6 +46,9 @@ public class SyllabusFragment extends android.app.Fragment {
     private ArrayList<Course> courses;
     public static SyllabusAdapter adapter;
     private String session;
+    private TextView nothingFoundText;
+    private ImageView nothingFoundImage;
+    private Context context;
     public SyllabusFragment() {
         super();
     }
@@ -68,6 +78,7 @@ public class SyllabusFragment extends android.app.Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context = getActivity().getApplicationContext();
     }
 
     @Override
@@ -77,6 +88,8 @@ public class SyllabusFragment extends android.app.Fragment {
         floatingActionButton = (FloatingActionButton) view.findViewById(R.id.add_fab);
         syllabusList = (ListView) view.findViewById(R.id.syllabus_list);
         syllabusLoadingProgress = (ProgressBar) view.findViewById(R.id.syllabus_loading);
+        nothingFoundText = (TextView) view.findViewById(R.id.nothing_found_txt);
+        nothingFoundImage = (ImageView) view.findViewById(R.id.nothing_found_image);
         return view;
     }
 
@@ -106,8 +119,29 @@ public class SyllabusFragment extends android.app.Fragment {
                     courses.add(currentCourse);
                 }
 
-                adapter = new SyllabusAdapter(getActivity().getApplicationContext(),R.layout.fragment_syllabus2,R.id.course_code,courses,isEditable,getFragmentManager(),dept.getDeptCode().toLowerCase(),semester,session);
-                syllabusList.setAdapter(adapter);
+                if(courses.size()>0)
+                {
+                    adapter = new SyllabusAdapter(getActivity().getApplicationContext(),R.layout.fragment_syllabus2,R.id.course_code,courses,isEditable,getFragmentManager(),dept.getDeptCode().toLowerCase(),semester,session);
+                    syllabusList.setAdapter(adapter);
+                }
+                else
+                {
+                    nothingFoundImage.setVisibility(View.VISIBLE);
+                    nothingFoundText.setVisibility(View.VISIBLE);
+                    nothingFoundText.setText("OOOPS!!! No Records found for "+dept.getDeptTitle()+"  of "+session+" Session. Tap + to add");
+                    try{
+                        Glide.with(context).load(context.getResources()
+                                .getIdentifier("nothing_found", "drawable", context.getPackageName())).thumbnail(0.5f)
+                                .crossFade()
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .into(nothingFoundImage);
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+
+
                 syllabusLoadingProgress.setVisibility(View.GONE);
             }
 

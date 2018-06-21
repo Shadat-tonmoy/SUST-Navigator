@@ -43,7 +43,8 @@
             android:layout_height="match_parent"
             android:layout_marginTop="48dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/semester_list_header_msg" />
+            app:layout_constraintTop_toBottomOf="@+id/semester_list_header_msg"
+            />
 
 
 

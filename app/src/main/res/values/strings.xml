@@ -41,4 +41,18 @@
         <item>Proctor</item>
         <item>Assistant Proctor</item>
     </string-array>
+
+    <string-array name="semester_list">
+        <item>Choose a Semester</item>
+        <item>1st Year 1st Semester</item>
+        <item>1st Year 2nd Semester</item>
+        <item>2nd Year 1st Semester</item>
+        <item>2nd Year 2nd Semester</item>
+        <item>3rd Year 1st Semester</item>
+        <item>3rd Year 2nd Semester</item>
+        <item>4th Year 1st Semester</item>
+        <item>4th Year 2nd Semester</item>
+        <item>5th Year 1st Semester</item>
+        <item>5th Year 2nd Semester</item>
+    </string-array>
 </resources>

@@ -1,5 +1,7 @@
 package shadattonmoy.sustnavigator.commons.view;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -24,12 +26,14 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import shadattonmoy.sustnavigator.admin.view.SemesterAddFragment;
 import shadattonmoy.sustnavigator.cgpa.view.CGPAFragment;
 import shadattonmoy.sustnavigator.Course;
 import shadattonmoy.sustnavigator.R;
 import shadattonmoy.sustnavigator.commons.controller.SemesterAdapter;
 import shadattonmoy.sustnavigator.commons.model.Semester;
 import shadattonmoy.sustnavigator.dept.model.Dept;
+import shadattonmoy.sustnavigator.dept.view.DeptFragment;
 import shadattonmoy.sustnavigator.syllabus.view.SyllabusFragment;
 
 
@@ -163,8 +167,12 @@ public class SemesterListFragment extends android.app.Fragment {
                     semesterAddFab.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-
-
+                            FragmentManager manager = getFragmentManager();
+                            FragmentTransaction transaction = manager.beginTransaction();
+                            SemesterAddFragment semesterAddFragment = new SemesterAddFragment(session,dept.getDeptCode().toLowerCase());
+                            transaction.replace(R.id.main_content_root,semesterAddFragment);
+                            transaction.addToBackStack("semester_add_fragment");
+                            transaction.commit();
                         }
                     });
                 }
