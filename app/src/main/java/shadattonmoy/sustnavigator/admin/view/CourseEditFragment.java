@@ -1,5 +1,8 @@
 package shadattonmoy.sustnavigator.admin.view;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -36,6 +39,8 @@ public class CourseEditFragment extends android.app.Fragment {
     private DatabaseReference databaseReference;
     private View view;
     private AwesomeValidation awesomeValidation;
+    private Activity activity;
+    private Context context;
     public CourseEditFragment() {
         // Required empty public constructor
     }
@@ -51,6 +56,8 @@ public class CourseEditFragment extends android.app.Fragment {
     }
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        activity = getActivity();
+        context = getActivity().getApplicationContext();
 
     }
 
@@ -74,8 +81,8 @@ public class CourseEditFragment extends android.app.Fragment {
         courseCreditEdit.setText(courseCredit);
 
         awesomeValidation = new AwesomeValidation(ValidationStyle.BASIC);
-        awesomeValidation.addValidation(getActivity(), R.id.course_code_field, "^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$", R.string.course_code_error);
-        awesomeValidation.addValidation(getActivity(), R.id.course_title_field, "^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$", R.string.course_title_error);
+        awesomeValidation.addValidation(getActivity(), R.id.course_code_field, "^[A-Za-z0-9\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$", R.string.course_code_error);
+        awesomeValidation.addValidation(getActivity(), R.id.course_title_field, "^[A-Za-z0-9\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$", R.string.course_title_error);
         awesomeValidation.addValidation(getActivity(), R.id.course_credit_field, "^[0-9\\.]+$", R.string.course_credit_error);
 
         courseEditSubmitBtn.setOnClickListener(new View.OnClickListener() {
@@ -83,10 +90,14 @@ public class CourseEditFragment extends android.app.Fragment {
             public void onClick(View v) {
                 if(awesomeValidation.validate())
                 {
+                    final ProgressDialog progressDialog;
+                    progressDialog = new ProgressDialog(activity);
+                    progressDialog.setTitle("Adding Record");
+                    progressDialog.setMessage("Please Wait....");
+                    progressDialog.show();
                     String courseCode = courseCodeEdit.getText().toString();
                     String courseTitle = courseTitleEdit.getText().toString();
                     String courseCredit = courseCreditEdit.getText().toString();
-                    Toast.makeText(getActivity().getApplicationContext(),"will edit "+courseId +" to "+courseCode+" " +courseTitle +" " +courseCredit + " in "+dept+" "+semester,Toast.LENGTH_SHORT).show();
                     Course updatedCourse = new Course(courseCode,courseTitle,courseCredit);
                     firebaseDatabase = FirebaseDatabase.getInstance();
                     databaseReference = firebaseDatabase.getReference().child("syllabus").child(session).child(dept).child(semester).child(courseId);
@@ -95,34 +106,29 @@ public class CourseEditFragment extends android.app.Fragment {
                         public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                             if(databaseError == null)
                             {
-                                Snackbar snackbar = Snackbar.make(view,"Course Details has been updated",Snackbar.LENGTH_LONG);
+                                Snackbar snackbar = Snackbar.make(view,"Course Details has been updated",Snackbar.LENGTH_INDEFINITE);
+                                snackbar.setActionTextColor(context.getResources().getColor(R.color.blue));
                                 snackbar.setAction("Back", new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
                                         android.app.FragmentManager manager = getFragmentManager();
                                         manager.popBackStack();
-
                                     }
                                 });
                                 snackbar.show();
-
+                                progressDialog.dismiss();
                             }
-
                         }
                     });
                 }
-
-
             }
         });
-
         courseEditResetBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 reset();
             }
         });
-
 
     }
 

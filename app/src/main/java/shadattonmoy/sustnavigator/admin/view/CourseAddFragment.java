@@ -1,5 +1,7 @@
 package shadattonmoy.sustnavigator.admin.view;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -35,6 +37,7 @@ public class CourseAddFragment extends android.app.Fragment {
     private TextView courseAddResetBtn;
     private Context context;
     private AwesomeValidation awesomeValidation;
+    private Activity activity;
 
 
     public CourseAddFragment() {
@@ -49,6 +52,12 @@ public class CourseAddFragment extends android.app.Fragment {
         this.session = session;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        activity = getActivity();
+        context = getActivity().getApplicationContext();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,8 +76,8 @@ public class CourseAddFragment extends android.app.Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         awesomeValidation = new AwesomeValidation(ValidationStyle.BASIC);
-        awesomeValidation.addValidation(getActivity(), R.id.course_title_field, "^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$", R.string.course_title_error);
-        awesomeValidation.addValidation(getActivity(), R.id.course_code_field, "^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$", R.string.course_code_error);
+        awesomeValidation.addValidation(getActivity(), R.id.course_title_field, "^[A-Za-z0-9\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$", R.string.course_title_error);
+        awesomeValidation.addValidation(getActivity(), R.id.course_code_field, "^[A-Za-z0-9\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$", R.string.course_code_error);
         awesomeValidation.addValidation(getActivity(), R.id.course_credit_field, "^[0-9\\.]+$", R.string.course_credit_error);
 
 
@@ -81,34 +90,37 @@ public class CourseAddFragment extends android.app.Fragment {
             public void onClick(View v) {
                 if(awesomeValidation.validate())
                 {
+                    final ProgressDialog progressDialog;
+                    progressDialog = new ProgressDialog(activity);
+                    progressDialog.setTitle("Adding Record");
+                    progressDialog.setMessage("Please Wait....");
+                    progressDialog.show();
                     courseCode = courseCodeField.getText().toString().trim();
                     courseTitle = courseTitleField.getText().toString().trim();
                     courseCredit = courseCreditField.getText().toString().trim();
 
                     firebaseDatabase = FirebaseDatabase.getInstance();
-                    databaseReference = firebaseDatabase.getReference().child("syllabus").child(dept.toLowerCase()).child(semester);
+                    databaseReference = firebaseDatabase.getReference().child("syllabus").child(session).child(dept.toLowerCase()).child(semester);
 
 
                     databaseReference.push().setValue(new Course(courseCode, courseTitle, courseCredit), new DatabaseReference.CompletionListener() {
                         @Override
                         public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                             //Toast.makeText(getActivity().getApplicationContext(),"Added...",Toast.LENGTH_SHORT).show();
-                            Snackbar snackbar = Snackbar.make(view,"Course Has Been Added",Snackbar.LENGTH_SHORT).setAction("Back", new View.OnClickListener() {
+                            Snackbar snackbar = Snackbar.make(view,"Course Has Been Added",Snackbar.LENGTH_INDEFINITE).setAction("Back", new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
                                     android.app.FragmentManager manager = getFragmentManager();
                                     manager.popBackStack();
                                 }
-                            });
+                            }).setActionTextColor(context.getResources().getColor(R.color.blue));
+                            progressDialog.dismiss();
                             snackbar.show();
                         }
                     });
-
                 }
-
             }
         });
-
 
         courseAddResetBtn.setOnClickListener(new View.OnClickListener() {
             @Override

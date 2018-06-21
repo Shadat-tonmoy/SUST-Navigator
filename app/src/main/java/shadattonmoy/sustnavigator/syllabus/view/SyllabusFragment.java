@@ -140,9 +140,11 @@ public class SyllabusFragment extends android.app.Fragment {
                         e.printStackTrace();
                     }
                 }
-
-
                 syllabusLoadingProgress.setVisibility(View.GONE);
+                if(isEditable)
+                {
+                    floatingActionButton.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
@@ -153,9 +155,6 @@ public class SyllabusFragment extends android.app.Fragment {
 
         if(isEditable)
         {
-            floatingActionButton.setVisibility(View.VISIBLE);
-
-
             floatingActionButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
