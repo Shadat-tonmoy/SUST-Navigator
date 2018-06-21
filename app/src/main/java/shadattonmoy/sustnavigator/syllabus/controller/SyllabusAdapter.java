@@ -26,7 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 
 import shadattonmoy.sustnavigator.Course;
-import shadattonmoy.sustnavigator.CourseEditFragment;
+import shadattonmoy.sustnavigator.admin.view.CourseEditFragment;
 import shadattonmoy.sustnavigator.R;
 import shadattonmoy.sustnavigator.syllabus.view.SyllabusFragment;
 
@@ -38,16 +38,17 @@ public class SyllabusAdapter extends ArrayAdapter<Course>{
 
     private View row;
     private TextView courseCodeView,courseTitleView,courseCreditView,courseIconView;
-    private String courseCode,courseTitle,courseCredit,courseId,dept,semester;
+    private String courseCode,courseTitle,courseCredit,courseId,dept,semester,session;
     private ImageView courseEditIcon;
     private boolean isEditable;
     private android.app.FragmentManager manager;
-    public SyllabusAdapter(@NonNull Context context, @LayoutRes int resource, @IdRes int textViewResourceId, @NonNull ArrayList<Course> objects,boolean isEditable,android.app.FragmentManager manager,String dept, String semester) {
+    public SyllabusAdapter(@NonNull Context context, @LayoutRes int resource, @IdRes int textViewResourceId, @NonNull ArrayList<Course> objects,boolean isEditable,android.app.FragmentManager manager,String dept, String semester,String session) {
         super(context, resource, textViewResourceId, objects);
         this.isEditable = isEditable;
         this.manager = manager;
         this.dept = dept;
         this.semester = semester;
+        this.session = session;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -88,7 +89,7 @@ public class SyllabusAdapter extends ArrayAdapter<Course>{
                 }
             });
 
-            popupMenu.setOnMenuItemClickListener(new menuItemClickHandler(getContext(),manager,currentCourse,dept,semester,row));
+            popupMenu.setOnMenuItemClickListener(new menuItemClickHandler(getContext(),manager,currentCourse,dept,semester,row,session));
         }
 
         return row;
@@ -99,15 +100,16 @@ class menuItemClickHandler implements PopupMenu.OnMenuItemClickListener{
     private Context context;
     private Course course;
     private android.app.FragmentManager manager;
-    private String dept,semester;
+    private String dept,semester,session;
     private View view;
-    menuItemClickHandler(Context context,android.app.FragmentManager manager,Course course,String dept, String semester,View view){
+    menuItemClickHandler(Context context,android.app.FragmentManager manager,Course course,String dept, String semester,View view,String session){
         this.context = context;
         this.manager = manager;
         this.course = course;
         this.dept = dept;
         this.semester = semester;
         this.view = view;
+        this.session = session;
     }
     @Override
     public boolean onMenuItemClick(MenuItem item) {
@@ -118,12 +120,11 @@ class menuItemClickHandler implements PopupMenu.OnMenuItemClickListener{
             String courseTitle = course.getCourse_title();
             String courseCode = course.getCourse_code();
             String courseCredit = course.getCourse_credit();
-            CourseEditFragment courseEditFragment = new CourseEditFragment(dept,semester,courseCode,courseTitle,courseCredit,courseId);
+            CourseEditFragment courseEditFragment = new CourseEditFragment(dept,semester,courseCode,courseTitle,courseCredit,courseId,session);
             android.app.FragmentTransaction transaction = manager.beginTransaction();
             transaction.replace(R.id.main_content_root,courseEditFragment);
             transaction.addToBackStack("course_edit_fragment");
             transaction.commit();
-            Toast.makeText(context,"Edit course" + courseId,Toast.LENGTH_SHORT).show();
             return true;
         }
         else if (id == R.id.remove_course_menu)

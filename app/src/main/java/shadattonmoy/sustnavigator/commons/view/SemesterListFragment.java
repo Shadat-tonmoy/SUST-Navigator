@@ -3,6 +3,7 @@ package shadattonmoy.sustnavigator.commons.view;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,6 +48,7 @@ public class SemesterListFragment extends android.app.Fragment {
     private ImageView nothingFoundImage;
     private Context context;
     private double subTotalCredit = 0.0;
+    private FloatingActionButton semesterAddFab;
 
 
 
@@ -76,6 +78,7 @@ public class SemesterListFragment extends android.app.Fragment {
         progressBar = (ProgressBar) view.findViewById(R.id.semester_list_loading);
         nothingFoundText = (TextView) view.findViewById(R.id.nothing_found_txt);
         nothingFoundImage = (ImageView) view.findViewById(R.id.nothing_found_image);
+        semesterAddFab = (FloatingActionButton) view.findViewById(R.id.semester_add_fab);
         return view;
     }
 
@@ -154,6 +157,18 @@ public class SemesterListFragment extends android.app.Fragment {
                 }
 
                 progressBar.setVisibility(View.GONE);
+                if(isSyllabusEditable)
+                {
+                    semesterAddFab.setVisibility(View.VISIBLE);
+                    semesterAddFab.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+
+                        }
+                    });
+                }
+                else semesterAddFab.setVisibility(View.GONE);
                 //debugView.setText(txt);
 
             }

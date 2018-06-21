@@ -85,7 +85,6 @@ public class ProctorAddFragment extends android.app.Fragment implements View.OnC
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         designationField.setAdapter(adapter);
         awesomeValidation = new AwesomeValidation(ValidationStyle.BASIC);
-        awesomeValidation = new AwesomeValidation(ValidationStyle.BASIC);
         awesomeValidation.addValidation(getActivity(), R.id.proctor_add_name_field, "^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$", R.string.name_error);
         if (!isUpdating)
             designationField.setSelection(0);

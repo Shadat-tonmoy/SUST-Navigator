@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import shadattonmoy.sustnavigator.Course;
 import shadattonmoy.sustnavigator.R;
 import shadattonmoy.sustnavigator.syllabus.controller.SyllabusAdapter;
-import shadattonmoy.sustnavigator.CourseAddFragment;
+import shadattonmoy.sustnavigator.admin.view.CourseAddFragment;
 import shadattonmoy.sustnavigator.dept.model.Dept;
 
 
@@ -106,7 +106,7 @@ public class SyllabusFragment extends android.app.Fragment {
                     courses.add(currentCourse);
                 }
 
-                adapter = new SyllabusAdapter(getActivity().getApplicationContext(),R.layout.fragment_syllabus2,R.id.course_code,courses,isEditable,getFragmentManager(),dept.getDeptCode().toLowerCase(),semester);
+                adapter = new SyllabusAdapter(getActivity().getApplicationContext(),R.layout.fragment_syllabus2,R.id.course_code,courses,isEditable,getFragmentManager(),dept.getDeptCode().toLowerCase(),semester,session);
                 syllabusList.setAdapter(adapter);
                 syllabusLoadingProgress.setVisibility(View.GONE);
             }
@@ -125,10 +125,10 @@ public class SyllabusFragment extends android.app.Fragment {
             floatingActionButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(getActivity().getApplicationContext(),"Add for "+dept+" in "+semester,Toast.LENGTH_SHORT).show();
+                    /*Toast.makeText(getActivity().getApplicationContext(),"Add for "+dept+" in "+semester,Toast.LENGTH_SHORT).show();*/
                     android.app.FragmentManager manager = getFragmentManager();
                     android.app.FragmentTransaction transaction = manager.beginTransaction();
-                    CourseAddFragment courseAddFragment = new CourseAddFragment(getActivity().getApplicationContext(),dept.getDeptCode().toLowerCase(),semester);
+                    CourseAddFragment courseAddFragment = new CourseAddFragment(getActivity().getApplicationContext(),dept.getDeptCode().toLowerCase(),semester,session);
                     transaction.replace(R.id.main_content_root, courseAddFragment);
                     transaction.addToBackStack("syllabus_add_fragment");
                     transaction.commit();

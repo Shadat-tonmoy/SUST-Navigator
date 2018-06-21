@@ -1,4 +1,4 @@
-package shadattonmoy.sustnavigator;
+package shadattonmoy.sustnavigator.admin.view;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,16 +13,21 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.basgeekball.awesomevalidation.AwesomeValidation;
+import com.basgeekball.awesomevalidation.ValidationStyle;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
+import shadattonmoy.sustnavigator.Course;
+import shadattonmoy.sustnavigator.R;
+
 
 public class CourseEditFragment extends android.app.Fragment {
 
-    private String courseCode,courseTitle,courseCredit,courseId,dept,semester;
+    private String courseCode,courseTitle,courseCredit,courseId,dept,semester,session;
     private EditText courseCodeEdit,courseTitleEdit,courseCreditEdit;
     private TextView editHeader;
     private Button courseEditSubmitBtn;
@@ -30,10 +35,11 @@ public class CourseEditFragment extends android.app.Fragment {
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
     private View view;
+    private AwesomeValidation awesomeValidation;
     public CourseEditFragment() {
         // Required empty public constructor
     }
-    public CourseEditFragment(String dept, String semester,String courseCode,String courseTitle, String courseCredit,String courseId)
+    public CourseEditFragment(String dept, String semester,String courseCode,String courseTitle, String courseCredit,String courseId,String session)
     {
         this.courseCode=courseCode;
         this.courseCredit=courseCredit;
@@ -41,6 +47,7 @@ public class CourseEditFragment extends android.app.Fragment {
         this.courseId = courseId;
         this.dept = dept;
         this.semester = semester;
+        this.session = session;
     }
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,36 +73,45 @@ public class CourseEditFragment extends android.app.Fragment {
         courseTitleEdit.setText(courseTitle);
         courseCreditEdit.setText(courseCredit);
 
+        awesomeValidation = new AwesomeValidation(ValidationStyle.BASIC);
+        awesomeValidation.addValidation(getActivity(), R.id.course_code_field, "^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$", R.string.course_code_error);
+        awesomeValidation.addValidation(getActivity(), R.id.course_title_field, "^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$", R.string.course_title_error);
+        awesomeValidation.addValidation(getActivity(), R.id.course_credit_field, "^[0-9\\.]+$", R.string.course_credit_error);
+
         courseEditSubmitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String courseCode = courseCodeEdit.getText().toString();
-                String courseTitle = courseTitleEdit.getText().toString();
-                String courseCredit = courseCreditEdit.getText().toString();
-                Toast.makeText(getActivity().getApplicationContext(),"will edit "+courseId +" to "+courseCode+" " +courseTitle +" " +courseCredit + " in "+dept+" "+semester,Toast.LENGTH_SHORT).show();
-                Course updatedCourse = new Course(courseCode,courseTitle,courseCredit);
-                firebaseDatabase = FirebaseDatabase.getInstance();
-                databaseReference = firebaseDatabase.getReference().child("syllabus").child(dept).child(semester).child(courseId);
-                databaseReference.setValue(updatedCourse, new DatabaseReference.CompletionListener() {
-                    @Override
-                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                        if(databaseError == null)
-                        {
-                            Snackbar snackbar = Snackbar.make(view,"Course Details has been updated",Snackbar.LENGTH_LONG);
-                            snackbar.setAction("Back", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    android.app.FragmentManager manager = getFragmentManager();
-                                    manager.popBackStack();
+                if(awesomeValidation.validate())
+                {
+                    String courseCode = courseCodeEdit.getText().toString();
+                    String courseTitle = courseTitleEdit.getText().toString();
+                    String courseCredit = courseCreditEdit.getText().toString();
+                    Toast.makeText(getActivity().getApplicationContext(),"will edit "+courseId +" to "+courseCode+" " +courseTitle +" " +courseCredit + " in "+dept+" "+semester,Toast.LENGTH_SHORT).show();
+                    Course updatedCourse = new Course(courseCode,courseTitle,courseCredit);
+                    firebaseDatabase = FirebaseDatabase.getInstance();
+                    databaseReference = firebaseDatabase.getReference().child("syllabus").child(session).child(dept).child(semester).child(courseId);
+                    databaseReference.setValue(updatedCourse, new DatabaseReference.CompletionListener() {
+                        @Override
+                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                            if(databaseError == null)
+                            {
+                                Snackbar snackbar = Snackbar.make(view,"Course Details has been updated",Snackbar.LENGTH_LONG);
+                                snackbar.setAction("Back", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        android.app.FragmentManager manager = getFragmentManager();
+                                        manager.popBackStack();
 
-                                }
-                            });
-                            snackbar.show();
+                                    }
+                                });
+                                snackbar.show();
+
+                            }
 
                         }
+                    });
+                }
 
-                    }
-                });
 
             }
         });
