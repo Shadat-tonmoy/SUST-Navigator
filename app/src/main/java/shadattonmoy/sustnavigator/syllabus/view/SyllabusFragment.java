@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +16,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 
 import shadattonmoy.sustnavigator.Course;
 import shadattonmoy.sustnavigator.R;
+import shadattonmoy.sustnavigator.admin.view.ScanSyllabusFragment;
 import shadattonmoy.sustnavigator.commons.controller.SemesterAdapter;
 import shadattonmoy.sustnavigator.syllabus.controller.SyllabusAdapter;
 import shadattonmoy.sustnavigator.admin.view.CourseAddFragment;
@@ -38,7 +40,8 @@ public class SyllabusFragment extends android.app.Fragment {
     private View view;
     private String semester;
     private Dept dept;
-    private FloatingActionButton floatingActionButton;
+    private FloatingActionButton customCourseButton,scanSyllabusButton;
+    private FloatingActionMenu floatingActionMenu;
     private ListView syllabusList;
     private ProgressBar syllabusLoadingProgress;
     private FirebaseDatabase firebaseDatabase;
@@ -88,7 +91,9 @@ public class SyllabusFragment extends android.app.Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_syllabus2, container, false);
-        floatingActionButton = (FloatingActionButton) view.findViewById(R.id.add_fab);
+        floatingActionMenu = (FloatingActionMenu) view.findViewById(R.id.add_fab);
+        customCourseButton = (FloatingActionButton) view.findViewById(R.id.custom_course_fab);
+        scanSyllabusButton = (FloatingActionButton) view.findViewById(R.id.scan_syllabus_fab);
         syllabusList = (ListView) view.findViewById(R.id.syllabus_list);
         syllabusLoadingProgress = (ProgressBar) view.findViewById(R.id.syllabus_loading);
         nothingFoundText = (TextView) view.findViewById(R.id.nothing_found_txt);
@@ -146,7 +151,7 @@ public class SyllabusFragment extends android.app.Fragment {
                 syllabusLoadingProgress.setVisibility(View.GONE);
                 if(isEditable)
                 {
-                    floatingActionButton.setVisibility(View.VISIBLE);
+                    floatingActionMenu.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -158,7 +163,7 @@ public class SyllabusFragment extends android.app.Fragment {
 
         if(isEditable)
         {
-            floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            customCourseButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     /*Toast.makeText(getActivity().getApplicationContext(),"Add for "+dept+" in "+semester,Toast.LENGTH_SHORT).show();*/
@@ -170,10 +175,24 @@ public class SyllabusFragment extends android.app.Fragment {
                     transaction.commit();
                 }
             });
+
+            scanSyllabusButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    /*Toast.makeText(getActivity().getApplicationContext(),"Add for "+dept+" in "+semester,Toast.LENGTH_SHORT).show();*/
+                    android.app.FragmentManager manager = getFragmentManager();
+                    android.app.FragmentTransaction transaction = manager.beginTransaction();
+                    ScanSyllabusFragment scanSyllabusFragment= new ScanSyllabusFragment();
+//                    ScanSyllabusFragment scanSyllabusFragment= new ScanSyllabusFragment(getActivity().getApplicationContext(),dept.getDeptCode().toLowerCase(),semester,session);
+                    transaction.replace(R.id.main_content_root, scanSyllabusFragment);
+                    transaction.addToBackStack("syllabus_scan_fragment");
+                    transaction.commit();
+                }
+            });
         }
         else
         {
-            floatingActionButton.setVisibility(View.GONE);
+            floatingActionMenu.setVisibility(View.GONE);
         }
 
     }
