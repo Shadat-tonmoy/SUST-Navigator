@@ -2,12 +2,14 @@ package shadattonmoy.sustnavigator.admin.view;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -89,7 +91,7 @@ public class ScanSyllabusFragment extends android.app.Fragment {
         startScanningButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                scan();
+                new BackgroundTask().execute();
 
             }
         });
@@ -164,21 +166,18 @@ public class ScanSyllabusFragment extends android.app.Fragment {
     }
 
     private void setPic() {
-        // Get the dimensions of the View
+
         int targetW = outputImage.getWidth();
         int targetH = outputImage.getHeight();
 
-        // Get the dimensions of the bitmap
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
         bmOptions.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
         int photoW = bmOptions.outWidth;
         int photoH = bmOptions.outHeight;
 
-        // Determine how much to scale down the image
         int scaleFactor = Math.min(photoW / targetW, photoH / targetH);
 
-        // Decode the image file into a Bitmap sized to fill the View
         bmOptions.inJustDecodeBounds = false;
         bmOptions.inSampleSize = scaleFactor;
         bmOptions.inPurgeable = true;
@@ -187,29 +186,58 @@ public class ScanSyllabusFragment extends android.app.Fragment {
         outputImage.setImageBitmap(bitmap);
     }
 
-    private void scan()
-    {
-        TextRecognizer textRecognizer = new TextRecognizer.Builder(context)
-                .build();
-        if (!textRecognizer.isOperational()) {
-            new AlertDialog.Builder(context)
-                    .setMessage("Text recognizer could not be set up on your device :(").show();
-            return;
+
+
+    private class BackgroundTask extends AsyncTask<Void,Void,Void>{
+
+        ProgressDialog progressDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(activity);
+            progressDialog.setTitle("Scanning Image");
+            progressDialog.setMessage("Please Wait....");
+            progressDialog.show();
         }
 
-        Frame frame = new Frame.Builder().setBitmap(bitmap).build();
-        SparseArray<TextBlock> text = textRecognizer.detect(frame);
+        @Override
+        protected Void doInBackground(Void... voids) {
+            scan();
+            return null;
+        }
 
-        String detectedText = "";
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            progressDialog.dismiss();
+        }
 
-        for (int i = 0; i < text.size(); i++) {
-            TextBlock textBlock = text.valueAt(i);
-            if (textBlock != null && textBlock.getValue() != null) {
-                detectedText += textBlock.getValue();
-                Log.e("OutputText",textBlock.getValue());
+
+        private void scan()
+        {
+            TextRecognizer textRecognizer = new TextRecognizer.Builder(context)
+                    .build();
+            if (!textRecognizer.isOperational()) {
+                new AlertDialog.Builder(context)
+                        .setMessage("Text recognizer could not be set up on your device :(").show();
+                return;
             }
+
+            Frame frame = new Frame.Builder().setBitmap(bitmap).build();
+            SparseArray<TextBlock> text = textRecognizer.detect(frame);
+
+            String detectedText = "";
+
+            for (int i = 0; i < text.size(); i++) {
+                TextBlock textBlock = text.valueAt(i);
+                if (textBlock != null && textBlock.getValue() != null) {
+                    detectedText += textBlock.getValue();
+                    Log.e("OutputText",textBlock.getValue());
+                }
+            }
+            Log.e("OutputText",detectedText);
         }
-        Log.e("OutputText",detectedText);
     }
 
 
