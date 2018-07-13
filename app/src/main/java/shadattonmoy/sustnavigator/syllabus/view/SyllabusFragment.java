@@ -40,7 +40,7 @@ public class SyllabusFragment extends android.app.Fragment {
     private View view;
     private String semester;
     private Dept dept;
-    private FloatingActionButton customCourseButton,scanSyllabusButton;
+    private FloatingActionButton customCourseButton,scanSyllabusButton,cloneSyllabusButton;
     private FloatingActionMenu floatingActionMenu;
     private ListView syllabusList;
     private ProgressBar syllabusLoadingProgress;
@@ -94,6 +94,7 @@ public class SyllabusFragment extends android.app.Fragment {
         floatingActionMenu = (FloatingActionMenu) view.findViewById(R.id.add_fab);
         customCourseButton = (FloatingActionButton) view.findViewById(R.id.custom_course_fab);
         scanSyllabusButton = (FloatingActionButton) view.findViewById(R.id.scan_syllabus_fab);
+        cloneSyllabusButton = (FloatingActionButton) view.findViewById(R.id.clone_syllabus_fab);
         syllabusList = (ListView) view.findViewById(R.id.syllabus_list);
         syllabusLoadingProgress = (ProgressBar) view.findViewById(R.id.syllabus_loading);
         nothingFoundText = (TextView) view.findViewById(R.id.nothing_found_txt);

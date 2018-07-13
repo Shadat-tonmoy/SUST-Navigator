@@ -2,17 +2,21 @@ package shadattonmoy.sustnavigator.admin.view;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -26,13 +30,21 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
+import com.google.firebase.ml.vision.FirebaseVision;
+import com.google.firebase.ml.vision.common.FirebaseVisionImage;
+import com.google.firebase.ml.vision.text.FirebaseVisionText;
+import com.google.firebase.ml.vision.text.FirebaseVisionTextDetector;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import shadattonmoy.sustnavigator.R;
@@ -52,6 +64,10 @@ public class ScanSyllabusFragment extends android.app.Fragment {
     private Bitmap bitmap;
     private Activity activity;
     private Context context;
+    private FirebaseVisionImage firebaseVisionImage;
+    private FirebaseVisionTextDetector firebaseVisionTextDetector;
+    private FragmentManager fragmentManager;
+    private ArrayList<String> detectedTexts;
     private final String TAG = "CameraActivity";
     public ScanSyllabusFragment() {
 
@@ -64,6 +80,7 @@ public class ScanSyllabusFragment extends android.app.Fragment {
         super.onCreate(savedInstanceState);
         activity = getActivity();
         context = getActivity().getApplicationContext();
+        fragmentManager = getActivity().getFragmentManager();
     }
 
     @Override
@@ -203,7 +220,7 @@ public class ScanSyllabusFragment extends android.app.Fragment {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            scan();
+            startScanning();
             return null;
         }
 
@@ -216,6 +233,7 @@ public class ScanSyllabusFragment extends android.app.Fragment {
 
         private void scan()
         {
+            detectedTexts = new ArrayList<>();
             TextRecognizer textRecognizer = new TextRecognizer.Builder(context)
                     .build();
             if (!textRecognizer.isOperational()) {
@@ -233,10 +251,57 @@ public class ScanSyllabusFragment extends android.app.Fragment {
                 TextBlock textBlock = text.valueAt(i);
                 if (textBlock != null && textBlock.getValue() != null) {
                     detectedText += textBlock.getValue();
+                    String textBlockValue = textBlock.getValue();
+                    detectedTexts.add(textBlockValue);
                     Log.e("OutputText",textBlock.getValue());
                 }
             }
             Log.e("OutputText",detectedText);
+        }
+
+        private void startScanning() {
+            detectedTexts = new ArrayList<>();
+            firebaseVisionImage = FirebaseVisionImage.fromBitmap(bitmap);
+            firebaseVisionTextDetector = FirebaseVision.getInstance().getVisionTextDetector();
+
+            Task<FirebaseVisionText> result =
+                    firebaseVisionTextDetector.detectInImage(firebaseVisionImage)
+                            .addOnSuccessListener(new OnSuccessListener<FirebaseVisionText>() {
+                                @Override
+                                public void onSuccess(FirebaseVisionText firebaseVisionText) {
+                                    for (FirebaseVisionText.Block block: firebaseVisionText.getBlocks()) {
+                                        Rect boundingBox = block.getBoundingBox();
+                                        Point[] cornerPoints = block.getCornerPoints();
+                                        String text = block.getText();
+                                        for (FirebaseVisionText.Line line: block.getLines()) {
+
+                                            Log.e("LineText",line.getText());
+                                            for (FirebaseVisionText.Element element: line.getElements()) {
+                                            Log.e("LineElement",element.getText());
+                                            detectedTexts.add(element.getText());
+                                            }
+                                        }
+                                    }
+                                    showDialog();
+
+
+                                }
+                            })
+                            .addOnFailureListener(
+                                    new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+
+                                        }
+                                    });
+        }
+
+        private void showDialog()
+        {
+
+            DetectedTextDialog detectedTextDialog = new DetectedTextDialog(context,detectedTexts);
+            detectedTextDialog.show(fragmentManager,"detectedTextDialog");
+
         }
     }
 

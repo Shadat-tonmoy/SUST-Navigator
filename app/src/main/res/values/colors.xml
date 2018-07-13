@@ -2,6 +2,7 @@
 <resources>
     <color name="colorPrimary">#009688</color>
     <color name="colorPrimaryDark">#00796B</color>
+    <color name="colorChipBackground">#e0e0e0</color>
     <color name="colorAccent">#263238</color>
     <color name="warningRed">#e74c3c</color>
     <color name="warningGreen">#16a085</color>

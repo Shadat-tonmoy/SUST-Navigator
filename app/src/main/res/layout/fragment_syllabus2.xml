@@ -108,6 +108,14 @@
             app:fab_size="mini"
             app:fab_label="Scan From Syllabus" />
 
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/clone_syllabus_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_add_white_24dp"
+            app:fab_size="mini"
+            app:fab_label="Clone From Others" />
+
     </com.github.clans.fab.FloatingActionMenu>
 
 
