@@ -6,4 +6,10 @@
         android:icon="@drawable/search_icon"
         app:showAsAction="always"
         android:title="Search"/>
+
+    <item
+        android:id="@+id/sort_teacher"
+        android:icon="@drawable/sort_white_24"
+        app:showAsAction="always"
+        android:title="Search"/>
 </menu>

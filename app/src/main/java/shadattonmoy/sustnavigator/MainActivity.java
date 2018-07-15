@@ -3,11 +3,15 @@ package shadattonmoy.sustnavigator;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -27,6 +31,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ThrowOnExtraProperties;
 
 import java.util.List;
 
@@ -50,7 +55,7 @@ public class MainActivity extends AppCompatActivity
     private FirebaseUser user;
     private SQLiteAdapter sqLiteAdapter;
     private Toolbar toolbar;
-
+    private RelativeLayout root;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,7 +81,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
-        RelativeLayout root = (RelativeLayout)findViewById(R.id.main_content_root);
+        root = (RelativeLayout)findViewById(R.id.main_content_root);
         if(root!=null)
         {
             manager = getFragmentManager();
@@ -258,26 +263,40 @@ public class MainActivity extends AppCompatActivity
 
     public void openAdminFragment(View view)
     {
-        //Toast.makeText(this,"LL",Toast.LENGTH_SHORT).show();
-        if(user!=null)
+        if(isNetworkAvailable())
         {
-            FragmentManager manager = getFragmentManager();
-            FragmentTransaction transaction = manager.beginTransaction();
-            AdminPanelFragment adminPanelFragment = new AdminPanelFragment();
-            transaction.replace(R.id.main_content_root,adminPanelFragment);
-            transaction.addToBackStack("admin_panel_fragment");
-            transaction.commit();
+            if(user!=null)
+            {
+                FragmentManager manager = getFragmentManager();
+                FragmentTransaction transaction = manager.beginTransaction();
+                AdminPanelFragment adminPanelFragment = new AdminPanelFragment();
+                transaction.replace(R.id.main_content_root,adminPanelFragment);
+                transaction.addToBackStack("admin_panel_fragment");
+                transaction.commit();
+            }
+            else
+            {
+                FragmentManager manager = getFragmentManager();
+                FragmentTransaction transaction = manager.beginTransaction();
+                AdminFragment adminFragment = new AdminFragment();
+                transaction.replace(R.id.main_content_root,adminFragment);
+                transaction.addToBackStack("admin_fragment");
+                transaction.commit();
+            }
         }
         else
         {
-            FragmentManager manager = getFragmentManager();
-            FragmentTransaction transaction = manager.beginTransaction();
-            AdminFragment adminFragment = new AdminFragment();
-            transaction.replace(R.id.main_content_root,adminFragment);
-            transaction.addToBackStack("admin_fragment");
-            transaction.commit();
+            Snackbar.make(root, "Please enable the internet and try again", Snackbar.LENGTH_LONG)
+                    .setAction("CLOSE", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
 
+                        }
+                    })
+                    .setActionTextColor(getResources().getColor(android.R.color.holo_blue_dark ))
+                    .show();
         }
+
     }
 
     public void openProctorFragment(View view)
@@ -386,6 +405,12 @@ public class MainActivity extends AppCompatActivity
     protected void onStop() {
         super.onStop();
         firebaseAuth.removeAuthStateListener(authStateListener);
+    }
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     /*public void addFaculty(*//*Teacher teacher, final String dept*//*)

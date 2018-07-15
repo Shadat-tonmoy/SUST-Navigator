@@ -1,7 +1,9 @@
 package shadattonmoy.sustnavigator.cgpa.controller;
 
+import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -27,6 +29,7 @@ import java.util.Map;
 import shadattonmoy.sustnavigator.Course;
 import shadattonmoy.sustnavigator.R;
 import shadattonmoy.sustnavigator.cgpa.view.CGPAFragment;
+import shadattonmoy.sustnavigator.cgpa.view.GradeChooseDialog;
 
 /**
  * Created by Shadat Tonmoy on 6/20/2017.
@@ -37,10 +40,7 @@ public class CGPAAdapter extends ArrayAdapter<Course> {
     private String[] gpa = new String[]{"F","A+","A","A-","B+","B","B-","C+","C","C-"};
     ArrayList<String> gpaList = new ArrayList<String>();
     private Context context;
-
-
-
-
+    private FragmentManager fragmentManager;
     public static float totalCredit = (float)0.0;
     public static float totalGPA = (float)0.0;
     public static float cgpa = (float) 0.0;
@@ -49,9 +49,10 @@ public class CGPAAdapter extends ArrayAdapter<Course> {
 
 
 
-    public CGPAAdapter(@NonNull Context context, @LayoutRes int resource, @IdRes int textViewResourceId, @NonNull List<Course> objects) {
+    public CGPAAdapter(@NonNull Context context, @LayoutRes int resource, @IdRes int textViewResourceId, @NonNull List<Course> objects,FragmentManager fragmentManager) {
         super(context, resource, textViewResourceId, objects);
         this.context = context;
+        this.fragmentManager = fragmentManager;
         for(int i=0;i<gpa.length;i++)
             gpaList.add(gpa[i]);
 
@@ -69,11 +70,8 @@ public class CGPAAdapter extends ArrayAdapter<Course> {
 
         if(isReset)
         {
-            Spinner cgpaListView = (Spinner) row.findViewById(R.id.cgpa_list);
-            ArrayAdapter adapter = ArrayAdapter.createFromResource(getContext(),R.array.cgpa,R.layout.spinner_layout);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            cgpaListView.setAdapter(adapter);
-            cgpaListView.setSelection(0);
+            TextView cgpaListView = (TextView) row.findViewById(R.id.cgpa_list);
+            cgpaListView.setText("F");
             record.clear();
             isReset=false;
         }
@@ -88,13 +86,13 @@ public class CGPAAdapter extends ArrayAdapter<Course> {
             TextView courseCodeView = (TextView) row.findViewById(R.id.holiday_name);
             TextView courseTitleView = (TextView) row.findViewById(R.id.holiday_desc);
             TextView courseCreditView = (TextView) row.findViewById(R.id.holiday_days);
-            Spinner cgpaListView = (Spinner) row.findViewById(R.id.cgpa_list);
+            TextView cgpaListView = (TextView) row.findViewById(R.id.cgpa_list);
             final ImageView moreOption = (ImageView) row.findViewById(R.id.more_option_cgpa);
             moreOption.setImageResource(R.drawable.more);
 
             final ArrayAdapter adapter = ArrayAdapter.createFromResource(getContext(),R.array.cgpa,R.layout.spinner_layout);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            cgpaListView.setAdapter(adapter);
+//            cgpaListView.setAdapter(adapter);
             courseCodeView.setText(courseCode);
             courseTitleView.setText(courseTitle);
             courseCreditView.setText(courseCredit+" Credits");
@@ -103,11 +101,24 @@ public class CGPAAdapter extends ArrayAdapter<Course> {
             {
 
                 String grade = record.get(courseCode).toString();
-                int index = gpaList.indexOf(grade);
-                cgpaListView.setSelection(index);
+//                int index = gpaList.indexOf(grade);
+                cgpaListView.setText(grade);
             }
+            else cgpaListView.setText("F");
 
-            cgpaListView.setOnItemSelectedListener(new selectListener(getContext(),courseCredit,courseCode));
+//            cgpaListView.setOnItemSelectedListener(new selectListener(getContext(),courseCredit,courseCode));
+            cgpaListView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    GradeChooseDialog gradeChooseDialog = new GradeChooseDialog();
+                    Bundle args = new Bundle();
+                    args.putString("credit",courseCredit);
+                    args.putString("code",courseCode);
+                    gradeChooseDialog.setArguments(args);
+                    gradeChooseDialog.setListGradeView((TextView) view);
+                    gradeChooseDialog.show(fragmentManager,"gradeChooseDialog");
+                }
+            });
 
             moreOption.setOnClickListener(new View.OnClickListener() {
                 @RequiresApi(api = Build.VERSION_CODES.KITKAT)

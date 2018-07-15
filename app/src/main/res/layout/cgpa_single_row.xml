@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/relativeLayout3">
 
     <TextView
         android:id="@+id/holiday_name"
@@ -13,32 +15,31 @@
         android:layout_marginTop="15dp"
         android:textColor="#000000"
         android:textSize="16sp"
-        />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/holiday_desc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/holiday_name"
-        android:layout_alignStart="@+id/holiday_name"
-        android:layout_below="@+id/holiday_name"
         android:text="Structured Programming Language"
         android:textColor="#7f8c8d"
         android:textSize="12sp"
-        />
+        app:layout_constraintStart_toStartOf="@+id/holiday_name"
+        app:layout_constraintTop_toBottomOf="@+id/holiday_name"
+        app:layout_constraintLeft_toLeftOf="@+id/holiday_name" />
 
     <TextView
         android:id="@+id/holiday_days"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/holiday_desc"
-        android:layout_alignStart="@+id/holiday_desc"
-        android:layout_below="@+id/holiday_desc"
         android:text="3.00 Credit"
         android:textColor="#7f8c8d"
         android:textSize="12sp"
-        />
-    <Spinner
+        app:layout_constraintStart_toStartOf="@+id/holiday_desc"
+        app:layout_constraintTop_toBottomOf="@+id/holiday_desc"
+        app:layout_constraintLeft_toLeftOf="@+id/holiday_desc" />
+    <!--<Spinner
         android:id="@+id/cgpa_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -48,22 +49,38 @@
         android:layout_above="@+id/holiday_days"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignTop="@+id/holiday_name" />
+        android:layout_alignTop="@+id/holiday_name" />-->
+
+    <TextView
+        android:id="@+id/cgpa_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:padding="16dp"
+        android:text="F"
+        android:textColor="@color/textBlack"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/holiday_days"
+        app:layout_constraintEnd_toStartOf="@+id/more_option_cgpa"
+        app:layout_constraintTop_toTopOf="@+id/holiday_name" />
 
     <ImageView
         android:id="@+id/more_option_cgpa"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:src="@drawable/more"
-        android:layout_alignBottom="@+id/cgpa_list"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="8dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_marginRight="20dp"
-        />
+        android:layout_marginTop="8dp"
+        android:src="@drawable/more"
+        app:layout_constraintBottom_toBottomOf="@+id/cgpa_list"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 
 
 
 
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>

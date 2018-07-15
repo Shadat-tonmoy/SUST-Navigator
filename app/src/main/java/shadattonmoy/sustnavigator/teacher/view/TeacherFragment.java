@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -20,6 +22,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.github.javiersantos.bottomdialogs.BottomDialog;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,6 +30,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import shadattonmoy.sustnavigator.admin.view.TeacherAddFragment;
 import shadattonmoy.sustnavigator.R;
@@ -34,6 +39,8 @@ import shadattonmoy.sustnavigator.SQLiteAdapter;
 import shadattonmoy.sustnavigator.dept.model.Dept;
 import shadattonmoy.sustnavigator.teacher.controller.TeacherListAdapter;
 import shadattonmoy.sustnavigator.teacher.model.Teacher;
+
+import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
 
 public class TeacherFragment extends android.app.Fragment {
@@ -45,15 +52,18 @@ public class TeacherFragment extends android.app.Fragment {
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
     private ProgressBar progressBar;
-    private TextView fragmentHeader,nothingFoundText;
+    private TextView fragmentHeader, nothingFoundText;
     private ImageView nothingFoundImage;
     private Context context;
     private boolean isAdmin;
     private FloatingActionButton addMoreTeacherFab;
-    public TeacherFragment()
-    {
+    private TeacherListAdapter adapter;
+    private BottomDialog bottomDialog;
+
+    public TeacherFragment() {
 
     }
+
     public TeacherFragment(Dept dept) {
         this.dept = dept;
 
@@ -89,8 +99,7 @@ public class TeacherFragment extends android.app.Fragment {
 
     }
 
-    public void getTeachersFromServer()
-    {
+    public void getTeachersFromServer() {
         teachers = new ArrayList<Teacher>();
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference().child("teacher").child(dept.getDeptCode().toLowerCase());
@@ -98,23 +107,20 @@ public class TeacherFragment extends android.app.Fragment {
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot child : dataSnapshot.getChildren())
-                {
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
                     Teacher currentTeachcer = child.getValue(Teacher.class);
                     currentTeachcer.setId(child.getKey());
                     teachers.add(currentTeachcer);
                 }
-                if(teachers.size()>0)
-                {
+                if (teachers.size() > 0) {
                     manager = getFragmentManager();
-                    TeacherListAdapter adapter = new TeacherListAdapter(getActivity().getApplicationContext(),R.layout.teacher_single_row,R.id.teacher_icon,teachers,dept);
+                    adapter = new TeacherListAdapter(getActivity().getApplicationContext(), R.layout.teacher_single_row, R.id.teacher_icon, teachers, dept);
                     adapter.setFragmentManager(getFragmentManager());
 
                     ListView teacherListView = (ListView) view.findViewById(R.id.teacherList);
                     teacherListView.setAdapter(adapter);
-                    teacherListView.setOnItemClickListener(new detailListener(getActivity().getApplicationContext(),manager));
-                    if(isAdmin)
-                    {
+                    teacherListView.setOnItemClickListener(new detailListener(getActivity().getApplicationContext(), manager));
+                    if (isAdmin) {
                         adapter.setAdmin(isAdmin);
                         adapter.setView(view);
                         adapter.setActivity(getActivity());
@@ -151,20 +157,17 @@ public class TeacherFragment extends android.app.Fragment {
 
                     }
 
-                }
-                else
-                {
+                } else {
                     nothingFoundImage.setVisibility(View.VISIBLE);
                     nothingFoundText.setVisibility(View.VISIBLE);
-                    nothingFoundText.setText("OOOPS!!! No Records found for "+dept.getDeptTitle()+"Please Contact Admin");
-                    try{
+                    nothingFoundText.setText("OOOPS!!! No Records found for " + dept.getDeptTitle() + "Please Contact Admin");
+                    try {
                         Glide.with(context).load(context.getResources()
                                 .getIdentifier("nothing_found", "drawable", context.getPackageName())).thumbnail(0.5f)
                                 .crossFade()
                                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                                 .into(nothingFoundImage);
-                    }catch (Exception e)
-                    {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
 
@@ -179,10 +182,143 @@ public class TeacherFragment extends android.app.Fragment {
         });
     }
 
+    public View generateSortingOptionBottomSheet() {
+        View sortingOptions = null;
+        LinearLayout nameAsc, nameDesc, designationAsc, designationDesc;
+        try {
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
+            try {
+                sortingOptions = inflater.inflate(R.layout.teacher_sorting_bottom_sheet, null, false);
+                nameAsc = (LinearLayout) sortingOptions.findViewById(R.id.sort_bottom_sheet_name_asc);
+                nameDesc = (LinearLayout) sortingOptions.findViewById(R.id.sort_bottom_sheet_name_desc);
+                designationAsc = (LinearLayout) sortingOptions.findViewById(R.id.sort_bottom_sheet_designation_asc);
+                designationDesc = (LinearLayout) sortingOptions.findViewById(R.id.sort_bottom_sheet_designation_desc);
+                nameAsc.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(getActivity().getApplicationContext(), "Sorted By Name Asc ", Toast.LENGTH_SHORT).show();
+                        sortTeacherList("name", false);
+                        Log.e("SortingOption", "Sorted By Name Asc");
+
+                    }
+                });
+
+                nameDesc.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        sortTeacherList("name", true);
+                        Toast.makeText(getActivity().getApplicationContext(), "Sorted By Name Desc ", Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+
+                designationAsc.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        sortTeacherList("designation", false);
+                        Toast.makeText(getActivity().getApplicationContext(), "Sorted By Designation Asc ", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                designationDesc.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(getActivity().getApplicationContext(), "Sorted By Designation Desc ", Toast.LENGTH_SHORT).show();
+                        sortTeacherList("designation", true);
+
+                    }
+                });
+            } catch (Exception e) {
+                Log.e("Exception", e.getMessage());
+
+            }
+
+
+        } catch (Exception e) {
+            Log.e("Exception", e.getMessage());
+        }
+        return sortingOptions;
+    }
+
+    public void sortTeacherList(String parameter, final boolean desc) {
+        hideSortingBottomSheet();
+        if (parameter.equals("name")) {
+            Collections.sort(teachers, new Comparator<Teacher>() {
+                @Override
+                public int compare(Teacher o1, Teacher o2) {
+                    String name1 = o1.getName();
+                    String name2 = o2.getName();
+                    if (name1.compareTo(name2) >= 0) {
+                        if (desc)
+                            return -1;
+                        else return 1;
+                    } else {
+                        if (desc)
+                            return 1;
+                        else return -1;
+                    }
+                }
+            });
+        }
+
+        if (parameter.equals("designation")) {
+            Collections.sort(teachers, new Comparator<Teacher>() {
+                @Override
+                public int compare(Teacher o1, Teacher o2) {
+                    int designationPoint1 = -1;
+                    int designationPoint2 = -1;
+                    String designation1 = o1.getDesignation();
+                    String designation2 = o2.getDesignation();
+                    switch (designation1) {
+                        case "Professor":
+                            designationPoint1 = 4;
+                            break;
+                        case "Associate Professor":
+                            designationPoint1 = 3;
+                            break;
+                        case "Assistant Professor":
+                            designationPoint1 = 2;
+                            break;
+                        case "Lecturer":
+                            designationPoint1 = 1;
+                            break;
+                    }
+
+                    switch (designation2) {
+                        case "Professor":
+                            designationPoint2 = 4;
+                            break;
+                        case "Associate Professor":
+                            designationPoint2 = 3;
+                            break;
+                        case "Assistant Professor":
+                            designationPoint2 = 2;
+                            break;
+                        case "Lecturer":
+                            designationPoint2 = 1;
+                            break;
+                    }
+
+                    if (designationPoint1>=designationPoint2) {
+                        if (desc)
+                            return -1;
+                        else return 1;
+                    } else {
+                        if (desc)
+                            return 1;
+                        else return -1;
+                    }
+                }
+            });
+        }
+        adapter.notifyDataSetChanged();
+
+    }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.teacher_fragment_menu, menu);
-        super.onCreateOptionsMenu(menu,inflater);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
@@ -193,9 +329,24 @@ public class TeacherFragment extends android.app.Fragment {
                         "Search Teacher",
                         Toast.LENGTH_SHORT).show();
                 return true;
+            case R.id.sort_teacher:
+                showSortingBottomSheet();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void showSortingBottomSheet() {
+        bottomDialog = new BottomDialog.Builder(getActivity())
+                .setTitle("Sort By")
+                .setCustomView(generateSortingOptionBottomSheet())
+                .setCancelable(true)
+                .show();
+    }
+
+    public void hideSortingBottomSheet() {
+        bottomDialog.dismiss();
     }
 
     public void setAdmin(boolean admin) {
@@ -203,11 +354,12 @@ public class TeacherFragment extends android.app.Fragment {
     }
 }
 
-class detailListener implements AdapterView.OnItemClickListener{
+class detailListener implements AdapterView.OnItemClickListener {
 
     private Context context;
     FragmentManager manager;
-    public detailListener(Context context,FragmentManager manager) {
+
+    public detailListener(Context context, FragmentManager manager) {
         super();
         this.context = context;
         this.manager = manager;
@@ -222,8 +374,8 @@ class detailListener implements AdapterView.OnItemClickListener{
         String phone = touchedTeacher.getPhone();
         String fb = touchedTeacher.getFb();
         String email = touchedTeacher.getEmail();
-        TeacherContactDialog dialog = new TeacherContactDialog(name,email,phone,fb);
-        dialog.show(manager,"teacher_contact_dialog");
+        TeacherContactDialog dialog = new TeacherContactDialog(name, email, phone, fb);
+        dialog.show(manager, "teacher_contact_dialog");
         //Toast.makeText(context,"Hello "+name,Toast.LENGTH_SHORT).show();
     }
 }
