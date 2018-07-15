@@ -77,7 +77,6 @@ public class TeacherFragment extends android.app.Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
         context = getActivity().getApplicationContext();
 
 
@@ -118,6 +117,7 @@ public class TeacherFragment extends android.app.Fragment {
                     teachers.add(currentTeachcer);
                 }
                 if (teachers.size() > 0) {
+                    setHasOptionsMenu(true);
                     manager = getFragmentManager();
                     adapter = new TeacherListAdapter(getActivity().getApplicationContext(), R.layout.teacher_single_row, R.id.teacher_icon, teachers, dept);
                     adapter.setFragmentManager(getFragmentManager());
@@ -163,6 +163,7 @@ public class TeacherFragment extends android.app.Fragment {
                     }
 
                 } else {
+                    setHasOptionsMenu(false);
                     nothingFoundImage.setVisibility(View.VISIBLE);
                     nothingFoundText.setVisibility(View.VISIBLE);
                     nothingFoundText.setText("OOOPS!!! No Records found for " + dept.getDeptTitle() + "Please Contact Admin");

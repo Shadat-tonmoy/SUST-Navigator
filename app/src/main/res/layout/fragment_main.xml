@@ -38,8 +38,8 @@
                         <ImageView
                             android:padding="15dp"
                             android:id="@+id/imageView20"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="96dp"
+                            android:layout_height="96dp"
                             android:onClick="openTeacherFragment"
                             android:layout_gravity="center"
                             app:srcCompat="@drawable/teacher" />
@@ -68,8 +68,8 @@
                         android:orientation="vertical">
                         <ImageView
                             android:id="@+id/imageView21"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="96dp"
+                            android:layout_height="96dp"
                             android:onClick="openSyllabusFragment"
                             android:layout_gravity="center"
                             android:padding="15dp"
@@ -97,8 +97,8 @@
                         android:orientation="vertical">
                         <ImageView
                             android:id="@+id/imageView22"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="96dp"
+                            android:layout_height="96dp"
                             android:onClick="openProctorFragment"
                             android:layout_gravity="center"
                             android:padding="15dp"
@@ -134,8 +134,8 @@
 
                         <ImageView
                             android:padding="15dp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="96dp"
+                            android:layout_height="96dp"
                             android:layout_gravity="center"
                             android:id="@+id/imageView23"
                             android:onClick="openCGPAFragment"
@@ -165,38 +165,9 @@
                         <ImageView
                             android:layout_gravity="center"
                             android:padding="15dp"
-                            android:id="@+id/imageView24"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:onClick="openBusFragment"
-                            app:srcCompat="@drawable/bus"/>
-                        <TextView
-                            android:id="@+id/textView31"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Transport"
-                            android:background="#4F8196"
-                            style="@style/homeScreenText"/>
-                    </LinearLayout>
-                </android.support.v7.widget.CardView>
-
-                <android.support.v7.widget.CardView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    app:cardElevation="4dp"
-                    android:layout_margin="5dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-                        <ImageView
-                            android:layout_gravity="center"
-                            android:padding="15dp"
                             android:id="@+id/imageView25"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="96dp"
+                            android:layout_height="96dp"
                             android:layout_weight="1"
                             android:onClick="openHolidayFragment"
                             app:srcCompat="@drawable/holiday"/>
@@ -207,43 +178,6 @@
                             android:text="Holidays"
                             android:background="#FBAF3F"
                             style="@style/homeScreenText"/>
-                    </LinearLayout>
-                </android.support.v7.widget.CardView>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_marginTop="30dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <android.support.v7.widget.CardView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    app:cardElevation="4dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:padding="15dp"
-                            android:layout_gravity="center"
-                            android:id="@+id/imageView26"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            app:srcCompat="@drawable/location"/>
-
-                        <TextView
-                            android:id="@+id/textView33"
-                            style="@style/homeScreenText"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="#6CAE7E"
-                            android:text="Location" />
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
 
@@ -263,16 +197,55 @@
                             android:padding="15dp"
                             android:layout_gravity="center"
                             android:id="@+id/imageView30"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="96dp"
+                            android:layout_height="96dp"
                             android:layout_weight="1"
-                            app:srcCompat="@drawable/holiday"/>
+                            app:srcCompat="@drawable/teacher"/>
                         <TextView
                             android:id="@+id/textView34"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Staff"
-                            android:background="#FBAF3F"
+                            android:background="#3798D3"
+                            style="@style/homeScreenText"/>
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginTop="30dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    app:cardElevation="4dp"
+                    android:layout_margin="5dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+                        <ImageView
+                            android:padding="15dp"
+                            android:layout_gravity="center"
+                            android:id="@+id/imageView31"
+                            android:layout_width="96dp"
+                            android:layout_height="96dp"
+                            android:layout_weight="1"
+                            android:onClick="openAdminFragment"
+                            app:srcCompat="@drawable/teacher"/>
+                        <TextView
+                            android:id="@+id/textView35"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Admin"
+                            android:background="#2F2F2F"
                             style="@style/homeScreenText"/>
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
@@ -291,18 +264,48 @@
                         <ImageView
                             android:padding="15dp"
                             android:layout_gravity="center"
-                            android:id="@+id/imageView31"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:id="@+id/imageView32"
+                            android:layout_width="96dp"
+                            android:layout_height="96dp"
                             android:layout_weight="1"
                             android:onClick="openAdminFragment"
-                            app:srcCompat="@drawable/teacher"/>
+                            app:srcCompat="@drawable/about"/>
                         <TextView
-                            android:id="@+id/textView35"
+                            android:id="@+id/textView36"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Admin"
-                            android:background="#2F2F2F"
+                            android:text="About"
+                            android:background="#0776B8"
+                            style="@style/homeScreenText"/>
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    app:cardElevation="4dp"
+                    android:layout_margin="5dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+                        <ImageView
+                            android:padding="15dp"
+                            android:layout_gravity="center"
+                            android:id="@+id/imageView33"
+                            android:layout_width="96dp"
+                            android:layout_height="96dp"
+                            android:layout_weight="1"
+                            android:onClick="openAdminFragment"
+                            app:srcCompat="@drawable/help"/>
+                        <TextView
+                            android:id="@+id/textView37"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="About"
+                            android:background="#FDC057"
                             style="@style/homeScreenText"/>
                     </LinearLayout>
                 </android.support.v7.widget.CardView>

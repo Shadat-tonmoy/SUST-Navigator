@@ -101,7 +101,6 @@ public class SyllabusFragment extends android.app.Fragment {
         super.onCreate(savedInstanceState);
         context = getActivity().getApplicationContext();
         activity= getActivity();
-        setHasOptionsMenu(true);
     }
 
     @Override
@@ -147,11 +146,13 @@ public class SyllabusFragment extends android.app.Fragment {
 
                 if(courses.size()>0)
                 {
+                    setHasOptionsMenu(true);
                     adapter = new SyllabusAdapter(getActivity().getApplicationContext(),R.layout.fragment_syllabus2,R.id.course_code,courses,isEditable,getFragmentManager(),dept.getDeptCode().toLowerCase(),semester,session,activity);
                     syllabusList.setAdapter(adapter);
                 }
                 else
                 {
+                    setHasOptionsMenu(false);
                     nothingFoundImage.setVisibility(View.VISIBLE);
                     nothingFoundText.setVisibility(View.VISIBLE);
                     nothingFoundText.setText("OOOPS!!! No Records found for "+dept.getDeptTitle()+"  of "+session+" Session. Tap + to add");

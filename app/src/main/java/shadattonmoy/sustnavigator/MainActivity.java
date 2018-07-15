@@ -22,6 +22,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -71,7 +72,7 @@ public class MainActivity extends AppCompatActivity
 
 
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -79,6 +80,19 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        View headerview = navigationView.getHeaderView(0);
+        LinearLayout header = (LinearLayout) headerview.findViewById(R.id.nav_header);
+        header.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawer.closeDrawer(GravityCompat.START);
+                for(int i = 0; i < manager.getBackStackEntryCount(); ++i) {
+                    manager.popBackStack();
+                }
+
+            }
+        });
 
 
         root = (RelativeLayout)findViewById(R.id.main_content_root);
@@ -167,14 +181,6 @@ public class MainActivity extends AppCompatActivity
             fragment = new StaffFragment();
 
         }
-        else if (id == R.id.bus_service) {
-            fragment = new BusServiceFragment();
-
-        }
-        else if (id == R.id.student_organization) {
-            fragment = new StudentOrganizationFragment();
-
-        }
         else if (id == R.id.holidays) {
             fragment = new HolidaysFragment();
 
@@ -183,10 +189,10 @@ public class MainActivity extends AppCompatActivity
             fragment = new ProctorialBodyFragment(false);
 
         }
-        else if (id == R.id.admission_info) {
+        /*else if (id == R.id.admission_info) {
             fragment = new AdmissionInfoFragment();
 
-        }
+        }*/
 
         if(fragment!=null)
         {
@@ -320,12 +326,6 @@ public class MainActivity extends AppCompatActivity
         transaction.commit();
     }
 
-
-    public void openBusFragment(View view)
-    {
-        Toast.makeText(getBaseContext(),"Not ready yet",Toast.LENGTH_SHORT).show();
-    }
-
     public void openTeacherManageFragment(View view)
     {
         //Toast.makeText(getBaseContext(),"Teacher Manage",Toast.LENGTH_SHORT).show();
@@ -370,12 +370,6 @@ public class MainActivity extends AppCompatActivity
         transaction.replace(R.id.main_content_root,adminManage);
         transaction.addToBackStack("admin_manage_fragment");
         transaction.commit();
-
-    }
-
-    public void openBusManageFragment(View view)
-    {
-        Toast.makeText(getBaseContext(),"Bus Manage",Toast.LENGTH_SHORT).show();
 
     }
 
