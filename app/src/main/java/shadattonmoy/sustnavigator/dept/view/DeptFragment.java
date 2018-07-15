@@ -26,6 +26,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.apache.commons.lang3.text.WordUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +46,7 @@ public class DeptFragment extends android.app.Fragment implements View.OnClickLi
     private RecyclerView deptList;
     private SchoolListAdapter schoolListAdapter;
     private Context context;
-    private TextView headerText,sessionText;
+    private TextView headerText,sessionText,sessionMsg;
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
     private List<School> schoolList;
@@ -80,6 +82,7 @@ public class DeptFragment extends android.app.Fragment implements View.OnClickLi
         deptList = (RecyclerView) view.findViewById(R.id.school_list);
         headerText = (TextView) view.findViewById(R.id.dept_header_msg);
         sessionText = (TextView) view.findViewById(R.id.dept_session_msg);
+        sessionMsg = (TextView) view.findViewById(R.id.session_msg);
         appBarLayout = (AppBarLayout) getActivity().findViewById(R.id.appbar_layout);
         progressBar = (ProgressBar) view.findViewById(R.id.dept_progressbar);
         return view;
@@ -89,7 +92,9 @@ public class DeptFragment extends android.app.Fragment implements View.OnClickLi
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         StringBuilder stringBuilder = new StringBuilder(purpose);
-        headerText.setText(Html.fromHtml("Department for <b>"+ purpose.toUpperCase()+"</b>"));
+        String purposeTrimmed = purpose.replace("_"," ");
+        String purposeFormatted = WordUtils.capitalizeFully(purposeTrimmed);
+        headerText.setText(Html.fromHtml("Dept. for <b>"+ purposeFormatted +"</b>"));
         appBarLayout.setExpanded(false);
         getSchoolsFromServer(purpose);
 
@@ -139,6 +144,7 @@ public class DeptFragment extends android.app.Fragment implements View.OnClickLi
                 if(purpose.equals("syllabus") || purpose.equals("cgpa") || purpose.equals("syllabus_manage"))
                 {
                     sessionText.setVisibility(View.VISIBLE);
+                    sessionMsg.setVisibility(View.VISIBLE);
                     sessionText.setText(Values.getSessions().get(0));
                     sessionText.setOnClickListener(new View.OnClickListener() {
                         @Override

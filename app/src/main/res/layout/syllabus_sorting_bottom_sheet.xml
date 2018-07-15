@@ -10,41 +10,73 @@
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/sort_bottom_sheet_name_asc"
+            android:id="@+id/course_credit_asc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:padding="8dp">
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/textBlack"
-                android:text="Name (Ascending)"
+                android:text="Course Credit (Ascending)"
                 android:drawableLeft="@drawable/edit_black"
-                android:drawablePadding="8dp"
+                android:drawablePadding="16dp"
+                android:textColor="@color/textBlack"
                 android:textSize="18sp"/>
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/sort_bottom_sheet_name_desc"
+            android:id="@+id/course_credit_desc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:padding="8dp">
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="Course Credit (Descending)"
                 android:textColor="@color/textBlack"
-                android:text="Name (Descending)"
                 android:drawableLeft="@drawable/edit_black"
-                android:drawablePadding="8dp"
+                android:drawablePadding="16dp"
                 android:textSize="18sp"/>
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/sort_bottom_sheet_designation_asc"
+            android:id="@+id/course_code_asc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/textBlack"
+                android:text="Course Code (Ascending)"
+                android:drawableLeft="@drawable/edit_black"
+                android:drawablePadding="16dp"
+                android:textSize="18sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/course_code_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/textBlack"
+                android:text="Course Code (Descending)"
+                android:drawableLeft="@drawable/edit_black"
+                android:drawablePadding="16dp"
+                android:textSize="18sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/course_title_asc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -52,16 +84,16 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Designation (Ascending)"
+                android:text="Course Title (Ascending)"
                 android:textColor="@color/textBlack"
                 android:drawableLeft="@drawable/edit_black"
-                android:drawablePadding="8dp"
+                android:drawablePadding="16dp"
                 android:textSize="18sp"/>
         </LinearLayout>
 
 
         <LinearLayout
-            android:id="@+id/sort_bottom_sheet_designation_desc"
+            android:id="@+id/course_title_desc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -69,12 +101,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Designation (Descending)"
+                android:text="Course Title (Descending)"
                 android:textColor="@color/textBlack"
                 android:drawableLeft="@drawable/edit_black"
-                android:drawablePadding="8dp"
+                android:drawablePadding="16dp"
                 android:textSize="18sp"/>
         </LinearLayout>
+
+
 
 
     </LinearLayout>

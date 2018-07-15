@@ -5,6 +5,9 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.SearchView;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -32,6 +35,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 import shadattonmoy.sustnavigator.admin.view.TeacherAddFragment;
 import shadattonmoy.sustnavigator.R;
@@ -59,7 +63,8 @@ public class TeacherFragment extends android.app.Fragment {
     private FloatingActionButton addMoreTeacherFab;
     private TeacherListAdapter adapter;
     private BottomDialog bottomDialog;
-
+    private SearchView searchView;
+    private ListView teacherListView;
     public TeacherFragment() {
 
     }
@@ -117,7 +122,7 @@ public class TeacherFragment extends android.app.Fragment {
                     adapter = new TeacherListAdapter(getActivity().getApplicationContext(), R.layout.teacher_single_row, R.id.teacher_icon, teachers, dept);
                     adapter.setFragmentManager(getFragmentManager());
 
-                    ListView teacherListView = (ListView) view.findViewById(R.id.teacherList);
+                    teacherListView = (ListView) view.findViewById(R.id.teacherList);
                     teacherListView.setAdapter(adapter);
                     teacherListView.setOnItemClickListener(new detailListener(getActivity().getApplicationContext(), manager));
                     if (isAdmin) {
@@ -317,8 +322,47 @@ public class TeacherFragment extends android.app.Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.teacher_fragment_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.teacher_fragment_menu, menu);
+        MenuItem searchItem = menu.findItem(R.id.search_teacher);
+        searchView = new SearchView(getActivity());
+        searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setQueryHint("Search Here");
+        searchView.setQueryHint(Html.fromHtml("<font color = #ecf0f1>" + getResources().getString(R.string.teacher_search_hint) + "</font>"));
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filterData(newText);
+                return false;
+            }
+        });
+    }
+
+    public void filterData(String query)
+    {
+        ArrayList<Teacher> filteredTeacher = new ArrayList<Teacher>();
+        if(searchView!=null)
+        {
+            for(Teacher teacher:teachers)
+            {
+                if(teacher.getName().toLowerCase().startsWith(query.toLowerCase()) || teacher.getName().toLowerCase().endsWith(query.toLowerCase())|| teacher.getDesignation().toLowerCase().startsWith(query.toLowerCase()) || teacher.getDesignation().endsWith(query.toLowerCase())
+                        || teacher.getRoom().toLowerCase().startsWith(query.toLowerCase()) || teacher.getRoom().endsWith(query.toLowerCase())
+                        || teacher.getPhone().toLowerCase().startsWith(query.toLowerCase()) || teacher.getPhone().endsWith(query.toLowerCase()))
+                {
+                    filteredTeacher.add(teacher);
+                }
+                //else filteredVendors=vendors;
+                adapter = new TeacherListAdapter(context,R.layout.teacher_single_row,R.id.teacher_icon,filteredTeacher,dept);
+                teacherListView.setAdapter(adapter);
+            }
+        }
+
     }
 
     @Override
@@ -352,6 +396,8 @@ public class TeacherFragment extends android.app.Fragment {
     public void setAdmin(boolean admin) {
         isAdmin = admin;
     }
+
+
 }
 
 class detailListener implements AdapterView.OnItemClickListener {

@@ -286,10 +286,11 @@ public class MainActivity extends AppCompatActivity
         }
         else
         {
-            Snackbar.make(root, "Please enable the internet and try again", Snackbar.LENGTH_LONG)
-                    .setAction("CLOSE", new View.OnClickListener() {
+            Snackbar.make(root, "No Internet Connection!! Try again", Snackbar.LENGTH_LONG)
+                    .setAction("Got It", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+
 
                         }
                     })
