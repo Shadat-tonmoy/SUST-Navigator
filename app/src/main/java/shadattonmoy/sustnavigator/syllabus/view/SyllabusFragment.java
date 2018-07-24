@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.text.Html;
@@ -45,6 +46,7 @@ import shadattonmoy.sustnavigator.admin.view.CourseAddFragment;
 import shadattonmoy.sustnavigator.dept.model.Dept;
 import shadattonmoy.sustnavigator.teacher.controller.TeacherListAdapter;
 import shadattonmoy.sustnavigator.teacher.model.Teacher;
+import shadattonmoy.sustnavigator.utils.SyllabusSessionBottomSheet;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
@@ -70,9 +72,11 @@ public class SyllabusFragment extends android.app.Fragment {
     private Activity activity;
     private BottomDialog bottomDialog;
     private SearchView searchView;
+    private FragmentActivity fragmentActivity;
     public SyllabusFragment() {
         super();
     }
+
     public SyllabusFragment(Dept dept,String semester,boolean isEditable,String session)
     {
         this.dept = dept;
@@ -206,6 +210,14 @@ public class SyllabusFragment extends android.app.Fragment {
                     transaction.replace(R.id.main_content_root, scanSyllabusFragment);
                     transaction.addToBackStack("syllabus_scan_fragment");
                     transaction.commit();
+                }
+            });
+
+            cloneSyllabusButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    SyllabusSessionBottomSheet syllabusSessionBottomSheet = new SyllabusSessionBottomSheet(context,true,dept.getDeptCode().toLowerCase(),semester,session);
+                    syllabusSessionBottomSheet.show(fragmentActivity.getSupportFragmentManager(),"syllabusSessionBottomSheet");
                 }
             });
         }
@@ -433,5 +445,11 @@ public class SyllabusFragment extends android.app.Fragment {
 
     public void hideSortingBottomSheet() {
         bottomDialog.dismiss();
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        fragmentActivity=(FragmentActivity) activity;
+        super.onAttach(activity);
     }
 }

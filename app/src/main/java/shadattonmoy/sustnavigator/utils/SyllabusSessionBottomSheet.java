@@ -2,18 +2,34 @@ package shadattonmoy.sustnavigator.utils;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.os.Bundle;
 import android.support.design.widget.BottomSheetDialogFragment;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
+
+import shadattonmoy.sustnavigator.Course;
 import shadattonmoy.sustnavigator.R;
+import shadattonmoy.sustnavigator.admin.view.CourseListDialog;
 import shadattonmoy.sustnavigator.dept.view.DeptFragment;
 import shadattonmoy.sustnavigator.school.controller.SchoolListAdapter;
+import shadattonmoy.sustnavigator.syllabus.controller.SyllabusAdapter;
 
 public class SyllabusSessionBottomSheet extends BottomSheetDialogFragment {
 
@@ -22,9 +38,24 @@ public class SyllabusSessionBottomSheet extends BottomSheetDialogFragment {
     private TextView sessionTextView;
     private Dialog dialog;
     private SchoolListAdapter schoolListAdapter;
-
+    private boolean fetchFromServer;
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference databaseReference;
+    private ArrayList<String> sessionFromServer;
+    private ProgressBar sessionLoadingProgressBar;
+    private String dept,semester,session;
     public SyllabusSessionBottomSheet()
     {
+
+    }
+
+    public SyllabusSessionBottomSheet(Context context,boolean fetchFromServer,String dept, String semester,String session)
+    {
+        this.context = context;
+        this.fetchFromServer = fetchFromServer;
+        this.dept = dept;
+        this.semester = semester;
+        this.session = session;
 
     }
 
@@ -32,14 +63,13 @@ public class SyllabusSessionBottomSheet extends BottomSheetDialogFragment {
     {
         this.context = context;
         this.sessionTextView = sessionTextView;
-
-
-
     }
     @Override
     public void setupDialog(Dialog dialog, int style) {
         View contentView = View.inflate(getContext(), R.layout.session_selection_bottom_sheet, null);
-        initNodes(contentView);
+        if(fetchFromServer)
+            initNodesFromServer(contentView);
+        else initNodes(contentView);
         setNodesTouchListener();
         dialog.setContentView(contentView);
         this.dialog = dialog;
@@ -51,6 +81,49 @@ public class SyllabusSessionBottomSheet extends BottomSheetDialogFragment {
 
     public void initNodes(View view)
     {
+        sessionList = (ListView) view.findViewById(R.id.session_list);
+        sessionList.setVisibility(View.VISIBLE);
+        SessionListAdapter sessionListAdapter = new SessionListAdapter(context,R.layout.session_single_row,R.id.session_title,(ArrayList<String>) Values.getSessions());
+        sessionList.setAdapter(sessionListAdapter);
+    }
+
+    public void initNodesFromServer(final View view)
+    {
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference().child("syllabus");
+        sessionFromServer = new ArrayList<>();
+        sessionLoadingProgressBar = (ProgressBar) view.findViewById(R.id.session_loading_progress);
+        sessionLoadingProgressBar.setVisibility(View.VISIBLE);
+
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot child : dataSnapshot.getChildren() )
+                {
+                    String session = child.getKey();
+                    sessionFromServer.add(session);
+                }
+
+                if(sessionFromServer.size()>0)
+                {
+                    sessionLoadingProgressBar.setVisibility(View.GONE);
+                    sessionList = (ListView) view.findViewById(R.id.session_list);
+                    sessionList.setVisibility(View.VISIBLE);
+                    SessionListAdapter sessionListAdapter = new SessionListAdapter(context,R.layout.session_single_row,R.id.session_title,sessionFromServer);
+                    sessionList.setAdapter(sessionListAdapter);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+
+
         sessionList = (ListView) view.findViewById(R.id.session_list);
         SessionListAdapter sessionListAdapter = new SessionListAdapter(context,R.layout.session_single_row,R.id.session_title,(ArrayList<String>) Values.getSessions());
         sessionList.setAdapter(sessionListAdapter);
@@ -65,11 +138,27 @@ public class SyllabusSessionBottomSheet extends BottomSheetDialogFragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 int pos = adapterView.getSelectedItemPosition();
-                String session = Values.getSessions().get(i);
-                session = session.replaceAll("[a-zA-Z()\" \"]+","");
-                sessionTextView.setText(session);
-                DeptFragment.bottomSheetSelectedPosition= i;
-                schoolListAdapter.setSession(session);
+                String sessionToClone = Values.getSessions().get(i);
+//                Log.e("SelectedSession",session);
+                if(!fetchFromServer)
+                {
+                    sessionToClone = sessionToClone.replaceAll("[a-zA-Z()\" \"]+","");
+                    sessionTextView.setText(sessionToClone);
+                    DeptFragment.bottomSheetSelectedPosition= i;
+                    schoolListAdapter.setSession(sessionToClone);
+                }
+                else
+                {
+                    sessionToClone = sessionFromServer.get(i);
+                    CourseListDialog courseListDialog = new CourseListDialog();
+                    Bundle args = new Bundle();
+                    args.putString("sessionToClone",sessionToClone);
+                    args.putString("session",session);
+                    args.putString("dept",dept);
+                    args.putString("semester",semester);
+                    courseListDialog.setArguments(args);
+                    courseListDialog.show(getActivity().getFragmentManager(),"courseListDialog");
+                }
                 dialog.dismiss();
 
 
@@ -84,4 +173,6 @@ public class SyllabusSessionBottomSheet extends BottomSheetDialogFragment {
     public void setSchoolListAdapter(SchoolListAdapter schoolListAdapter) {
         this.schoolListAdapter = schoolListAdapter;
     }
+
+
 }

@@ -373,6 +373,17 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    public void openHelpFragment(View view)
+    {
+        Toast.makeText(getApplicationContext(),"Not Ready Yet",Toast.LENGTH_SHORT).show();
+
+    }
+    public void openAboutFragment(View view)
+    {
+        Toast.makeText(getApplicationContext(),"Not Ready Yet",Toast.LENGTH_SHORT).show();
+
+    }
+
     public void openMLKit(View view)
     {
         Intent intent = new Intent(MainActivity.this,CameraActivity.class);

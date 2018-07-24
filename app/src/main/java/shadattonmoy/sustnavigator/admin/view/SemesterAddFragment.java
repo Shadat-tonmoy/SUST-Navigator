@@ -139,7 +139,8 @@ public class SemesterAddFragment extends android.app.Fragment {
                         databaseReference.setValue("", new DatabaseReference.CompletionListener() {
                             @Override
                             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                                Snackbar snackbar = Snackbar.make(rootView, "Proctorial Body Member added...", Snackbar.LENGTH_INDEFINITE);
+                                Snackbar snackbar = Snackbar.make(rootView, "Semester Added", Snackbar.LENGTH_INDEFINITE);
+                                snackbar.setActionTextColor(context.getResources().getColor(android.R.color.holo_blue_dark));
                                 snackbar.setAction("Back", new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {

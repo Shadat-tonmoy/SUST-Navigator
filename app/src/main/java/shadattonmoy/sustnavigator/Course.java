@@ -82,4 +82,19 @@ public class Course {
     public void setAdded(boolean added) {
         isAdded = added;
     }
+
+
+    @Override
+    public String toString() {
+        return "Course{" +
+                "course_code='" + course_code + '\'' +
+                ", course_title='" + course_title + '\'' +
+                ", course_credit='" + course_credit + '\'' +
+                ", course_detp='" + course_detp + '\'' +
+                ", course_id='" + course_id + '\'' +
+                ", grade='" + grade + '\'' +
+                ", local_id='" + local_id + '\'' +
+                ", isAdded=" + isAdded +
+                '}';
+    }
 }
