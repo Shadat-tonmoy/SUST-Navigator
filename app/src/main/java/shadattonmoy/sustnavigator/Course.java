@@ -5,17 +5,18 @@ package shadattonmoy.sustnavigator;
  */
 
 public class Course {
-    private String course_code,course_title,course_credit,course_detp,course_id,grade,local_id;
+    private String course_code,course_title,course_credit,course_detp,course_id,grade,local_id,courseDetail;
     private boolean isAdded;
 
     public Course(){
         super();
     }
-    public Course(String course_code, String course_title, String course_credit, String course_detp) {
+    public Course(String course_code, String course_title, String course_credit, String course_detp, String courseDetail) {
         this.course_code = course_code;
         this.course_title = course_title;
         this.course_credit = course_credit;
         this.course_detp = course_detp;
+        this.courseDetail = courseDetail;
     }
     public Course(String course_code, String course_title, String course_credit) {
         this.course_code = course_code;
@@ -84,6 +85,14 @@ public class Course {
     }
 
 
+    public String getCourseDetail() {
+        return courseDetail;
+    }
+
+    public void setCourseDetail(String courseDetail) {
+        this.courseDetail = courseDetail;
+    }
+
     @Override
     public String toString() {
         return "Course{" +
@@ -94,6 +103,7 @@ public class Course {
                 ", course_id='" + course_id + '\'' +
                 ", grade='" + grade + '\'' +
                 ", local_id='" + local_id + '\'' +
+                ", courseDetail='" + courseDetail + '\'' +
                 ", isAdded=" + isAdded +
                 '}';
     }
