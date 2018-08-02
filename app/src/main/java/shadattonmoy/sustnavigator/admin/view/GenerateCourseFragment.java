@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -24,10 +25,14 @@ import shadattonmoy.sustnavigator.R;
 
 public class GenerateCourseFragment extends android.app.Fragment {
 
-    private View view,detectedTextLayout;
+    private View view, detectedTextLayout;
     private ArrayList<String> detectedTexts;
     private LinearLayout detectedTextContainer;
     private TextView detectedTextView;
+    private EditText courseCodeField, courseCreditField, courseTitleField;
+    private DragAndDropListener dragAndDropListener;
+    private String textToDrop;
+
     public GenerateCourseFragment() {
         // Required empty public constructor
     }
@@ -45,6 +50,9 @@ public class GenerateCourseFragment extends android.app.Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_generate_course, container, false);
         detectedTextContainer = (LinearLayout) view.findViewById(R.id.detected_text_container);
+        courseCodeField = (EditText) view.findViewById(R.id.course_code_field);
+        courseCreditField = (EditText) view.findViewById(R.id.course_credit_field);
+        courseTitleField = (EditText) view.findViewById(R.id.course_title_field);
         generateDetectedTextsLayout(inflater);
         return view;
     }
@@ -52,27 +60,31 @@ public class GenerateCourseFragment extends android.app.Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        dragAndDropListener = new DragAndDropListener();
+        courseCreditField.setOnDragListener(dragAndDropListener);
+        courseTitleField.setOnDragListener(dragAndDropListener);
+        courseCodeField.setOnDragListener(dragAndDropListener);
+
+
     }
 
-    public void generateDetectedTextsLayout(LayoutInflater inflater)
-    {
+    public void generateDetectedTextsLayout(LayoutInflater inflater) {
         detectedTextContainer.removeAllViews();
-        for(String text:detectedTexts)
-        {
-            Log.e("TextDetected",text);
-            detectedTextLayout = inflater.inflate(R.layout.detected_text_chip,null,false);
+        for (String text : detectedTexts) {
+            Log.e("TextDetected", text);
+            detectedTextLayout = inflater.inflate(R.layout.detected_text_chip, null, false);
             detectedTextView = (TextView) detectedTextLayout.findViewById(R.id.detected_text_chip);
             detectedTextView.setText(text);
-            detectedTextView.setOnDragListener(new DragAndDropListener());
+            detectedTextView.setOnDragListener(new DragAndDropListenerForTextView());
             detectedTextView.setOnTouchListener(new MyTouchListener());
-            if(detectedTextView.getParent()!=null)
-                ((ViewGroup)detectedTextView.getParent()).removeView(detectedTextView);
+            if (detectedTextView.getParent() != null)
+                ((ViewGroup) detectedTextView.getParent()).removeView(detectedTextView);
             detectedTextContainer.addView(detectedTextView);
         }
     }
 
     private final class MyTouchListener implements View.OnTouchListener {
-        public boolean onTouch(View view, MotionEvent motionEvent) {
+        /*public boolean onTouch(View view, MotionEvent motionEvent) {
             if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                 ClipData data = ClipData.newPlainText("", "");
                 View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(
@@ -83,38 +95,80 @@ public class GenerateCourseFragment extends android.app.Fragment {
             } else {
                 return false;
             }
-        }
-    }
-
-    private class DragAndDropListener implements View.OnDragListener{
+        }*/
 
         @Override
-        public boolean onDrag(View view, DragEvent event) {
-            int action = event.getAction();
-            switch (event.getAction()) {
-                case DragEvent.ACTION_DRAG_STARTED:
-                    Log.e("Action","ACTION_DRAG_STARTED");
-                    break;
-                case DragEvent.ACTION_DRAG_ENTERED:
-                    Log.e("Action","ACTION_DRAG_ENTERED");
-                    break;
-                case DragEvent.ACTION_DRAG_EXITED:
-                    Log.e("Action","ACTION_DRAG_EXITED");
-                    break;
-                case DragEvent.ACTION_DROP:
-                    Log.e("Action","ACTION_DROP");
-                    TextView textView = (TextView) event.getLocalState();
-                    Log.e("DroppedText",textView.getText().toString()+" To Dropped "+view.toString());
-
-                    break;
-                case DragEvent.ACTION_DRAG_ENDED:
-                    Log.e("Action","ACTION_DRAG_ENDED");
-                    textView = (TextView) event.getLocalState();
-                    Log.e("DroppedText",textView.getText().toString()+" To Dropped "+view.toString());
-                default:
-                    break;
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                ClipData data = ClipData.newPlainText("text", "");
+                View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
+                view.startDrag(data, shadowBuilder, view, 0);
             }
             return true;
         }
+    }
+
+    private class DragAndDropListener implements View.OnDragListener {
+
+        @Override
+        public boolean onDrag(View v, DragEvent event) {
+            Log.e("Event","ONDrag");
+            switch(event.getAction())
+            {
+                case DragEvent.ACTION_DRAG_STARTED:
+//                    textToDrop = ((TextView)v).getText().toString();
+                    Log.e("Event","OnDragStarted "+v.toString());
+                    break;
+                case DragEvent.ACTION_DROP:
+                    ClipData.Item item = event.getClipData().getItemAt(0);
+                    CharSequence paste = item.getText();
+                    Log.e("OnDrop",paste.toString());
+                    if(v.getId()==R.id.course_code_field)
+                    {
+                        Log.e("OnDrop"," Code Field "+paste.toString());
+                        ((EditText) v).setText(textToDrop);
+                    }
+                    break;
+                case DragEvent.ACTION_DRAG_ENDED:
+                    Log.e("Event","OnDragEnded");
+                    break;
+                case DragEvent.ACTION_DRAG_EXITED:
+                    Log.e("Event","OnDragExited");
+                    break;
+                default: break;
+            }
+
+            return false;
+        }
+
+    }
+
+    private class DragAndDropListenerForTextView implements View.OnDragListener {
+
+        @Override
+        public boolean onDrag(View v, DragEvent event) {
+            Log.e("Event","ONDrag");
+            textToDrop = "";
+            switch(event.getAction())
+            {
+                case DragEvent.ACTION_DRAG_STARTED:
+                    textToDrop = ((TextView)v).getText().toString();
+                    Log.e("Event","OnDragStartedForTextView"+textToDrop+" ID "+v.toString());
+                    break;
+                case DragEvent.ACTION_DROP:
+                    break;
+                case DragEvent.ACTION_DRAG_ENDED:
+                    textToDrop = ((TextView)v).getText().toString();
+                    Log.e("Event","OnDragStartedEndedTextView"+textToDrop+" ID "+v.toString());
+                    break;
+                case DragEvent.ACTION_DRAG_EXITED:
+                    Log.e("Event","OnDragExited");
+                    break;
+                default: break;
+            }
+
+            return false;
+        }
+
     }
 }

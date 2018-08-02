@@ -81,6 +81,7 @@ public class ScanSyllabusFragment extends android.app.Fragment {
     private final String TAG = "CameraActivity";
     public ScanSyllabusFragment() {
 
+
     }
 
 
