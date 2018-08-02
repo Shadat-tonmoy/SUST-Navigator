@@ -10,6 +10,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -45,6 +46,21 @@ dependencies {
     implementation 'com.android.support:gridlayout-v7:25.3.1'
     implementation 'com.github.javiersantos:BottomDialogs:1.2.1'
     implementation 'org.apache.commons:commons-lang3:3.5'
+    implementation 'com.theartofdev.edmodo:android-image-cropper:2.7.+'
+    implementation 'com.android.support:multidex:1.0.3'
+
+
+
 }
 
 apply plugin: 'com.google.gms.google-services'
+configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        def requested = details.requested
+        if (requested.group == 'com.android.support') {
+            if (!requested.name.startsWith("multidex")) {
+                details.useVersion '25.3.1'
+            }
+        }
+    }
+}

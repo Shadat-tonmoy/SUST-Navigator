@@ -11,6 +11,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -43,6 +45,8 @@ import com.google.firebase.ml.vision.FirebaseVision;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 import com.google.firebase.ml.vision.text.FirebaseVisionText;
 import com.google.firebase.ml.vision.text.FirebaseVisionTextDetector;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,6 +56,8 @@ import java.util.Date;
 
 import shadattonmoy.sustnavigator.R;
 
+import static shadattonmoy.sustnavigator.R.id.cropImageView;
+
 
 public class ScanSyllabusFragment extends android.app.Fragment {
 
@@ -60,17 +66,18 @@ public class ScanSyllabusFragment extends android.app.Fragment {
     private int PERMISSION_ALL = 0;
     static final int REQUEST_IMAGE_CAPTURE = 1;
     static final int REQUEST_TAKE_PHOTO = 1;
-    private Button openCameraButton, startScanningButton;
+    private Button openCameraButton, startScanningButton, cropImageButton, cropDoneButton;
     private ImageView outputImage;
     private String mCurrentPhotoPath;
     private String packageName;
-    private Bitmap bitmap;
+    private Bitmap bitmap,bitmapCropped;
     private Activity activity;
     private Context context;
     private FirebaseVisionImage firebaseVisionImage;
     private FirebaseVisionTextDetector firebaseVisionTextDetector;
     private FragmentManager fragmentManager;
     private ArrayList<String> detectedTexts;
+    private CropImageView cropImageView;
     private final String TAG = "CameraActivity";
     public ScanSyllabusFragment() {
 
@@ -92,7 +99,11 @@ public class ScanSyllabusFragment extends android.app.Fragment {
         view = inflater.inflate(R.layout.fragment_scan_syllabus, container, false);
         openCameraButton = (Button) view.findViewById(R.id.open_camera_button);
         startScanningButton = (Button) view.findViewById(R.id.start_scanning_button);
+        cropImageButton = (Button) view.findViewById(R.id.crop_image_button);
+        cropDoneButton = (Button) view.findViewById(R.id.crop_done_button);
         outputImage = (ImageView) view.findViewById(R.id.output_image);
+        cropImageView= (CropImageView) view.findViewById(R.id.cropImageView);
+
         return view;
     }
 
@@ -111,8 +122,28 @@ public class ScanSyllabusFragment extends android.app.Fragment {
         startScanningButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new BackgroundTask().execute();
+                new BackgroundTask().execute(bitmapCropped);
 
+            }
+        });
+
+        cropImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                outputImage.setVisibility(View.GONE);
+                cropImageView.setVisibility(View.VISIBLE);
+                cropImageView.setImageBitmap(bitmap);
+                cropDoneButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        bitmapCropped = cropImageView.getCroppedImage();
+                        outputImage.setImageBitmap(bitmapCropped);
+                        cropImageView.setVisibility(View.GONE);
+                        outputImage.setVisibility(View.VISIBLE);
+                        cropImageView.setImageBitmap(bitmapCropped);
+                        Log.e("CroppedImage","Done");
+                    }
+                });
             }
         });
     }
@@ -203,8 +234,11 @@ public class ScanSyllabusFragment extends android.app.Fragment {
         bmOptions.inPurgeable = true;
 
         bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
-        bitmap = adjustedContrast(bitmap,100);
+//        bitmap = adjustedContrast(bitmap,100);
+//        cropImageView.setImageBitmap(bitmap);
+        bitmap = changeBitmapContrastBrightness(bitmap,1,-5);
         outputImage.setImageBitmap(bitmap);
+//        outputImage.setVisibility(View.GONE);
     }
 
     private Bitmap adjustedContrast(Bitmap src, double value)
@@ -260,8 +294,25 @@ public class ScanSyllabusFragment extends android.app.Fragment {
         return bmOut;
     }
 
+    private Bitmap changeBitmapContrastBrightness(Bitmap bitmap, float contrast, float brightness)
+    {
+        ColorMatrix colorMatrix = new ColorMatrix(new float[]
+                {
+                        contrast, 0, 0, 0, brightness,
+                        0, contrast, 0, 0, brightness,
+                        0, 0, contrast, 0, brightness,
+                        0, 0, 0, 1, 0
+                });
+        Bitmap bitmapToReturn = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), bitmap.getConfig());
+        Canvas canvas = new Canvas(bitmapToReturn);
+        Paint paint = new Paint();
+        paint.setColorFilter(new ColorMatrixColorFilter(colorMatrix));
+        canvas.drawBitmap(bitmap, 0, 0, paint);
+        return bitmapToReturn;
+    }
 
-    private class BackgroundTask extends AsyncTask<Void,Void,Void>{
+
+    private class BackgroundTask extends AsyncTask<Bitmap,Void,Void>{
 
         ProgressDialog progressDialog;
 
@@ -275,8 +326,8 @@ public class ScanSyllabusFragment extends android.app.Fragment {
         }
 
         @Override
-        protected Void doInBackground(Void... voids) {
-            startScanning();
+        protected Void doInBackground(Bitmap... bitmaps) {
+            startScanning(bitmaps[0]);
             return null;
         }
 
@@ -315,7 +366,8 @@ public class ScanSyllabusFragment extends android.app.Fragment {
             Log.e("OutputText",detectedText);
         }
 
-        private void startScanning() {
+        private void startScanning(Bitmap bitmap) {
+//            bitmap = changeBitmapContrastBrightness(bitmap,10,10);
             detectedTexts = new ArrayList<>();
             firebaseVisionImage = FirebaseVisionImage.fromBitmap(bitmap);
             firebaseVisionTextDetector = FirebaseVision.getInstance().getVisionTextDetector();

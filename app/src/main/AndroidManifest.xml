@@ -4,7 +4,8 @@
 
     <meta-data
         android:name="com.google.firebase.ml.vision.DEPENDENCIES"
-        android:value="text" />
+        android:value="text"
+        />
 
     <uses-feature
         android:name="android.hardware.camera"
