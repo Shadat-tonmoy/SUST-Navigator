@@ -53,6 +53,8 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import shadattonmoy.sustnavigator.R;
 
@@ -70,7 +72,7 @@ public class ScanSyllabusFragment extends android.app.Fragment {
     private ImageView outputImage;
     private String mCurrentPhotoPath;
     private String packageName;
-    private Bitmap bitmap,bitmapCropped;
+    private Bitmap bitmap, bitmapCropped;
     private Activity activity;
     private Context context;
     private FirebaseVisionImage firebaseVisionImage;
@@ -78,12 +80,13 @@ public class ScanSyllabusFragment extends android.app.Fragment {
     private FragmentManager fragmentManager;
     private ArrayList<String> detectedTexts;
     private CropImageView cropImageView;
+    Map<String, Boolean> foundText;
     private final String TAG = "CameraActivity";
+
     public ScanSyllabusFragment() {
 
 
     }
-
 
 
     @Override
@@ -103,7 +106,7 @@ public class ScanSyllabusFragment extends android.app.Fragment {
         cropImageButton = (Button) view.findViewById(R.id.crop_image_button);
         cropDoneButton = (Button) view.findViewById(R.id.crop_done_button);
         outputImage = (ImageView) view.findViewById(R.id.output_image);
-        cropImageView= (CropImageView) view.findViewById(R.id.cropImageView);
+        cropImageView = (CropImageView) view.findViewById(R.id.cropImageView);
 
         return view;
     }
@@ -142,7 +145,7 @@ public class ScanSyllabusFragment extends android.app.Fragment {
                         cropImageView.setVisibility(View.GONE);
                         outputImage.setVisibility(View.VISIBLE);
                         cropImageView.setImageBitmap(bitmapCropped);
-                        Log.e("CroppedImage","Done");
+                        Log.e("CroppedImage", "Done");
                     }
                 });
             }
@@ -237,13 +240,12 @@ public class ScanSyllabusFragment extends android.app.Fragment {
         bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
 //        bitmap = adjustedContrast(bitmap,100);
 //        cropImageView.setImageBitmap(bitmap);
-        bitmap = changeBitmapContrastBrightness(bitmap,1,-5);
+        bitmap = changeBitmapContrastBrightness(bitmap, 1, -5);
         outputImage.setImageBitmap(bitmap);
 //        outputImage.setVisibility(View.GONE);
     }
 
-    private Bitmap adjustedContrast(Bitmap src, double value)
-    {
+    private Bitmap adjustedContrast(Bitmap src, double value) {
         // image size
         int width = src.getWidth();
         int height = src.getHeight();
@@ -267,26 +269,35 @@ public class ScanSyllabusFragment extends android.app.Fragment {
         double contrast = Math.pow((100 + value) / 100, 2);
 
         // scan through all pixels
-        for(int x = 0; x < width; ++x) {
-            for(int y = 0; y < height; ++y) {
+        for (int x = 0; x < width; ++x) {
+            for (int y = 0; y < height; ++y) {
                 // get pixel color
                 pixel = src.getPixel(x, y);
                 A = Color.alpha(pixel);
                 // apply filter contrast for every channel R, G, B
                 R = Color.red(pixel);
-                R = (int)(((((R / 255.0) - 0.5) * contrast) + 0.5) * 255.0);
-                if(R < 0) { R = 0; }
-                else if(R > 255) { R = 255; }
+                R = (int) (((((R / 255.0) - 0.5) * contrast) + 0.5) * 255.0);
+                if (R < 0) {
+                    R = 0;
+                } else if (R > 255) {
+                    R = 255;
+                }
 
                 G = Color.green(pixel);
-                G = (int)(((((G / 255.0) - 0.5) * contrast) + 0.5) * 255.0);
-                if(G < 0) { G = 0; }
-                else if(G > 255) { G = 255; }
+                G = (int) (((((G / 255.0) - 0.5) * contrast) + 0.5) * 255.0);
+                if (G < 0) {
+                    G = 0;
+                } else if (G > 255) {
+                    G = 255;
+                }
 
                 B = Color.blue(pixel);
-                B = (int)(((((B / 255.0) - 0.5) * contrast) + 0.5) * 255.0);
-                if(B < 0) { B = 0; }
-                else if(B > 255) { B = 255; }
+                B = (int) (((((B / 255.0) - 0.5) * contrast) + 0.5) * 255.0);
+                if (B < 0) {
+                    B = 0;
+                } else if (B > 255) {
+                    B = 255;
+                }
 
                 // set new pixel color to output bitmap
                 bmOut.setPixel(x, y, Color.argb(A, R, G, B));
@@ -295,8 +306,7 @@ public class ScanSyllabusFragment extends android.app.Fragment {
         return bmOut;
     }
 
-    private Bitmap changeBitmapContrastBrightness(Bitmap bitmap, float contrast, float brightness)
-    {
+    private Bitmap changeBitmapContrastBrightness(Bitmap bitmap, float contrast, float brightness) {
         ColorMatrix colorMatrix = new ColorMatrix(new float[]
                 {
                         contrast, 0, 0, 0, brightness,
@@ -313,7 +323,7 @@ public class ScanSyllabusFragment extends android.app.Fragment {
     }
 
 
-    private class BackgroundTask extends AsyncTask<Bitmap,Void,Void>{
+    private class BackgroundTask extends AsyncTask<Bitmap, Void, Void> {
 
         ProgressDialog progressDialog;
 
@@ -338,38 +348,10 @@ public class ScanSyllabusFragment extends android.app.Fragment {
             progressDialog.dismiss();
         }
 
-
-        private void scan()
-        {
-            detectedTexts = new ArrayList<>();
-            TextRecognizer textRecognizer = new TextRecognizer.Builder(context)
-                    .build();
-            if (!textRecognizer.isOperational()) {
-                new AlertDialog.Builder(context)
-                        .setMessage("Text recognizer could not be set up on your device :(").show();
-                return;
-            }
-
-            Frame frame = new Frame.Builder().setBitmap(bitmap).build();
-            SparseArray<TextBlock> text = textRecognizer.detect(frame);
-
-            String detectedText = "";
-
-            for (int i = 0; i < text.size(); i++) {
-                TextBlock textBlock = text.valueAt(i);
-                if (textBlock != null && textBlock.getValue() != null) {
-                    detectedText += textBlock.getValue();
-                    String textBlockValue = textBlock.getValue();
-                    detectedTexts.add(textBlockValue);
-                    Log.e("OutputText",textBlock.getValue());
-                }
-            }
-            Log.e("OutputText",detectedText);
-        }
-
         private void startScanning(Bitmap bitmap) {
 //            bitmap = changeBitmapContrastBrightness(bitmap,10,10);
             detectedTexts = new ArrayList<>();
+            foundText = new HashMap<>();
             firebaseVisionImage = FirebaseVisionImage.fromBitmap(bitmap);
             firebaseVisionTextDetector = FirebaseVision.getInstance().getVisionTextDetector();
 
@@ -378,16 +360,22 @@ public class ScanSyllabusFragment extends android.app.Fragment {
                             .addOnSuccessListener(new OnSuccessListener<FirebaseVisionText>() {
                                 @Override
                                 public void onSuccess(FirebaseVisionText firebaseVisionText) {
-                                    for (FirebaseVisionText.Block block: firebaseVisionText.getBlocks()) {
+                                    for (FirebaseVisionText.Block block : firebaseVisionText.getBlocks()) {
                                         Rect boundingBox = block.getBoundingBox();
                                         Point[] cornerPoints = block.getCornerPoints();
                                         String text = block.getText();
-                                        for (FirebaseVisionText.Line line: block.getLines()) {
+                                        for (FirebaseVisionText.Line line : block.getLines()) {
 
-                                            Log.e("LineText",line.getText());
-                                            for (FirebaseVisionText.Element element: line.getElements()) {
-                                            Log.e("LineElement",element.getText());
-                                            detectedTexts.add(line.getText());
+                                            Log.e("LineText", line.getText());
+                                            for (FirebaseVisionText.Element element : line.getElements()) {
+                                                Log.e("LineElement", element.getText());
+                                                String textBlockValue = line.getText();
+                                                if (foundText.get(textBlockValue) == null || !foundText.get(textBlockValue)) {
+                                                    detectedTexts.add(textBlockValue);
+                                                    foundText.put(textBlockValue, true);
+                                                    Log.e("OutputText", textBlockValue);
+                                                }
+//                                                detectedTexts.add(line.getText());
                                             }
                                         }
                                     }
@@ -406,17 +394,13 @@ public class ScanSyllabusFragment extends android.app.Fragment {
         }
 
 
+        private void showDialog() {
 
-        private void showDialog()
-        {
-
-            DetectedTextDialog detectedTextDialog = new DetectedTextDialog(context,detectedTexts);
-            detectedTextDialog.show(fragmentManager,"detectedTextDialog");
+            DetectedTextDialog detectedTextDialog = new DetectedTextDialog(context, detectedTexts);
+            detectedTextDialog.show(fragmentManager, "detectedTextDialog");
 
         }
     }
-
-
 
 
 }

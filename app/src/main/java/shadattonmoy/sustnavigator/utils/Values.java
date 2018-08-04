@@ -9,6 +9,9 @@ import java.util.Map;
 public class Values {
     public static String[] months = new String[]{"January","February","March","April","May","June","July","August","September","October","November","December"};
     public static String[] days = new String[]{"Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
+    public static final int DETECTED_TYPE_COURSE_CODE = 1;
+    public static final int DETECTED_TYPE_COURSE_TITLE = 2;
+    public static final int DETECTED_TYPE_COURSE_CREDIT = 3;
     private static Map<String,String> semesterCodeMap = new HashMap<>();
     public static List<String> getSessions()
     {

@@ -12,25 +12,32 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.flexbox.FlexboxLayout;
+
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import shadattonmoy.sustnavigator.R;
+import shadattonmoy.sustnavigator.utils.Values;
 
 
 public class GenerateCourseFragment extends android.app.Fragment {
 
     private View view, detectedTextLayout;
     private ArrayList<String> detectedTexts;
-    private LinearLayout detectedTextContainer;
-    private TextView detectedTextView;
+    private FlexboxLayout detectedCodeContainer,detectedTitleContainer,detectedCreditContainer;
+    private TextView detectedTextView,courseCodeButton,courseTitleButton,courseCreditButton;
     private EditText courseCodeField, courseCreditField, courseTitleField;
     private DragAndDropListener dragAndDropListener;
+    private DragAndDropListenerForTextView dragAndDropListenerForTextView;
     private String textToDrop;
 
     public GenerateCourseFragment() {
@@ -49,12 +56,49 @@ public class GenerateCourseFragment extends android.app.Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_generate_course, container, false);
-        detectedTextContainer = (LinearLayout) view.findViewById(R.id.detected_text_container);
+        detectedCodeContainer = (FlexboxLayout) view.findViewById(R.id.detected_code_container);
+        detectedTitleContainer = (FlexboxLayout) view.findViewById(R.id.detected_title_container);
+        detectedCreditContainer = (FlexboxLayout) view.findViewById(R.id.detected_credit_container);
         courseCodeField = (EditText) view.findViewById(R.id.course_code_field);
         courseCreditField = (EditText) view.findViewById(R.id.course_credit_field);
         courseTitleField = (EditText) view.findViewById(R.id.course_title_field);
+        courseCodeButton = (TextView) view.findViewById(R.id.course_code_button);
+        courseTitleButton = (TextView) view.findViewById(R.id.course_title_button);
+        courseCreditButton = (TextView) view.findViewById(R.id.course_credit_button);
+        detectedCreditContainer.setVisibility(View.GONE);
+        detectedTitleContainer.setVisibility(View.GONE);
+        initTabClickListener();
         generateDetectedTextsLayout(inflater);
         return view;
+    }
+
+    public void initTabClickListener()
+    {
+        courseCreditButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                detectedCodeContainer.setVisibility(View.GONE);
+                detectedTitleContainer.setVisibility(View.GONE);
+                detectedCreditContainer.setVisibility(View.VISIBLE);
+            }
+        });
+        courseTitleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                detectedCodeContainer.setVisibility(View.GONE);
+                detectedTitleContainer.setVisibility(View.VISIBLE);
+                detectedCreditContainer.setVisibility(View.GONE);
+            }
+        });
+        courseCodeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                detectedCodeContainer.setVisibility(View.VISIBLE);
+                detectedTitleContainer.setVisibility(View.GONE);
+                detectedCreditContainer.setVisibility(View.GONE);
+            }
+        });
+
     }
 
     @Override
@@ -69,18 +113,67 @@ public class GenerateCourseFragment extends android.app.Fragment {
     }
 
     public void generateDetectedTextsLayout(LayoutInflater inflater) {
-        detectedTextContainer.removeAllViews();
+        detectedTitleContainer.removeAllViews();
+        detectedCodeContainer.removeAllViews();
+        detectedCreditContainer.removeAllViews();
+        int i=0;
         for (String text : detectedTexts) {
+            TextView detectedTextView;
+            View detectedTextLayout;
             Log.e("TextDetected", text);
             detectedTextLayout = inflater.inflate(R.layout.detected_text_chip, null, false);
             detectedTextView = (TextView) detectedTextLayout.findViewById(R.id.detected_text_chip);
+            detectedTextView.setId(i);
+            i++;
             detectedTextView.setText(text);
-            detectedTextView.setOnDragListener(new DragAndDropListenerForTextView());
             detectedTextView.setOnTouchListener(new MyTouchListener());
             if (detectedTextView.getParent() != null)
                 ((ViewGroup) detectedTextView.getParent()).removeView(detectedTextView);
-            detectedTextContainer.addView(detectedTextView);
+            if(getDetectedTextType(text)==Values.DETECTED_TYPE_COURSE_CODE)
+            {
+                detectedCodeContainer.addView(detectedTextView);
+
+            }
+            else if(getDetectedTextType(text)==Values.DETECTED_TYPE_COURSE_TITLE)
+            {
+                detectedTitleContainer.addView(detectedTextView);
+
+            }
+            else if(getDetectedTextType(text)==Values.DETECTED_TYPE_COURSE_CREDIT)
+            {
+                detectedCreditContainer.addView(detectedTextView);
+
+            }
+
         }
+        dragAndDropListenerForTextView = new DragAndDropListenerForTextView();
+    }
+
+    private int getDetectedTextType(String text)
+    {
+        String patternOfCode = "^[A-Za-z]{3}[ ]*[0-9A-Z*]+$";
+        String patternOfTitle = "^[A-Za-z ]+$";
+        String patternOfCredit = "^[0-9 .]+$";
+
+        Pattern pattern = Pattern.compile(patternOfCode);
+        Matcher matcher = pattern.matcher(text);
+        if(matcher.matches())
+        {
+            return Values.DETECTED_TYPE_COURSE_CODE;
+        }
+        pattern = Pattern.compile(patternOfTitle);
+        matcher = pattern.matcher(text);
+        if(matcher.matches())
+        {
+            return Values.DETECTED_TYPE_COURSE_TITLE;
+        }
+        pattern = Pattern.compile(patternOfCredit);
+        matcher = pattern.matcher(text);
+        if(matcher.matches())
+        {
+            return Values.DETECTED_TYPE_COURSE_CREDIT;
+        }
+        return -1;
     }
 
     private final class MyTouchListener implements View.OnTouchListener {
@@ -100,19 +193,71 @@ public class GenerateCourseFragment extends android.app.Fragment {
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
             if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                Log.e("OnTouch","TouchedOn "+view.getId());
                 ClipData data = ClipData.newPlainText("text", "");
+                dragAndDropListenerForTextView.setViewToDrag(view);
+                view.setOnDragListener(dragAndDropListenerForTextView);
                 View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
                 view.startDrag(data, shadowBuilder, view, 0);
+
+                return true;
             }
-            return true;
+            return false;
+
         }
     }
 
-    private class DragAndDropListener implements View.OnDragListener {
+
+    private class DragAndDropListenerForTextView implements View.OnDragListener {
+        private View viewToDrag = null;
+
+
 
         @Override
         public boolean onDrag(View v, DragEvent event) {
             Log.e("Event","ONDrag");
+            textToDrop = "";
+            if(v.getId() == viewToDrag.getId())
+            {
+                switch(event.getAction())
+                {
+                    case DragEvent.ACTION_DRAG_STARTED:
+                        textToDrop = ((TextView)v).getText().toString();
+//                    Log.e("Event","OnDragStartedForTextView"+textToDrop+" ID "+v.getId());
+                        break;
+                    case DragEvent.ACTION_DROP:
+                        break;
+                    case DragEvent.ACTION_DRAG_ENDED:
+                        textToDrop = ((TextView)v).getText().toString();
+                        Log.e("Event","OnDragStartedEndedTextView"+textToDrop+" ID "+v.getId());
+                        dragAndDropListener.setStringToDrop(textToDrop);
+                        break;
+                    case DragEvent.ACTION_DRAG_EXITED:
+                        Log.e("Event","OnDragExited");
+                        break;
+                    default: break;
+                }
+            }
+
+            return false;
+        }
+
+        public View getViewToDrag() {
+            return viewToDrag;
+        }
+
+        public void setViewToDrag(View viewToDrag) {
+            this.viewToDrag = viewToDrag;
+        }
+    }
+
+    private class DragAndDropListener implements View.OnDragListener {
+        private String stringToDrop;
+
+
+        @Override
+        public boolean onDrag(View v, DragEvent event) {
+//            Log.e("Event","ONDrag");
             switch(event.getAction())
             {
                 case DragEvent.ACTION_DRAG_STARTED:
@@ -123,10 +268,10 @@ public class GenerateCourseFragment extends android.app.Fragment {
                     ClipData.Item item = event.getClipData().getItemAt(0);
                     CharSequence paste = item.getText();
                     Log.e("OnDrop",paste.toString());
-                    if(v.getId()==R.id.course_code_field)
+                    if(v.getId()==R.id.course_code_field || v.getId()==R.id.course_title_field || v.getId()==R.id.course_credit_field)
                     {
-                        Log.e("OnDrop"," Code Field "+paste.toString());
-                        ((EditText) v).setText(textToDrop);
+                        Log.e("OnDrop"," Code Field "+paste.toString()+ " TextToDrop  "+this.stringToDrop);
+                        ((EditText) v).setText(stringToDrop);
                     }
                     break;
                 case DragEvent.ACTION_DRAG_ENDED:
@@ -141,34 +286,14 @@ public class GenerateCourseFragment extends android.app.Fragment {
             return false;
         }
 
-    }
-
-    private class DragAndDropListenerForTextView implements View.OnDragListener {
-
-        @Override
-        public boolean onDrag(View v, DragEvent event) {
-            Log.e("Event","ONDrag");
-            textToDrop = "";
-            switch(event.getAction())
-            {
-                case DragEvent.ACTION_DRAG_STARTED:
-                    textToDrop = ((TextView)v).getText().toString();
-                    Log.e("Event","OnDragStartedForTextView"+textToDrop+" ID "+v.toString());
-                    break;
-                case DragEvent.ACTION_DROP:
-                    break;
-                case DragEvent.ACTION_DRAG_ENDED:
-                    textToDrop = ((TextView)v).getText().toString();
-                    Log.e("Event","OnDragStartedEndedTextView"+textToDrop+" ID "+v.toString());
-                    break;
-                case DragEvent.ACTION_DRAG_EXITED:
-                    Log.e("Event","OnDragExited");
-                    break;
-                default: break;
-            }
-
-            return false;
+        public String getStringToDrop() {
+            return stringToDrop;
         }
 
+        public void setStringToDrop(String stringToDrop) {
+            this.stringToDrop = stringToDrop;
+        }
     }
+
+
 }

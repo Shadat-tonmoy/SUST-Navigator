@@ -17,30 +17,98 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/colorPrimaryDark"
-                android:text="Detected Text - Drag and Drop Text To Form"
-                android:paddingLeft="8dp"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:textColor="@color/textWhite" />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/course_code_button"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorPrimaryDark"
+                    android:text="Course Code"
+                    android:paddingLeft="8dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:textColor="@color/textWhite" />
+
+
+                <TextView
+                    android:id="@+id/course_title_button"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorPrimaryDark"
+                    android:text="Course Title"
+                    android:paddingLeft="8dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:textColor="@color/textWhite" />
+
+                <TextView
+                    android:id="@+id/course_credit_button"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorPrimaryDark"
+                    android:text="Course Credit"
+                    android:paddingLeft="8dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:textColor="@color/textWhite" />
+
+
+            </LinearLayout>
+
 
             <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/textBlack"
-                android:padding="24dp">
+                android:paddingTop="2dp">
 
                 <LinearLayout
-                    android:id="@+id/detected_text_container"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    >
+                    <com.google.android.flexbox.FlexboxLayout
+                        android:id="@+id/detected_code_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:flexWrap="wrap"
+                        app:alignItems="stretch"
+                        app:alignContent="stretch">
 
 
+                    </com.google.android.flexbox.FlexboxLayout>
+
+                    <com.google.android.flexbox.FlexboxLayout
+                        android:id="@+id/detected_title_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:flexWrap="wrap"
+                        app:alignItems="stretch"
+                        app:alignContent="stretch" >
+
+
+                    </com.google.android.flexbox.FlexboxLayout>
+
+                    <com.google.android.flexbox.FlexboxLayout
+                        android:id="@+id/detected_credit_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:flexWrap="wrap"
+                        app:alignItems="stretch"
+                        app:alignContent="stretch" >
+
+
+                    </com.google.android.flexbox.FlexboxLayout>
                 </LinearLayout>
+
+
 
             </ScrollView>
         </LinearLayout>
