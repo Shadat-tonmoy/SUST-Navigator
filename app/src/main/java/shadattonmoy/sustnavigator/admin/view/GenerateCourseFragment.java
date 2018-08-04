@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.LayoutInflater;
@@ -34,11 +35,14 @@ public class GenerateCourseFragment extends android.app.Fragment {
     private View view, detectedTextLayout;
     private ArrayList<String> detectedTexts;
     private FlexboxLayout detectedCodeContainer,detectedTitleContainer,detectedCreditContainer;
-    private TextView detectedTextView,courseCodeButton,courseTitleButton,courseCreditButton;
+    private TextView detectedTextView,courseCodeButton,courseTitleButton,courseCreditButton,addMoreCourseButton,coursesButton;
     private EditText courseCodeField, courseCreditField, courseTitleField;
     private DragAndDropListener dragAndDropListener;
     private DragAndDropListenerForTextView dragAndDropListenerForTextView;
+    private RecyclerView courseList;
+    private LinearLayout courseFieldContainer,courseListContainer;
     private String textToDrop;
+    private Button semesterAddSubmitButton;
 
     public GenerateCourseFragment() {
         // Required empty public constructor
@@ -59,12 +63,18 @@ public class GenerateCourseFragment extends android.app.Fragment {
         detectedCodeContainer = (FlexboxLayout) view.findViewById(R.id.detected_code_container);
         detectedTitleContainer = (FlexboxLayout) view.findViewById(R.id.detected_title_container);
         detectedCreditContainer = (FlexboxLayout) view.findViewById(R.id.detected_credit_container);
+        courseListContainer = (LinearLayout) view.findViewById(R.id.course_list_container);
+        courseFieldContainer = (LinearLayout) view.findViewById(R.id.course_field_container);
         courseCodeField = (EditText) view.findViewById(R.id.course_code_field);
         courseCreditField = (EditText) view.findViewById(R.id.course_credit_field);
         courseTitleField = (EditText) view.findViewById(R.id.course_title_field);
         courseCodeButton = (TextView) view.findViewById(R.id.course_code_button);
         courseTitleButton = (TextView) view.findViewById(R.id.course_title_button);
         courseCreditButton = (TextView) view.findViewById(R.id.course_credit_button);
+        addMoreCourseButton = (TextView) view.findViewById(R.id.add_more_course_button);
+        coursesButton = (TextView) view.findViewById(R.id.courses_button);
+        courseList = (RecyclerView) view.findViewById(R.id.course_list);
+        semesterAddSubmitButton = (Button) view.findViewById(R.id.semester_add_submit_btn);
         detectedCreditContainer.setVisibility(View.GONE);
         detectedTitleContainer.setVisibility(View.GONE);
         initTabClickListener();
@@ -96,6 +106,27 @@ public class GenerateCourseFragment extends android.app.Fragment {
                 detectedCodeContainer.setVisibility(View.VISIBLE);
                 detectedTitleContainer.setVisibility(View.GONE);
                 detectedCreditContainer.setVisibility(View.GONE);
+            }
+        });
+
+        coursesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                courseListContainer.setVisibility(View.VISIBLE);
+                courseFieldContainer.setVisibility(View.GONE);
+                semesterAddSubmitButton.setText(R.string.submit);
+
+
+            }
+        });
+
+        addMoreCourseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                courseListContainer.setVisibility(View.GONE);
+                courseFieldContainer.setVisibility(View.VISIBLE);
+                semesterAddSubmitButton.setText(R.string.done);
             }
         });
 

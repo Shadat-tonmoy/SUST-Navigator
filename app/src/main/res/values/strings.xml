@@ -58,4 +58,7 @@
         <item>5th Year 1st Semester</item>
         <item>5th Year 2nd Semester</item>
     </string-array>
+
+    <string name="done">Done</string>
+    <string name="submit">Submit</string>
 </resources>
