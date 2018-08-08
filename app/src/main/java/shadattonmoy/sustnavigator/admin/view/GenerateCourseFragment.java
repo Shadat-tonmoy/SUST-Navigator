@@ -43,6 +43,7 @@ public class GenerateCourseFragment extends android.app.Fragment {
     private LinearLayout courseFieldContainer,courseListContainer;
     private String textToDrop;
     private Button semesterAddSubmitButton;
+    private Boolean sendToServer = false;
 
     public GenerateCourseFragment() {
         // Required empty public constructor
