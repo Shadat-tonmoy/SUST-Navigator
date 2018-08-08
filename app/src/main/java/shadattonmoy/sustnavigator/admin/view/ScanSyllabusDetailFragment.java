@@ -5,12 +5,12 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
@@ -19,16 +19,17 @@ import android.graphics.Rect;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.app.Fragment;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,14 +39,13 @@ import android.widget.ImageView;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.vision.Frame;
-import com.google.android.gms.vision.text.TextBlock;
-import com.google.android.gms.vision.text.TextRecognizer;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.ml.vision.FirebaseVision;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 import com.google.firebase.ml.vision.text.FirebaseVisionText;
 import com.google.firebase.ml.vision.text.FirebaseVisionTextDetector;
-import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.File;
@@ -54,59 +54,77 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
 
+import shadattonmoy.sustnavigator.Course;
 import shadattonmoy.sustnavigator.R;
+import shadattonmoy.sustnavigator.proctor.model.Proctor;
 
-import static shadattonmoy.sustnavigator.R.id.cropImageView;
 
-
-public class ScanSyllabusFragment extends android.app.Fragment {
-
+public class ScanSyllabusDetailFragment extends Fragment {
     private View view;
+    private Activity activity;
+    private Context context;
+    private FragmentManager fragmentManager;
+    private Button openCameraButton, startScanningButton, cropImageButton, cropDoneButton;
+    private ImageView outputImage;
+    private CropImageView cropImageView;
     String[] permissions;
     private int PERMISSION_ALL = 0;
     static final int REQUEST_IMAGE_CAPTURE = 1;
     static final int REQUEST_TAKE_PHOTO = 1;
-    private Button openCameraButton, startScanningButton, cropImageButton, cropDoneButton;
-    private ImageView outputImage;
     private String mCurrentPhotoPath;
     private String packageName;
     private Bitmap bitmap, bitmapCropped;
-    private Activity activity;
-    private Context context;
     private FirebaseVisionImage firebaseVisionImage;
     private FirebaseVisionTextDetector firebaseVisionTextDetector;
-    private FragmentManager fragmentManager;
     private ArrayList<String> detectedTexts;
-    private CropImageView cropImageView;
-    Map<String, Boolean> foundText;
-    private final String TAG = "CameraActivity";
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference databaseReference;
+    private String session,dept,semester;
+    private Course course;
 
-    public ScanSyllabusFragment() {
 
+    public ScanSyllabusDetailFragment() {
 
     }
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = getActivity();
         context = getActivity().getApplicationContext();
         fragmentManager = getActivity().getFragmentManager();
+
+        if(getArguments()!=null)
+        {
+            course = (Course) getArguments().getSerializable("course");
+            session = getArguments().getString("session");
+            semester = getArguments().getString("semester");
+            dept = getArguments().getString("dept");
+        }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_scan_syllabus, container, false);
+        view = inflater.inflate(R.layout.fragment_scan_syllabus_detail, container, false);
         openCameraButton = (Button) view.findViewById(R.id.open_camera_button);
         startScanningButton = (Button) view.findViewById(R.id.start_scanning_button);
         cropImageButton = (Button) view.findViewById(R.id.crop_image_button);
         cropDoneButton = (Button) view.findViewById(R.id.crop_done_button);
         outputImage = (ImageView) view.findViewById(R.id.output_image);
         cropImageView = (CropImageView) view.findViewById(R.id.cropImageView);
-
         return view;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == activity.RESULT_OK) {
+            Log.e("Image", "Taken");
+            setPic();
+        }
     }
 
     @Override
@@ -124,7 +142,7 @@ public class ScanSyllabusFragment extends android.app.Fragment {
         startScanningButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new BackgroundTask().execute(bitmapCropped);
+                new ScanSyllabusDetailFragment.BackgroundTask().execute(bitmapCropped);
 
             }
         });
@@ -151,11 +169,9 @@ public class ScanSyllabusFragment extends android.app.Fragment {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == activity.RESULT_OK) {
-            Log.e("Image", "Taken");
-            setPic();
-        }
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
     }
 
     public void requestPermissions() {
@@ -243,7 +259,6 @@ public class ScanSyllabusFragment extends android.app.Fragment {
 //        outputImage.setVisibility(View.GONE);
     }
 
-
     private Bitmap changeBitmapContrastBrightness(Bitmap bitmap, float contrast, float brightness) {
         ColorMatrix colorMatrix = new ColorMatrix(new float[]
                 {
@@ -259,7 +274,6 @@ public class ScanSyllabusFragment extends android.app.Fragment {
         canvas.drawBitmap(bitmap, 0, 0, paint);
         return bitmapToReturn;
     }
-
 
     private class BackgroundTask extends AsyncTask<Bitmap, Void, Void> {
 
@@ -289,7 +303,6 @@ public class ScanSyllabusFragment extends android.app.Fragment {
         private void startScanning(Bitmap bitmap) {
 //            bitmap = changeBitmapContrastBrightness(bitmap,10,10);
             detectedTexts = new ArrayList<>();
-            foundText = new HashMap<>();
             firebaseVisionImage = FirebaseVisionImage.fromBitmap(bitmap);
             firebaseVisionTextDetector = FirebaseVision.getInstance().getVisionTextDetector();
 
@@ -298,28 +311,24 @@ public class ScanSyllabusFragment extends android.app.Fragment {
                             .addOnSuccessListener(new OnSuccessListener<FirebaseVisionText>() {
                                 @Override
                                 public void onSuccess(FirebaseVisionText firebaseVisionText) {
+                                    String detectedText = "";
                                     for (FirebaseVisionText.Block block : firebaseVisionText.getBlocks()) {
                                         Rect boundingBox = block.getBoundingBox();
                                         Point[] cornerPoints = block.getCornerPoints();
                                         String text = block.getText();
-                                        for (FirebaseVisionText.Line line : block.getLines()) {
+                                        detectedText += text;
+                                        /*for (FirebaseVisionText.Line line : block.getLines()) {
 
                                             Log.e("LineText", line.getText());
                                             for (FirebaseVisionText.Element element : line.getElements()) {
                                                 Log.e("LineElement", element.getText());
                                                 String textBlockValue = line.getText();
-                                                if (foundText.get(textBlockValue) == null || !foundText.get(textBlockValue)) {
-                                                    detectedTexts.add(textBlockValue);
-                                                    foundText.put(textBlockValue, true);
-                                                    Log.e("OutputText", textBlockValue);
-                                                }
-//                                                detectedTexts.add(line.getText());
+                                                detectedTexts.add(textBlockValue);
                                             }
-                                        }
+                                        }*/
                                     }
-                                    showDialog();
-
-
+                                    detectedTexts.add(detectedText);
+                                    showDialog(detectedText);
                                 }
                             })
                             .addOnFailureListener(
@@ -332,10 +341,42 @@ public class ScanSyllabusFragment extends android.app.Fragment {
         }
 
 
-        private void showDialog() {
+        private void showDialog(final String detectedText) {
 
-            DetectedTextDialog detectedTextDialog = new DetectedTextDialog(context, detectedTexts);
-            detectedTextDialog.show(fragmentManager, "detectedTextDialog");
+            AlertDialog.Builder builder;
+
+            builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle("Detected Text")
+                    .setMessage(detectedText)
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            firebaseDatabase = FirebaseDatabase.getInstance();
+                            course.setCourseDetail(detectedText);
+                            databaseReference = firebaseDatabase.getReference().child("syllabus").child(session).child(dept).child(semester).child(course.getCourse_id());
+                            databaseReference.setValue(course,new DatabaseReference.CompletionListener() {
+                                @Override
+                                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                    progressDialog.dismiss();
+                                    Snackbar snackbar = Snackbar.make(view, "Course Detail added...", Snackbar.LENGTH_INDEFINITE);
+                                    snackbar.setAction("Back", new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            getFragmentManager().popBackStack();
+                                        }
+                                    });
+                                    snackbar.show();
+
+                                }
+                            });
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
 
         }
     }

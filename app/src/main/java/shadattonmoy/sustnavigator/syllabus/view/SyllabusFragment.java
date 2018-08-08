@@ -1,6 +1,8 @@
 package shadattonmoy.sustnavigator.syllabus.view;
 
 import android.app.Activity;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,6 +17,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -41,6 +44,7 @@ import shadattonmoy.sustnavigator.Course;
 import shadattonmoy.sustnavigator.R;
 import shadattonmoy.sustnavigator.admin.view.ScanSyllabusFragment;
 import shadattonmoy.sustnavigator.commons.controller.SemesterAdapter;
+import shadattonmoy.sustnavigator.dept.view.DeptFragment;
 import shadattonmoy.sustnavigator.syllabus.controller.SyllabusAdapter;
 import shadattonmoy.sustnavigator.admin.view.CourseAddFragment;
 import shadattonmoy.sustnavigator.dept.model.Dept;
@@ -153,6 +157,28 @@ public class SyllabusFragment extends android.app.Fragment {
                     setHasOptionsMenu(true);
                     adapter = new SyllabusAdapter(getActivity().getApplicationContext(),R.layout.fragment_syllabus2,R.id.course_code,courses,isEditable,getFragmentManager(),dept.getDeptCode().toLowerCase(),semester,session,activity);
                     syllabusList.setAdapter(adapter);
+                    syllabusList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                            Course clickedCourse = (Course) adapterView.getItemAtPosition(i);
+                            FragmentManager manager = getFragmentManager();
+                            FragmentTransaction transaction = manager.beginTransaction();
+                            SyllabusDetailFragment syllabusDetailFragment = new SyllabusDetailFragment();
+                            Bundle args = new Bundle();
+                            args.putSerializable("course",clickedCourse);
+                            args.putString("session",session);
+                            args.putString("semester",semester);
+                            args.putString("dept",dept.getDeptCode().toLowerCase());
+                            if(isEditable)
+                            {
+                                args.putBoolean("isAdmin",true);
+                            }
+                            syllabusDetailFragment.setArguments(args);
+                            transaction.replace(R.id.main_content_root,syllabusDetailFragment);
+                            transaction.addToBackStack("syllabusDetailFragment");
+                            transaction.commit();
+                        }
+                    });
                 }
                 else
                 {
@@ -408,7 +434,7 @@ public class SyllabusFragment extends android.app.Fragment {
             for(Course course:courses)
             {
                 if(course.getCourse_code().toLowerCase().startsWith(query.toLowerCase()) || course.getCourse_code().toLowerCase().endsWith(query.toLowerCase())|| course.getCourse_credit().toLowerCase().startsWith(query.toLowerCase()) || course.getCourse_credit().endsWith(query.toLowerCase())
-                        || course.getCourse_title().toLowerCase().startsWith(query.toLowerCase()) || course.getCourse_title().endsWith(query.toLowerCase()))
+                        || course.getCourse_title().toLowerCase().startsWith(query.toLowerCase()) || course.getCourse_title().endsWith(query.toLowerCase()) || course.getCourseDetail().toLowerCase().contains(query.toLowerCase()))
                 {
                     filteredCourse.add(course);
                 }

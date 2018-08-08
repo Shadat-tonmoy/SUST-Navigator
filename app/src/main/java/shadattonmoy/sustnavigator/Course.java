@@ -1,10 +1,12 @@
 package shadattonmoy.sustnavigator;
 
+import java.io.Serializable;
+
 /**
  * Created by Shadat Tonmoy on 6/19/2017.
  */
 
-public class Course {
+public class Course implements Serializable{
     private String course_code,course_title,course_credit,course_detp,course_id,grade,local_id,courseDetail;
     private boolean isAdded;
 
@@ -86,6 +88,8 @@ public class Course {
 
 
     public String getCourseDetail() {
+        if(courseDetail==null)
+            return "";
         return courseDetail;
     }
 
