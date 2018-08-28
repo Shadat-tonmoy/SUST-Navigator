@@ -107,12 +107,18 @@ public class SemesterListFragment extends android.app.Fragment {
                     int totalCourse = 0;
                     String key = child.getKey();
                     for(DataSnapshot child11 : child.getChildren()){
-                        Course course = child11.getValue(Course.class);
-                        String courseCredit = course.getCourse_credit();
-                        double credit = Double.parseDouble(courseCredit);
-                        totalCredit+=credit;
-                        totalCourse++;
-                        subTotalCredit+=credit;
+                        try{
+                            Course course = child11.getValue(Course.class);
+                            String courseCredit = course.getCourse_credit();
+                            double credit = Double.parseDouble(courseCredit);
+                            totalCredit+=credit;
+                            totalCourse++;
+                            subTotalCredit+=credit;
+
+                        }catch (Exception e)
+                        {
+                            e.printStackTrace();
+                        }
 
                     }
                     String totalCreditString = String.valueOf(totalCredit);
@@ -134,6 +140,10 @@ public class SemesterListFragment extends android.app.Fragment {
                         semesters.add(new Semester(totalCourseString,totalCreditString,"4th Year 1st Semester","4/1"));
                     else if(key.equals("4_2"))
                         semesters.add(new Semester(totalCourseString,totalCreditString,"4th Year 2nd Semester","4/2"));
+                    else if(key.equals("5_1"))
+                        semesters.add(new Semester(totalCourseString,totalCreditString,"5th Year 1st Semester","5/1"));
+                    else if(key.equals("5_2"))
+                        semesters.add(new Semester(totalCourseString,totalCreditString,"5th Year 2nd Semester","5/2"));
                     txt+="\n";
                     Log.e("TotalCredit",subTotalCredit+"");
                 }

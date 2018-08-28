@@ -1,11 +1,15 @@
 package shadattonmoy.sustnavigator.admin.view;
 
+import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -20,8 +24,12 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.flexbox.FlexboxLayout;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.w3c.dom.Text;
 
@@ -33,6 +41,7 @@ import java.util.regex.Pattern;
 import shadattonmoy.sustnavigator.AllCourseListAdapter;
 import shadattonmoy.sustnavigator.Course;
 import shadattonmoy.sustnavigator.R;
+import shadattonmoy.sustnavigator.proctor.model.Proctor;
 import shadattonmoy.sustnavigator.utils.Values;
 
 
@@ -54,6 +63,11 @@ public class GenerateCourseFragment extends android.app.Fragment {
     private Context context;
     private CardView generatedTextContainer,courseListContainer;
     private ScrollView courseFieldContainer;
+    private String session,semester,dept;
+    private TextView courseAddDoneButton;
+    private FragmentActivity activity;
+    private TextInputLayout courseCodeLayout,courseTitleLayout,courseCreditLayout;
+    private int counter;
 
     public GenerateCourseFragment() {
         // Required empty public constructor
@@ -63,12 +77,21 @@ public class GenerateCourseFragment extends android.app.Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         this.context = context;
+        activity = (FragmentActivity) context;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        detectedTexts = getArguments().getStringArrayList("detectedText");
+        Bundle args = getArguments();
+        if(args!=null)
+        {
+            detectedTexts = args.getStringArrayList("detectedText");
+            session = args.getString("session");
+            semester = args.getString("semester");
+            dept = args.getString("dept");
+        }
+
         courses = new ArrayList<>();
         courseListAdapter = new AllCourseListAdapter(context,R.layout.syllabus_single_row,R.id.course_icon, (ArrayList<Course>) courses);
 
@@ -87,10 +110,14 @@ public class GenerateCourseFragment extends android.app.Fragment {
         courseCodeField = (EditText) view.findViewById(R.id.course_code_field);
         courseCreditField = (EditText) view.findViewById(R.id.course_credit_field);
         courseTitleField = (EditText) view.findViewById(R.id.course_title_field);
+        courseCodeLayout = (TextInputLayout) view.findViewById(R.id.code_layout);
+        courseTitleLayout = (TextInputLayout) view.findViewById(R.id.title_layout);
+        courseCreditLayout = (TextInputLayout) view.findViewById(R.id.credit_layout);
         courseCodeButton = (TextView) view.findViewById(R.id.course_code_button);
         courseTitleButton = (TextView) view.findViewById(R.id.course_title_button);
         courseCreditButton = (TextView) view.findViewById(R.id.course_credit_button);
         addMoreCourseButton = (TextView) view.findViewById(R.id.add_more_course_button);
+        courseAddDoneButton = (TextView) view.findViewById(R.id.course_add_done_button);
         coursesButton = (TextView) view.findViewById(R.id.courses_button);
         courseList = (ListView) view.findViewById(R.id.course_list);
         courseAddSubmitButton = (Button) view.findViewById(R.id.course_add_submit_btn);
@@ -157,6 +184,13 @@ public class GenerateCourseFragment extends android.app.Fragment {
             }
         });
 
+        courseAddDoneButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addCourseToServer();
+            }
+        });
+
     }
 
 
@@ -175,16 +209,96 @@ public class GenerateCourseFragment extends android.app.Fragment {
 
     public void addCourseToList()
     {
+        boolean isValid = true;
         String courseCode = courseCodeField.getText().toString();
         String courseTitle = courseTitleField.getText().toString();
         String courseCredit = courseCreditField.getText().toString();
-        courses.add(new Course(courseCode,courseTitle,courseCredit));
-        courseListAdapter.notifyDataSetChanged();
-        coursesButton.performClick();
+        if(courseCode.length()==0 || courseCode.equals(""))
+        {
+            courseCodeLayout.setErrorEnabled(true);
+            Toast.makeText(context,"Please enter a valid course code",Toast.LENGTH_SHORT).show();
+            isValid = false;
+        }
+        else {
+
+            courseCodeLayout.setErrorEnabled(false);
+            isValid = true;
+        }
+
+        if(isValid && (courseTitle.length()==0 || courseTitle.equals("")))
+        {
+            courseTitleLayout.setErrorEnabled(true);
+            Toast.makeText(context,"Please enter a valid course title",Toast.LENGTH_SHORT).show();
+            isValid = false;
+        }
+        else {
+
+            courseCodeLayout.setErrorEnabled(false);
+            isValid = true;
+        }
+        if(isValid && (courseCredit.length()==0 || courseCredit.equals("")))
+        {
+            courseCreditLayout.setErrorEnabled(true);
+            Toast.makeText(context,"Please enter a valid course credit",Toast.LENGTH_SHORT).show();
+            isValid = false;
+        }
+        else {
+
+            courseCodeLayout.setErrorEnabled(false);
+            isValid = true;
+        }
+        if(isValid)
+        {
+            courses.add(new Course(courseCode,courseTitle,courseCredit));
+            courseListAdapter.notifyDataSetChanged();
+            coursesButton.performClick();
+        }
+
     }
 
     public void addCourseToServer()
     {
+        if(courses.size()==0)
+        {
+            Toast.makeText(context,"No Course To Add. Tap 'Add New Course' to add course",Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+            FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+            DatabaseReference databaseReference = firebaseDatabase.getReference().child("syllabus").child(session).child(dept).child(semester);
+
+            final ProgressDialog progressDialog;
+            progressDialog = new ProgressDialog(activity);
+            progressDialog.setTitle("Adding Course Record");
+            progressDialog.setMessage("Please Wait....");
+            progressDialog.show();
+            counter = 0;
+            for(Course course:courses)
+            {
+                databaseReference.push().setValue(course, new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                        counter++;
+                        if(counter>=courses.size())
+                        {
+                            progressDialog.dismiss();
+                            Snackbar snackbar = Snackbar.make(view, "Course Added successfully", Snackbar.LENGTH_INDEFINITE);
+                            snackbar.setAction("Back", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    getFragmentManager().popBackStack();
+                                }
+                            }).setActionTextColor(context.getResources().getColor(R.color.blue));
+                            snackbar.show();
+
+                        }
+
+                    }
+                });
+            }
+
+
+        }
 
     }
 

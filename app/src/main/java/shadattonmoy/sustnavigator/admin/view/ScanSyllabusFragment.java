@@ -34,6 +34,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -82,6 +83,8 @@ public class ScanSyllabusFragment extends android.app.Fragment {
     private CropImageView cropImageView;
     Map<String, Boolean> foundText;
     private final String TAG = "CameraActivity";
+    private String session,semester,dept;
+    private boolean isAdmin;
 
     public ScanSyllabusFragment() {
 
@@ -124,7 +127,14 @@ public class ScanSyllabusFragment extends android.app.Fragment {
         startScanningButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new BackgroundTask().execute(bitmapCropped);
+                if(bitmapCropped!=null)
+                    new BackgroundTask().execute(bitmapCropped);
+                else if(bitmap!=null)
+                    new BackgroundTask().execute(bitmap);
+                else
+                {
+                    Toast.makeText(context,"Please Capture an Image First",Toast.LENGTH_SHORT).show();
+                }
 
             }
         });
@@ -132,22 +142,40 @@ public class ScanSyllabusFragment extends android.app.Fragment {
         cropImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                outputImage.setVisibility(View.GONE);
-                cropImageView.setVisibility(View.VISIBLE);
-                cropImageView.setImageBitmap(bitmap);
-                cropDoneButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        bitmapCropped = cropImageView.getCroppedImage();
-                        outputImage.setImageBitmap(bitmapCropped);
-                        cropImageView.setVisibility(View.GONE);
-                        outputImage.setVisibility(View.VISIBLE);
-                        cropImageView.setImageBitmap(bitmapCropped);
-                        Log.e("CroppedImage", "Done");
-                    }
-                });
+                if(bitmap!=null)
+                {
+                    outputImage.setVisibility(View.GONE);
+                    cropImageView.setVisibility(View.VISIBLE);
+                    cropImageView.setImageBitmap(bitmap);
+                    cropDoneButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            bitmapCropped = cropImageView.getCroppedImage();
+                            outputImage.setImageBitmap(bitmapCropped);
+                            cropImageView.setVisibility(View.GONE);
+                            outputImage.setVisibility(View.VISIBLE);
+                            cropImageView.setImageBitmap(bitmapCropped);
+                            Log.e("CroppedImage", "Done");
+                        }
+                    });
+                }
+                else
+                {
+                    Toast.makeText(context,"Please Capture an Image First",Toast.LENGTH_SHORT).show();
+                }
             }
         });
+
+        Bundle args = getArguments();
+        if(args!=null)
+        {
+            session = args.getString("session");
+            semester = args.getString("semester");
+            dept = args.getString("dept");
+            isAdmin = args.getBoolean("isAdmin");
+
+        }
+
     }
 
     @Override
@@ -192,8 +220,11 @@ public class ScanSyllabusFragment extends android.app.Fragment {
 
         // Save a file: path for use with ACTION_VIEW intents
         mCurrentPhotoPath = image.getAbsolutePath();
+        Log.e("ImagePath",mCurrentPhotoPath);
         return image;
     }
+
+
 
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -334,7 +365,8 @@ public class ScanSyllabusFragment extends android.app.Fragment {
 
         private void showDialog() {
 
-            DetectedTextDialog detectedTextDialog = new DetectedTextDialog(context, detectedTexts);
+            DetectedTextDialog detectedTextDialog = new DetectedTextDialog(context, detectedTexts,session,semester,dept,mCurrentPhotoPath);
+
             detectedTextDialog.show(fragmentManager, "detectedTextDialog");
 
         }

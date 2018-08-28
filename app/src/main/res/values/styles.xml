@@ -21,6 +21,12 @@
         <item name="android:background">?android:attr/selectableItemBackground</item>
     </style>
 
+    <style name="error_appearance" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/textRed</item>
+        <item name="android:background">@drawable/edit_text_bg</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
     <style name="faculty_title">
         <item name="android:textColor">#ffffff</item>
         <item name="android:textSize">16sp</item>

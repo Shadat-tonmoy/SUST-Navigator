@@ -102,6 +102,10 @@ public class SyllabusFragment extends android.app.Fragment {
             this.semester = "4_1";
         else if(semester.equals("4/2"))
             this.semester = "4_2";
+        else if(semester.equals("5/1"))
+            this.semester = "5_1";
+        else if(semester.equals("5/2"))
+            this.semester = "5_2";
     }
 
     @Override
@@ -232,6 +236,15 @@ public class SyllabusFragment extends android.app.Fragment {
                     android.app.FragmentManager manager = getFragmentManager();
                     android.app.FragmentTransaction transaction = manager.beginTransaction();
                     ScanSyllabusFragment scanSyllabusFragment= new ScanSyllabusFragment();
+                    Bundle args = new Bundle();
+                    args.putString("session",session);
+                    args.putString("semester",semester);
+                    args.putString("dept",dept.getDeptCode().toLowerCase());
+                    if(isEditable)
+                    {
+                        args.putBoolean("isAdmin",true);
+                    }
+                    scanSyllabusFragment.setArguments(args);
 //                    ScanSyllabusFragment scanSyllabusFragment= new ScanSyllabusFragment(getActivity().getApplicationContext(),dept.getDeptCode().toLowerCase(),semester,session);
                     transaction.replace(R.id.main_content_root, scanSyllabusFragment);
                     transaction.addToBackStack("syllabus_scan_fragment");

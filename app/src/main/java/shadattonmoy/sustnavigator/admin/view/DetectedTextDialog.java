@@ -17,6 +17,7 @@ import com.google.android.flexbox.FlexboxLayout;
 
 import org.w3c.dom.Text;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,10 +30,15 @@ public class DetectedTextDialog extends DialogFragment {
     private List<String> detectedTexts;
     private Context context;
     private TextView detectedTextView;
+    private String session,semester,dept,imagePath;
 
-    public DetectedTextDialog(Context context,List<String> detectedTexts) {
+    public DetectedTextDialog(Context context,List<String> detectedTexts,String session,String semester,String dept,String imagePath) {
         this.detectedTexts = detectedTexts;
         this.context = context;
+        this.session = session;
+        this.semester = semester;
+        this.dept = dept;
+        this.imagePath = imagePath;
 
     }
 
@@ -56,8 +62,12 @@ public class DetectedTextDialog extends DialogFragment {
                 android.app.FragmentManager manager = getFragmentManager();
                 android.app.FragmentTransaction transaction = manager.beginTransaction();
                 GenerateCourseFragment generateCourseFragment = new GenerateCourseFragment();
+                deleteSavedImage();
                 Bundle args = new Bundle();
                 args.putStringArrayList("detectedText", (ArrayList<String>) detectedTexts);
+                args.putString("session",session);
+                args.putString("semester",semester);
+                args.putString("dept",dept);
                 generateCourseFragment.setArguments(args);
                 transaction.replace(R.id.main_content_root, generateCourseFragment);
                 transaction.addToBackStack("syllabus_scan_fragment");
@@ -84,6 +94,13 @@ public class DetectedTextDialog extends DialogFragment {
             detectedTextContainer.addView(detectedTextView);
         }
 
+    }
+
+    private boolean deleteSavedImage()
+    {
+        File file = new File(imagePath);
+        boolean deleted = file.delete();
+        return deleted;
     }
 
 
