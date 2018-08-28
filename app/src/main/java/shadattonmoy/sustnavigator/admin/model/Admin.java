@@ -75,4 +75,17 @@ public class Admin {
     public void setVarified(boolean varified) {
         isVarified = varified;
     }
+
+    @Override
+    public String toString() {
+        return "Admin{" +
+                "name='" + name + '\'' +
+                ", regNo='" + regNo + '\'' +
+                ", dept='" + dept + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", id='" + id + '\'' +
+                ", isVarified=" + isVarified +
+                '}';
+    }
 }

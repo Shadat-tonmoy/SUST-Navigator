@@ -5,8 +5,11 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
-    <string name="name_error">Please enter a valid name</string>
-    <string name="email_error">Please enter a valid email</string>
+    <string name="name_error">Invalid Name</string>
+    <string name="password_error">Password must be at least 6 digit long</string>
+    <string name="email_error">Invalid Email</string>
+    <string name="reg_no_error">Invalid Registration Number</string>
+    <string name="dept_error">Invalid Department Name</string>
     <string name="course_code_error">Please enter a valid course code</string>
     <string name="course_title_error">Please enter a valid course title</string>
     <string name="course_credit_error">Please enter a valid course credit</string>
@@ -63,4 +66,6 @@
     <string name="submit">Submit</string>
     <string name="syllabus">Syllabus</string>
     <string name="department">Department</string>
+    <string name="signup_done">Your request is received. Please be patient. Once your request is approved you will be an admin</string>
+    <string name="email_exists">The email you tried is already in use. Please try a different one.</string>
 </resources>

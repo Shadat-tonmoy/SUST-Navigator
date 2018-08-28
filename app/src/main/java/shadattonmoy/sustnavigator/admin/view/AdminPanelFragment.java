@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import shadattonmoy.sustnavigator.R;
+import shadattonmoy.sustnavigator.utils.Values;
 
 
 public class AdminPanelFragment extends android.app.Fragment {
@@ -28,5 +29,6 @@ public class AdminPanelFragment extends android.app.Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        Values.updateLastModified();
     }
 }

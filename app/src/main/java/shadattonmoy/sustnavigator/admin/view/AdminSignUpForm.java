@@ -1,5 +1,6 @@
 package shadattonmoy.sustnavigator.admin.view;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,14 +12,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
+import com.basgeekball.awesomevalidation.AwesomeValidation;
+import com.basgeekball.awesomevalidation.ValidationStyle;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import shadattonmoy.sustnavigator.R;
 import shadattonmoy.sustnavigator.admin.model.Admin;
+import shadattonmoy.sustnavigator.utils.Values;
 
 
 public class AdminSignUpForm extends android.app.Fragment {
@@ -31,9 +40,19 @@ public class AdminSignUpForm extends android.app.Fragment {
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
     private CardView signUpConfirmation;
+    private AwesomeValidation awesomeValidation;
+    private TextView signUpMessage;
+    private Context context;
     public AdminSignUpForm() {
 
     }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.context = context;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +75,7 @@ public class AdminSignUpForm extends android.app.Fragment {
         regNoLayout = (TextInputLayout) view.findViewById(R.id.admin_signup_regNo_layout);
         signUpButton = (Button) view.findViewById(R.id.admin_signup_submit_btn);
         signUpConfirmation = (CardView) view.findViewById(R.id.admin_signup_confirmation_msg);
+        signUpMessage = (TextView) view.findViewById(R.id.signup_msg);
         return view;
     }
 
@@ -67,7 +87,7 @@ public class AdminSignUpForm extends android.app.Fragment {
             public void onClick(View v) {
                 isValid = true;
                 formValidate();
-                if (isValid)
+                if (awesomeValidation.validate())
                     sendRequest();
             }
         });
@@ -76,69 +96,84 @@ public class AdminSignUpForm extends android.app.Fragment {
 
     void formValidate()
     {
-        if(nameField.getText().toString().isEmpty())
-        {
-            isValid = false;
-            nameLayout.setError("Name field is empty");
-        }
-        else nameLayout.setErrorEnabled(false);
-        if(emailField.getText().toString().isEmpty())
-        {
-            isValid = false;
-            emailLayout.setError("Email field is empty");
-        }
-        else emailLayout.setErrorEnabled(false);
-        if(passwordField.getText().toString().isEmpty())
-        {
-            isValid = false;
-            passwordLayout.setError("Password field is empty");
-        }
-        else if (passwordField.getText().toString().length()<6)
-        {
-            isValid = false;
-            passwordLayout.setError("Password must be at least 6 digit");
-        }
-        else passwordLayout.setErrorEnabled(false);
-        if(regNoField.getText().toString().isEmpty())
-        {
-            isValid = false;
-            regNoLayout.setError("Reg No field is empty");
-        }
-        else regNoLayout.setErrorEnabled(false);
-        if(deptField.getText().toString().isEmpty())
-        {
-            isValid = false;
-            deptLayout.setError("Department field is empty");
-        }
-        else deptLayout.setErrorEnabled(false);
+
+        awesomeValidation = new AwesomeValidation(ValidationStyle.BASIC);
+
+        awesomeValidation.addValidation(getActivity(), R.id.admin_signup_name_field, "^[A-Za-z0-9\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$", R.string.name_error);
+
+
+        awesomeValidation.addValidation(getActivity(), R.id.admin_signup_email_field, "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$", R.string.email_error);
+
+
+        awesomeValidation.addValidation(getActivity(), R.id.admin_signup_password_field, "^[A-Za-z0-9]{6,}$", R.string.password_error);
+
+        awesomeValidation.addValidation(getActivity(), R.id.admin_signup_regNo_field, "^\\d{10}$", R.string.reg_no_error);
+
+        awesomeValidation.addValidation(getActivity(), R.id.admin_signup_dept_field, "^[A-Za-z]+$", R.string.dept_error);
+
     }
 
     void sendRequest()
     {
-
-        String name = nameField.getText().toString();
-        String email = emailField.getText().toString();
-        String password = passwordField.getText().toString();
-        String regNo = regNoField.getText().toString();
-        String dept = deptField.getText().toString();
+        final String name = nameField.getText().toString();
+        final String email = emailField.getText().toString();
+        final String password = passwordField.getText().toString();
+        final String regNo = regNoField.getText().toString();
+        final String dept = deptField.getText().toString();
 
         signUpButton.setClickable(false);
         signUpButton.setText("Please wait...");
-        signUpButton.setBackgroundColor(Color.parseColor("#80CBC4"));
 
-
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference().child("admin");
-        databaseReference.push().setValue(new Admin(name,regNo,dept,email,password,false)).addOnCompleteListener(new OnCompleteListener<Void>() {
+        final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = firebaseDatabase.getReference();
+        Query queryRef = databaseReference.child("admin").orderByChild("email").equalTo(email);
+        queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            boolean found = false;
             @Override
-            public void onComplete(@NonNull Task<Void> task) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot child : dataSnapshot.getChildren() )
+                {
+                    Admin admin = child.getValue(Admin.class);
+                    if(admin.getEmail().equals(email))
+                    {
+                        found = true;
+                        signUpButton.setClickable(true);
+                        signUpButton.setText("Submit");
+                        signUpMessage.setText(context.getResources().getString(R.string.email_exists));
+                        signUpConfirmation.setVisibility(View.VISIBLE);
+                        signUpConfirmation.setCardBackgroundColor(context.getResources().getColor(R.color.warningRed));
+                        break;
+                    }
+                }
+                if(!found)
+                {
+                    FirebaseDatabase firebaseDatabase;
+                    DatabaseReference databaseReference;
+                    firebaseDatabase = FirebaseDatabase.getInstance();
+                    databaseReference = firebaseDatabase.getReference().child("admin");
+                    databaseReference.push().setValue(new Admin(name,regNo,dept,email,password,false)).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
 
-                signUpConfirmation.setVisibility(View.VISIBLE);
-                signUpButton.setClickable(false);
-                signUpButton.setText("Sign Up");
-                signUpButton.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                            signUpConfirmation.setVisibility(View.VISIBLE);
+                            signUpButton.setClickable(false);
+                            signUpButton.setText("Sign Up");
+                            signUpMessage.setText(context.getResources().getString(R.string.signup_done));
+                            signUpConfirmation.setCardBackgroundColor(context.getResources().getColor(R.color.cardBlue));
+                        }
+                    });
+
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
+
+
 
     }
 }

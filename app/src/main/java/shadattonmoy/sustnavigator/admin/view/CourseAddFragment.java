@@ -116,6 +116,7 @@ public class CourseAddFragment extends android.app.Fragment {
                             }).setActionTextColor(context.getResources().getColor(R.color.blue));
                             progressDialog.dismiss();
                             snackbar.show();
+
                         }
                     });
                 }

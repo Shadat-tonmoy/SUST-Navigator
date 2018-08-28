@@ -1,10 +1,29 @@
 package shadattonmoy.sustnavigator.utils;
 
+import android.app.Activity;
+import android.support.annotation.NonNull;
+import android.util.Log;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import shadattonmoy.sustnavigator.Course;
+import shadattonmoy.sustnavigator.admin.model.Admin;
 
 public class Values {
     public static String[] months = new String[]{"January","February","March","April","May","June","July","August","September","October","November","December"};
@@ -41,4 +60,48 @@ public class Values {
 
         return semesterCodeMap;
     }
+
+    public static void hideKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        View view = activity.getCurrentFocus();
+        if (view == null) {
+            view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    public static void updateLastModified()
+    {
+        final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = firebaseDatabase.getReference();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String email = user.getEmail();
+        Log.e("LoggedInAs",email);
+        Query queryRef = databaseReference.child("admin").orderByChild("email").equalTo(email);
+        queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot child : dataSnapshot.getChildren() )
+                {
+                    Admin admin = child.getValue(Admin.class);
+                    String pushId = child.getKey();
+                    admin.setId(pushId);
+                    String name = admin.getName();
+                    String regNo = admin.getRegNo();
+                    String dept = admin.getDept();
+                    long time = new Date().getTime();
+                    LastModified lastModified = new LastModified(name,regNo,dept,time);
+                    DatabaseReference databaseReference = firebaseDatabase.getReference().child("lastModified");
+                    databaseReference.setValue(lastModified);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+
 }

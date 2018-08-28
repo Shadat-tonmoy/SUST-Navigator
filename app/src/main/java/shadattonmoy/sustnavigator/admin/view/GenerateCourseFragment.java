@@ -174,13 +174,14 @@ public class GenerateCourseFragment extends android.app.Fragment {
                 courseFieldContainer.setVisibility(View.VISIBLE);
                 generatedTextContainer.setVisibility(View.VISIBLE);
                 courseAddSubmitButton.setText(R.string.done);
-                courseAddSubmitButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        addCourseToList();
+            }
+        });
 
-                    }
-                });
+        courseAddSubmitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addCourseToList();
+
             }
         });
 
