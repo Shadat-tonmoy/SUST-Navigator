@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.DragEvent;
@@ -16,6 +17,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.android.flexbox.FlexboxLayout;
@@ -23,9 +26,12 @@ import com.google.android.flexbox.FlexboxLayout;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import shadattonmoy.sustnavigator.AllCourseListAdapter;
+import shadattonmoy.sustnavigator.Course;
 import shadattonmoy.sustnavigator.R;
 import shadattonmoy.sustnavigator.utils.Values;
 
@@ -39,21 +45,32 @@ public class GenerateCourseFragment extends android.app.Fragment {
     private EditText courseCodeField, courseCreditField, courseTitleField;
     private DragAndDropListener dragAndDropListener;
     private DragAndDropListenerForTextView dragAndDropListenerForTextView;
-    private RecyclerView courseList;
-    private LinearLayout courseFieldContainer,courseListContainer;
+    private ListView courseList;
+    private List<Course> courses;
+    private AllCourseListAdapter courseListAdapter;
     private String textToDrop;
-    private Button semesterAddSubmitButton;
+    private Button courseAddSubmitButton;
     private Boolean sendToServer = false;
+    private Context context;
+    private CardView generatedTextContainer,courseListContainer;
+    private ScrollView courseFieldContainer;
 
     public GenerateCourseFragment() {
         // Required empty public constructor
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.context = context;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         detectedTexts = getArguments().getStringArrayList("detectedText");
+        courses = new ArrayList<>();
+        courseListAdapter = new AllCourseListAdapter(context,R.layout.syllabus_single_row,R.id.course_icon, (ArrayList<Course>) courses);
 
     }
 
@@ -64,8 +81,9 @@ public class GenerateCourseFragment extends android.app.Fragment {
         detectedCodeContainer = (FlexboxLayout) view.findViewById(R.id.detected_code_container);
         detectedTitleContainer = (FlexboxLayout) view.findViewById(R.id.detected_title_container);
         detectedCreditContainer = (FlexboxLayout) view.findViewById(R.id.detected_credit_container);
-        courseListContainer = (LinearLayout) view.findViewById(R.id.course_list_container);
-        courseFieldContainer = (LinearLayout) view.findViewById(R.id.course_field_container);
+        courseListContainer = (CardView) view.findViewById(R.id.course_list_container);
+        generatedTextContainer = (CardView) view.findViewById(R.id.generated_text_container);
+        courseFieldContainer = (ScrollView) view.findViewById(R.id.course_field_container);
         courseCodeField = (EditText) view.findViewById(R.id.course_code_field);
         courseCreditField = (EditText) view.findViewById(R.id.course_credit_field);
         courseTitleField = (EditText) view.findViewById(R.id.course_title_field);
@@ -74,8 +92,8 @@ public class GenerateCourseFragment extends android.app.Fragment {
         courseCreditButton = (TextView) view.findViewById(R.id.course_credit_button);
         addMoreCourseButton = (TextView) view.findViewById(R.id.add_more_course_button);
         coursesButton = (TextView) view.findViewById(R.id.courses_button);
-        courseList = (RecyclerView) view.findViewById(R.id.course_list);
-        semesterAddSubmitButton = (Button) view.findViewById(R.id.semester_add_submit_btn);
+        courseList = (ListView) view.findViewById(R.id.course_list);
+        courseAddSubmitButton = (Button) view.findViewById(R.id.course_add_submit_btn);
         detectedCreditContainer.setVisibility(View.GONE);
         detectedTitleContainer.setVisibility(View.GONE);
         initTabClickListener();
@@ -115,7 +133,7 @@ public class GenerateCourseFragment extends android.app.Fragment {
             public void onClick(View view) {
                 courseListContainer.setVisibility(View.VISIBLE);
                 courseFieldContainer.setVisibility(View.GONE);
-                semesterAddSubmitButton.setText(R.string.submit);
+                generatedTextContainer.setVisibility(View.GONE);
 
 
             }
@@ -127,11 +145,21 @@ public class GenerateCourseFragment extends android.app.Fragment {
 
                 courseListContainer.setVisibility(View.GONE);
                 courseFieldContainer.setVisibility(View.VISIBLE);
-                semesterAddSubmitButton.setText(R.string.done);
+                generatedTextContainer.setVisibility(View.VISIBLE);
+                courseAddSubmitButton.setText(R.string.done);
+                courseAddSubmitButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        addCourseToList();
+
+                    }
+                });
             }
         });
 
     }
+
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -140,7 +168,23 @@ public class GenerateCourseFragment extends android.app.Fragment {
         courseCreditField.setOnDragListener(dragAndDropListener);
         courseTitleField.setOnDragListener(dragAndDropListener);
         courseCodeField.setOnDragListener(dragAndDropListener);
+        courseList.setAdapter(courseListAdapter);
 
+
+    }
+
+    public void addCourseToList()
+    {
+        String courseCode = courseCodeField.getText().toString();
+        String courseTitle = courseTitleField.getText().toString();
+        String courseCredit = courseCreditField.getText().toString();
+        courses.add(new Course(courseCode,courseTitle,courseCredit));
+        courseListAdapter.notifyDataSetChanged();
+        coursesButton.performClick();
+    }
+
+    public void addCourseToServer()
+    {
 
     }
 
@@ -175,6 +219,9 @@ public class GenerateCourseFragment extends android.app.Fragment {
             {
                 detectedCreditContainer.addView(detectedTextView);
 
+            }
+            else {
+                detectedCreditContainer.addView(detectedTextView);
             }
 
         }

@@ -7,13 +7,91 @@
     android:layout_height="match_parent"
     tools:context=".admin.view.GenerateCourseFragment">
 
-    <ScrollView
-        android:id="@+id/scroll_view"
+    <LinearLayout
+        android:id="@+id/add_more_course"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@color/textBlack"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/courses_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_weight="1"
+            android:padding="8dp"
+            android:text="Courses"
+            android:textColor="@color/textWhite" />
+
+        <TextView
+            android:id="@+id/add_more_course_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableLeft="@drawable/add"
+            android:drawablePadding="8dp"
+            android:padding="8dp"
+            android:text="Add More Course"
+            android:textColor="@color/textWhite" />
+    </LinearLayout>
+
+
+    <android.support.v7.widget.CardView
+        android:visibility="gone"
+        android:id="@+id/course_list_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/add_more_course">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ListView
+                android:id="@+id/course_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="80dp">
+            </ListView>
+
+            <TextView
+                android:id="@+id/course_add_done_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="40dp"
+                android:background="@color/colorPrimaryDark"
+                android:gravity="center"
+                android:padding="16dp"
+                android:text="Done"
+                android:textColor="@color/textWhite"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+
+
+
+
+
+
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <ScrollView
+        android:id="@+id/course_field_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/add_more_course">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
@@ -22,7 +100,7 @@
             <android.support.v7.widget.CardView
                 android:id="@+id/field_card"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginBottom="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -33,58 +111,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
-
-                    <LinearLayout
-                        android:id="@+id/add_more_course"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/textBlack"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/courses_button"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentLeft="true"
-                            android:layout_weight="1"
-                            android:padding="8dp"
-                            android:text="Courses"
-                            android:textColor="@color/textWhite" />
-
-                        <TextView
-                            android:id="@+id/add_more_course_button"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:drawableLeft="@drawable/add"
-                            android:drawablePadding="8dp"
-                            android:padding="8dp"
-                            android:text="Add More Course"
-                            android:textColor="@color/textWhite" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:visibility="gone"
-                        android:id="@+id/course_list_container"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-
-                        <android.support.v7.widget.RecyclerView
-                            android:id="@+id/course_list"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
-
-                        </android.support.v7.widget.RecyclerView>
-
-
-
-
-                    </LinearLayout>
-
                     <LinearLayout
                         android:visibility="visible"
-                        android:id="@+id/course_field_container"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
@@ -189,7 +217,7 @@
 
 
                     <Button
-                        android:id="@+id/semester_add_submit_btn"
+                        android:id="@+id/course_add_submit_btn"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="8dp"
@@ -208,6 +236,7 @@
     </ScrollView>
 
     <android.support.v7.widget.CardView
+        android:id="@+id/generated_text_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
@@ -215,7 +244,7 @@
         app:cardElevation="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/scroll_view">
+        app:layout_constraintTop_toBottomOf="@+id/course_field_container">
 
         <LinearLayout
             android:layout_width="match_parent"

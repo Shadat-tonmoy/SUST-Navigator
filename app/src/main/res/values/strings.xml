@@ -61,4 +61,6 @@
 
     <string name="done">Done</string>
     <string name="submit">Submit</string>
+    <string name="syllabus">Syllabus</string>
+    <string name="department">Department</string>
 </resources>
