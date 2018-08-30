@@ -20,6 +20,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -27,6 +28,7 @@ import java.util.List;
 
 import shadattonmoy.sustnavigator.R;
 import shadattonmoy.sustnavigator.admin.model.Admin;
+import shadattonmoy.sustnavigator.utils.Values;
 
 /**
  * Created by Shadat Tonmoy on 10/2/2017.
@@ -61,7 +63,7 @@ public class AdminAdapter extends ArrayAdapter<Admin>{
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             row = inflater.inflate(R.layout.admin_single_row,parent,false);
         }
-        Admin admin= getItem(position);
+        final Admin admin= getItem(position);
         TextView adminIcon = (TextView) row.findViewById(R.id.admin_icon);
         TextView adminName = (TextView) row.findViewById(R.id.admin_name);
         TextView adminDept = (TextView) row.findViewById(R.id.admin_dept);
@@ -101,6 +103,14 @@ public class AdminAdapter extends ArrayAdapter<Admin>{
         }
 
         removeIcon.setImageResource(R.drawable.admin_remove);
+
+        removeIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                removeAdmin(admin);
+
+            }
+        });
 
 
 
@@ -153,8 +163,22 @@ public class AdminAdapter extends ArrayAdapter<Admin>{
             }
         });
     }
-    void disableAdmin()
+    void removeAdmin(final Admin admin)
     {
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = firebaseDatabase.getReference().child("admin").child(admin.getId());
+        databaseReference.setValue(null, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                remove(admin);
+                Snackbar snackbar = Snackbar.make(relativeLayout,"Admin is removed",Snackbar.LENGTH_SHORT);
+                snackbar.show();
+                Values.updateLastModified();
+
+            }
+        });
+
+
 
     }
 }

@@ -11,6 +11,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +40,7 @@ public class AdminFragment extends android.app.Fragment {
     private TextInputLayout emailLayout,passwordLayout;
     private boolean isValid;
     private CardView loginErrorMsg;
-    private TextView notAnAdminView;
+    private TextView notAnAdminView,forgetPasswordView;
     private AppBarLayout appBarLayout;
     private FragmentActivity fragmentActivity;
     private AwesomeValidation awesomeValidation;
@@ -65,6 +66,7 @@ public class AdminFragment extends android.app.Fragment {
         passwordLayout = (TextInputLayout) view.findViewById(R.id.login_password_layout);
         loginErrorMsg = (CardView) view.findViewById(R.id.login_error_msg);
         notAnAdminView = (TextView) view.findViewById(R.id.not_an_admint_btn);
+        forgetPasswordView = (TextView) view.findViewById(R.id.forget_password_btn);
         appBarLayout = (AppBarLayout) getActivity().findViewById(R.id.appbar_layout);
         return view;
     }
@@ -90,6 +92,14 @@ public class AdminFragment extends android.app.Fragment {
             @Override
             public void onClick(View v) {
                 openSignUpForm();
+            }
+        });
+
+        forgetPasswordView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showPasswordResetDialog();
+
             }
         });
 
@@ -157,6 +167,19 @@ public class AdminFragment extends android.app.Fragment {
 
     }
 
+    void sendPasswordResetRequest(String email)
+    {
+        FirebaseAuth.getInstance().sendPasswordResetEmail(email)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Log.d("PasswordReset", "Email sent.");
+                        }
+                    }
+                });
+    }
+
     void openSignUpForm()
     {
         android.app.FragmentManager manager = getFragmentManager();
@@ -164,6 +187,16 @@ public class AdminFragment extends android.app.Fragment {
         android.app.FragmentTransaction transaction = manager.beginTransaction();
         transaction.replace(R.id.main_content_root,signUpForm);
         transaction.addToBackStack("admin_signup");
+        transaction.commit();
+    }
+
+    void showPasswordResetDialog()
+    {
+        android.app.FragmentManager manager = getFragmentManager();
+        PasswordResetFragment passwordResetFragment = new PasswordResetFragment();
+        android.app.FragmentTransaction transaction = manager.beginTransaction();
+        transaction.replace(R.id.main_content_root,passwordResetFragment);
+        transaction.addToBackStack("passwordReset");
         transaction.commit();
     }
 }
