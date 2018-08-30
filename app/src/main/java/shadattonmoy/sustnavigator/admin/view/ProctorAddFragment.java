@@ -26,6 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import shadattonmoy.sustnavigator.R;
 import shadattonmoy.sustnavigator.proctor.model.Proctor;
+import shadattonmoy.sustnavigator.utils.Values;
 
 
 public class ProctorAddFragment extends android.app.Fragment implements View.OnClickListener {
@@ -156,6 +157,7 @@ public class ProctorAddFragment extends android.app.Fragment implements View.OnC
                                         }
                                     }).setActionTextColor(context.getResources().getColor(R.color.blue));
                                     snackbar.show();
+                                    Values.updateLastModified();
                                 }
                             });
 
@@ -179,6 +181,7 @@ public class ProctorAddFragment extends android.app.Fragment implements View.OnC
                                         }
                                     });
                                     snackbar.show();
+                                    Values.updateLastModified();
 
                                 }
                             });

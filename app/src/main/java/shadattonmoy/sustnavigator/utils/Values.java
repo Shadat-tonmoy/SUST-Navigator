@@ -1,7 +1,14 @@
 package shadattonmoy.sustnavigator.utils;
 
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -23,7 +30,10 @@ import java.util.List;
 import java.util.Map;
 
 import shadattonmoy.sustnavigator.Course;
+import shadattonmoy.sustnavigator.MainActivity;
+import shadattonmoy.sustnavigator.R;
 import shadattonmoy.sustnavigator.admin.model.Admin;
+import shadattonmoy.sustnavigator.admin.view.AdminPanelFragment;
 
 public class Values {
     public static String[] months = new String[]{"January","February","March","April","May","June","July","August","September","October","November","December"};
@@ -101,6 +111,52 @@ public class Values {
 
             }
         });
+    }
+
+    public static void getAdminRequest(final Context context)
+    {
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = firebaseDatabase.getReference();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        Query queryRef = databaseReference.child("admin").orderByChild("varified").equalTo(false);
+        queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                List<Admin> admins = new ArrayList<>();
+                for(DataSnapshot child : dataSnapshot.getChildren() )
+                {
+                    Admin admin = child.getValue(Admin.class);
+                    String pushId = child.getKey();
+                    admin.setId(pushId);
+                    String name = admin.getName();
+                    String regNo = admin.getRegNo();
+                    String dept = admin.getDept();
+                    if(!admin.isVarified())
+                    {
+                        admins.add(admin);
+                    }
+                }
+                if(admins.size()>0)
+                {
+                    AdminPanelFragment.setAdminReqMessage(admins.size()+" Admin Requests are pending for approval");
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    public static String getTimeString(long timeStamp)
+    {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(timeStamp);
+        return calendar.getTime().toString();
     }
 
 

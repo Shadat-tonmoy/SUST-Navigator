@@ -24,15 +24,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ThrowOnExtraProperties;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
@@ -43,7 +47,10 @@ import shadattonmoy.sustnavigator.dept.view.DeptFragment;
 import shadattonmoy.sustnavigator.holiday.view.HolidaysFragment;
 import shadattonmoy.sustnavigator.mlkit.CameraActivity;
 import shadattonmoy.sustnavigator.proctor.view.ProctorialBodyFragment;
+import shadattonmoy.sustnavigator.school.model.School;
 import shadattonmoy.sustnavigator.utils.DummyValues;
+import shadattonmoy.sustnavigator.utils.LastModified;
+import shadattonmoy.sustnavigator.utils.Values;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -57,10 +64,13 @@ public class MainActivity extends AppCompatActivity
     private SQLiteAdapter sqLiteAdapter;
     private Toolbar toolbar;
     private RelativeLayout root;
+    private TextView lastModifiedText;
+    private LastModified lastModified;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        lastModifiedText = (TextView) findViewById(R.id.last_modified);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("SUST Navigator");
         setSupportActionBar(toolbar);
@@ -124,6 +134,8 @@ public class MainActivity extends AppCompatActivity
             editor.putBoolean("firstTime", true);
             editor.commit();
         }
+
+        getLastModified();
 //        addCourse();
     }
     /*end of onCreate Method*/
@@ -464,6 +476,39 @@ public class MainActivity extends AppCompatActivity
 
 
     }*/
+
+    public void getLastModified()
+    {
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = firebaseDatabase.getReference().child("lastModified");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                lastModified = new LastModified();
+                for (DataSnapshot child : dataSnapshot.getChildren())
+                {
+                    if(child.getKey().equals("name"))
+                        lastModified.setName((String) child.getValue());
+                    else if(child.getKey().equals("dept"))
+                        lastModified.setDept((String) child.getValue());
+                    else if(child.getKey().equals("regNo"))
+                        lastModified.setRegNo((String) child.getValue());
+                    else if(child.getKey().equals("time"))
+                        lastModified.setTime((Long) child.getValue());
+                }
+                if(lastModified.getName()!="")
+                {
+                    lastModifiedText.setText("Last Updated by "+lastModified.getName()+"\nDepartment : "+lastModified.getDept()+"\nReg No : "+lastModified.getRegNo()+"\nAt "+ Values.getTimeString(lastModified.getTime()));
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
 
     public void addCourse()
     {

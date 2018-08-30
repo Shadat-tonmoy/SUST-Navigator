@@ -24,6 +24,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import shadattonmoy.sustnavigator.R;
 import shadattonmoy.sustnavigator.admin.view.TeacherAddFragment;
 import shadattonmoy.sustnavigator.teacher.model.Teacher;
+import shadattonmoy.sustnavigator.utils.Values;
 
 /**
  * Created by Shadat Tonmoy on 8/27/2017.
@@ -115,6 +116,7 @@ public class FacultyAddConfirmationDialog extends DialogFragment {
                     }).setActionTextColor(context.getResources().getColor(R.color.blue));
 
                     snackbar.show();
+                    Values.updateLastModified();
 
                 } catch (Exception e){
 
@@ -146,6 +148,7 @@ public class FacultyAddConfirmationDialog extends DialogFragment {
                     }).setActionTextColor(context.getResources().getColor(R.color.blue));
 
                     snackbar.show();
+                    Values.updateLastModified();
 
                 } catch (Exception e){
 

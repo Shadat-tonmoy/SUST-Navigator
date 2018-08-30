@@ -148,6 +148,7 @@ public class SemesterAddFragment extends android.app.Fragment {
                                     }
                                 });
                                 snackbar.show();
+                                Values.updateLastModified();
 
                             }
                         });

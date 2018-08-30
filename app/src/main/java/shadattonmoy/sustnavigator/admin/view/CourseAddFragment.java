@@ -25,6 +25,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import shadattonmoy.sustnavigator.Course;
 import shadattonmoy.sustnavigator.R;
+import shadattonmoy.sustnavigator.utils.Values;
 
 
 public class CourseAddFragment extends android.app.Fragment {
@@ -116,6 +117,7 @@ public class CourseAddFragment extends android.app.Fragment {
                             }).setActionTextColor(context.getResources().getColor(R.color.blue));
                             progressDialog.dismiss();
                             snackbar.show();
+                            Values.updateLastModified();
 
                         }
                     });

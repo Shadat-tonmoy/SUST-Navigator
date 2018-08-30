@@ -27,6 +27,17 @@
             android:textColor="@color/textWhite"
             android:textSize="16sp" />
 
+        <TextView
+            android:id="@+id/admin_request_msg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/textBlack"
+            android:padding="12dp"
+            android:visibility="gone"
+            android:textAlignment="center"
+            android:textColor="@color/textWhite"
+            android:textSize="16sp" />
+
 
         <ScrollView
             android:layout_width="match_parent"

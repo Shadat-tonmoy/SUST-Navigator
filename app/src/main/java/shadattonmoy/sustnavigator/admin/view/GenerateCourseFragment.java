@@ -291,6 +291,7 @@ public class GenerateCourseFragment extends android.app.Fragment {
                                 }
                             }).setActionTextColor(context.getResources().getColor(R.color.blue));
                             snackbar.show();
+                            Values.updateLastModified();
 
                         }
 

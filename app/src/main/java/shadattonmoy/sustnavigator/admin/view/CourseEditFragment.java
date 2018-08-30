@@ -26,6 +26,7 @@ import java.util.ArrayList;
 
 import shadattonmoy.sustnavigator.Course;
 import shadattonmoy.sustnavigator.R;
+import shadattonmoy.sustnavigator.utils.Values;
 
 
 public class CourseEditFragment extends android.app.Fragment {
@@ -118,6 +119,7 @@ public class CourseEditFragment extends android.app.Fragment {
                                 });
                                 snackbar.show();
                                 progressDialog.dismiss();
+                                Values.updateLastModified();
                             }
                         }
                     });
