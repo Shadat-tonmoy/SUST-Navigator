@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import shadattonmoy.sustnavigator.R;
+import shadattonmoy.sustnavigator.SQLiteAdapter;
 import shadattonmoy.sustnavigator.proctor.model.Proctor;
 import shadattonmoy.sustnavigator.utils.Values;
 
@@ -121,40 +122,73 @@ public class SemesterAddFragment extends android.app.Fragment {
             @Override
             public void onClick(View view) {
 
-                final ProgressDialog progressDialog;
-                progressDialog = new ProgressDialog(getActivity());
-                progressDialog.setTitle("Adding Record");
-                progressDialog.setMessage("Please Wait....");
-                progressDialog.show();
-                firebaseDatabase = FirebaseDatabase.getInstance();
-                for (Map.Entry<Integer, String> entry : selectedSemesterMap.entrySet())
+                if(Values.IS_LOCAL_ADMIN)
                 {
-                    int key = entry.getKey();
-                    String value = entry.getValue();
-                    String semesterCode = (String) Values.getSemesterCodeMap().get(value);
-                    if (semesterCode!=null)
+                    SQLiteAdapter sqLiteAdapter = SQLiteAdapter.getInstance(context);
+                    boolean isAdded = true;
+                    for (Map.Entry<Integer, String> entry : selectedSemesterMap.entrySet())
                     {
-                        databaseReference = firebaseDatabase.getReference().child("syllabus").child(session).child(dept).child(semesterCode);
-                        Log.e("SemesterToAdd",semesterCode);
-                        databaseReference.setValue("", new DatabaseReference.CompletionListener() {
+                        int key = entry.getKey();
+                        String value = entry.getValue();
+                        String semesterCode = (String) Values.getSemesterCodeMap().get(value);
+                        if (semesterCode!=null)
+                        {
+                            sqLiteAdapter.addSemester(semesterCode);
+                            isAdded = true;
+                        }
+                    }
+                    if(isAdded)
+                    {
+                        Snackbar snackbar = Snackbar.make(rootView, "Semester Added", Snackbar.LENGTH_INDEFINITE);
+                        snackbar.setActionTextColor(context.getResources().getColor(android.R.color.holo_blue_dark));
+                        snackbar.setAction("Back", new View.OnClickListener() {
                             @Override
-                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                                Snackbar snackbar = Snackbar.make(rootView, "Semester Added", Snackbar.LENGTH_INDEFINITE);
-                                snackbar.setActionTextColor(context.getResources().getColor(android.R.color.holo_blue_dark));
-                                snackbar.setAction("Back", new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        getFragmentManager().popBackStack();
-                                    }
-                                });
-                                snackbar.show();
-                                Values.updateLastModified();
-
+                            public void onClick(View v) {
+                                getFragmentManager().popBackStack();
                             }
                         });
+                        snackbar.show();
                     }
                 }
-                progressDialog.dismiss();
+                else
+                {
+                    final ProgressDialog progressDialog;
+                    progressDialog = new ProgressDialog(getActivity());
+                    progressDialog.setTitle("Adding Record");
+                    progressDialog.setMessage("Please Wait....");
+                    progressDialog.show();
+                    firebaseDatabase = FirebaseDatabase.getInstance();
+                    for (Map.Entry<Integer, String> entry : selectedSemesterMap.entrySet())
+                    {
+                        int key = entry.getKey();
+                        String value = entry.getValue();
+                        String semesterCode = (String) Values.getSemesterCodeMap().get(value);
+                        if (semesterCode!=null)
+                        {
+                            databaseReference = firebaseDatabase.getReference().child("syllabus").child(session).child(dept).child(semesterCode);
+                            Log.e("SemesterToAdd",semesterCode);
+                            databaseReference.setValue("", new DatabaseReference.CompletionListener() {
+                                @Override
+                                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                    Snackbar snackbar = Snackbar.make(rootView, "Semester Added", Snackbar.LENGTH_INDEFINITE);
+                                    snackbar.setActionTextColor(context.getResources().getColor(android.R.color.holo_blue_dark));
+                                    snackbar.setAction("Back", new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            getFragmentManager().popBackStack();
+                                        }
+                                    });
+                                    snackbar.show();
+                                    Values.updateLastModified();
+
+                                }
+                            });
+                        }
+                    }
+                    progressDialog.dismiss();
+                }
+
+
                 /*for(int i=0;i<totalSemester;i++)
                 {
                     View semesterRow = semesterSpinnerContainer.getChildAt(i);

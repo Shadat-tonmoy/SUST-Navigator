@@ -41,6 +41,7 @@ public class Values {
     public static final int DETECTED_TYPE_COURSE_CODE = 1;
     public static final int DETECTED_TYPE_COURSE_TITLE = 2;
     public static final int DETECTED_TYPE_COURSE_CREDIT = 3;
+    public static boolean IS_LOCAL_ADMIN = false;
     private static Map<String,String> semesterCodeMap = new HashMap<>();
     public static List<String> getSessions()
     {

@@ -42,6 +42,11 @@ public class CGPAShowFragment extends android.app.Fragment implements View.OnCli
         this.subTotalCredit = subTotalCredit;
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.context = context;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -126,7 +131,7 @@ public class CGPAShowFragment extends android.app.Fragment implements View.OnCli
         {
 //            Toast.makeText(getActivity().getApplicationContext(),"Save ",Toast.LENGTH_SHORT).show();
             String txt = "Grades : \n";
-            SQLiteAdapter sqLiteAdapter = new SQLiteAdapter(getActivity().getApplicationContext());
+            SQLiteAdapter sqLiteAdapter = SQLiteAdapter.getInstance(context);
             String[] semesters = {semester};
             Cursor record = sqLiteAdapter.getGPARecord(semesters);
             if(record.getCount()>0)

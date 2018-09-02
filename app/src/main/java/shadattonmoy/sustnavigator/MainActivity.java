@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity
 
 
 
-        sqLiteAdapter = new SQLiteAdapter(this);
+        sqLiteAdapter = SQLiteAdapter.getInstance(MainActivity.this);
         firebaseAuth = FirebaseAuth.getInstance();
 
 

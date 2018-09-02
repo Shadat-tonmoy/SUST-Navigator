@@ -70,7 +70,7 @@ public class SyllabusFragment extends android.app.Fragment {
     private ArrayList<Course> courses;
     public static SyllabusAdapter adapter;
     private String session;
-    private TextView nothingFoundText;
+    private TextView nothingFoundText,actAsAdmin;
     private ImageView nothingFoundImage;
     private Context context;
     private Activity activity;
@@ -127,6 +127,7 @@ public class SyllabusFragment extends android.app.Fragment {
         syllabusLoadingProgress = (ProgressBar) view.findViewById(R.id.syllabus_loading);
         nothingFoundText = (TextView) view.findViewById(R.id.nothing_found_txt);
         nothingFoundImage = (ImageView) view.findViewById(R.id.nothing_found_image);
+        actAsAdmin = (TextView) view.findViewById(R.id.act_as_admin);
         return view;
     }
 
@@ -189,6 +190,7 @@ public class SyllabusFragment extends android.app.Fragment {
                     setHasOptionsMenu(false);
                     nothingFoundImage.setVisibility(View.VISIBLE);
                     nothingFoundText.setVisibility(View.VISIBLE);
+                    actAsAdmin.setVisibility(View.VISIBLE);
                     nothingFoundText.setText("OOOPS!!! No Records found for "+dept.getDeptTitle()+"  of "+session+" Session. Tap + to add");
                     try{
                         Glide.with(context).load(context.getResources()

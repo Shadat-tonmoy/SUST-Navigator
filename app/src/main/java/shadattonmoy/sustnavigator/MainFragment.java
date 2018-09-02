@@ -30,7 +30,7 @@ public class MainFragment extends android.app.Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        SQLiteAdapter sqLiteAdapter = new SQLiteAdapter(getActivity().getApplicationContext());
+
     }
 
     @Override

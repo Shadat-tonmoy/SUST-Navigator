@@ -2,6 +2,7 @@ package shadattonmoy.sustnavigator.cgpa.view;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -54,12 +55,19 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
     private boolean isFabOpen =false;
     String session;
     private double subTotalCredit;
+    private Context context;
 
     public CGPAFragment() {
 
     }
 
-    public CGPAFragment(Dept dept,String semester,String session,double subTotalCredit) {
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.context = context;
+    }
+
+    public CGPAFragment(Dept dept, String semester, String session, double subTotalCredit) {
 
         this.dept = dept;
         this.session = session;
@@ -185,7 +193,7 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
     public void onClick(View v) {
         if(v.getId()==cgpaLoadButton.getId())
         {
-            SQLiteAdapter sqLiteAdapter = new SQLiteAdapter(getActivity().getApplicationContext());
+            SQLiteAdapter sqLiteAdapter = SQLiteAdapter.getInstance(context);
             String[] semesters = {semester};
             Cursor cursor = sqLiteAdapter.getGPARecord(semesters);
             if(cursor.getCount()>0)
@@ -293,7 +301,7 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
                 finalGPA = (float) totalGPA/passedCredit;
             else finalGPA=0;
             finalCGPA = (float) totalGPA/passedCredit;
-            SQLiteAdapter sqLiteAdapter = new SQLiteAdapter(getActivity().getApplicationContext());
+            SQLiteAdapter sqLiteAdapter = SQLiteAdapter.getInstance(context);
             String[] arr={};
             if(semester.equals("1_2"))
                 arr = new String[]{"1_1"};

@@ -34,9 +34,18 @@ public class AllCourseListAdapter extends ArrayAdapter<Course>{
     private ListView semesterCourseList;
     private TextView courseCodeView,courseTitleView,courseCreditView,courseIconView;
     private String courseCode,courseTitle,courseCredit,courseId,dept,semester;
-    private ImageView courseEditIcon;
+    private ImageView courseEditIcon,courseDeletIcon;
+    private boolean isDeletable = false;
     public AllCourseListAdapter(@NonNull Context context, @LayoutRes int resource, @IdRes int textViewResourceId, @NonNull ArrayList<Course> objects) {
         super(context, resource, textViewResourceId, objects);
+    }
+
+    public boolean isDeletable() {
+        return isDeletable;
+    }
+
+    public void setDeletable(boolean deletable) {
+        isDeletable = deletable;
     }
 
     @NonNull
@@ -54,7 +63,8 @@ public class AllCourseListAdapter extends ArrayAdapter<Course>{
         courseCreditView = (TextView) row.findViewById(R.id.course_credit);
         courseIconView = (TextView) row.findViewById(R.id.course_icon);
         courseEditIcon = (ImageView) row.findViewById(R.id.edit_course_icon1);
-        Course currentCourse = getItem(position);
+        courseDeletIcon = (ImageView) row.findViewById(R.id.delete_course_icon);
+        final Course currentCourse = getItem(position);
         courseCode = currentCourse.getCourse_code();
         courseTitle = currentCourse.getCourse_title();
         courseCredit = currentCourse.getCourse_credit();
@@ -65,6 +75,17 @@ public class AllCourseListAdapter extends ArrayAdapter<Course>{
         courseIconView.setText(courseIconText);
         courseCreditView.setText(courseCredit + " Credits");
         courseEditIcon.setImageResource(R.drawable.add_in_dialog);
+        if(isDeletable())
+        {
+            courseDeletIcon.setVisibility(View.VISIBLE);
+            courseDeletIcon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    remove(currentCourse);
+                }
+            });
+        }
+        else courseDeletIcon.setVisibility(View.GONE);
 
 
         return row;

@@ -415,7 +415,6 @@ class detailListener implements AdapterView.OnItemClickListener {
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Teacher touchedTeacher;
-        SQLiteAdapter adapter = new SQLiteAdapter(context);
         touchedTeacher = (Teacher) parent.getItemAtPosition(position);
         String name = touchedTeacher.getName();
         String phone = touchedTeacher.getPhone();

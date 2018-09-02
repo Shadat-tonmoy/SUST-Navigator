@@ -10,6 +10,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Shadat Tonmoy on 7/9/2017.
@@ -20,8 +21,16 @@ public class SQLiteAdapter {
 
     SQLiteHelper sqLiteHelper = null;
     Context context;
+    private  static  SQLiteAdapter instance;
 
-    public SQLiteAdapter(Context context)
+    public static synchronized SQLiteAdapter getInstance(Context context)
+    {
+        if(instance==null)
+            instance = new SQLiteAdapter(context);
+        return instance;
+    }
+
+    private SQLiteAdapter(Context context)
     {
         sqLiteHelper = new SQLiteHelper(context);
         this.context=context;
@@ -45,6 +54,78 @@ public class SQLiteAdapter {
         return id;
 
     };
+
+    public long addCourse(Course course,String semesterCode)
+    {
+        SQLiteDatabase db = sqLiteHelper.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(SQLiteHelper.COURSE_CODE,course.getCourse_code());
+        contentValues.put(SQLiteHelper.COURSE_TITLE,course.getCourse_title());
+        contentValues.put(SQLiteHelper.COURSE_CREDIT,course.getCourse_credit());
+        contentValues.put(SQLiteHelper.COURSE_SEMESTER,semesterCode);
+        long id = db.insert(SQLiteHelper.COURSE,null,contentValues);
+        return id;
+
+    };
+
+    public long addSemester(String semesterCode)
+    {
+        SQLiteDatabase db = sqLiteHelper.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(SQLiteHelper.SEMESTER_CODE,semesterCode);
+        long id = db.insert(SQLiteHelper.SEMESTER_TABLE,null,contentValues);
+        return id;
+
+    };
+
+    public List<Course> getCourses(String semesterCode)
+    {
+        List<Course> courses = new ArrayList<>();
+        String [] columns = {SQLiteHelper.COURSE_ID,SQLiteHelper.COURSE_SEMESTER,SQLiteHelper.COURSE_CODE,SQLiteHelper.COURSE_TITLE,SQLiteHelper.COURSE_CREDIT,SQLiteHelper.COURSE_DETAIL};
+        SQLiteDatabase db = sqLiteHelper.getReadableDatabase();
+        String selection = SQLiteHelper.COURSE_SEMESTER+"=?";
+        String[] selectionArgs = {semesterCode};
+        Cursor cursor = db.query(SQLiteHelper.COURSE,columns,selection,selectionArgs,null,null,null);
+
+        while (cursor.moveToNext()) {
+
+            int indexOfCourseID = cursor.getColumnIndex(sqLiteHelper.COURSE_ID);
+            int indexOfCourseCode= cursor.getColumnIndex(sqLiteHelper.COURSE_CODE);
+            int indexOfCourseTitle = cursor.getColumnIndex(sqLiteHelper.COURSE_TITLE);
+            int indexOfCourseCredit = cursor.getColumnIndex(sqLiteHelper.COURSE_CREDIT);
+            int indexOfCourseSemester = cursor.getColumnIndex(sqLiteHelper.COURSE_SEMESTER);
+            int indexOfCourseDetails = cursor.getColumnIndex(sqLiteHelper.COURSE_DETAIL);
+
+            long courseID = cursor.getInt(indexOfCourseID);
+            String courseCode = cursor.getString(indexOfCourseCode);
+            String courseTitle = cursor.getString(indexOfCourseTitle);
+            String courseCredit = cursor.getString(indexOfCourseCredit);
+            String courseSemester = cursor.getString(indexOfCourseSemester);
+            String courseDetails = cursor.getString(indexOfCourseDetails);
+            Course course = new Course(courseCode,courseTitle,courseCredit);
+            course.setCourseDetail(courseDetails);
+            courses.add(course);
+        }
+        return courses;
+    }
+
+    public List<String> getSemesters()
+    {
+        List<String> semesters = new ArrayList<>();
+        String [] columns = {SQLiteHelper.SEMESTER_CODE};
+        SQLiteDatabase db = sqLiteHelper.getReadableDatabase();
+        Cursor cursor = db.query(SQLiteHelper.SEMESTER,columns,null,null,null,null,null);
+
+        while (cursor.moveToNext()) {
+
+            int indexOfSemesterCode = cursor.getColumnIndex(sqLiteHelper.SEMESTER_CODE);
+
+            String semesterCode = cursor.getString(indexOfSemesterCode);
+            semesters.add(semesterCode);
+        }
+        return semesters;
+
+    }
 
     public Cursor getGPARecord(String[] semesters)
     {
@@ -92,10 +173,17 @@ public class SQLiteAdapter {
     public class SQLiteHelper extends SQLiteOpenHelper{
 
         static final String DB_NAME = "database";
-        static final int DB_VERSION = 20;
+        static final int DB_VERSION = 21;
         static final String TABLE_NAME = "cgpa";
+        static final String COURSE = "course";
         static final String ID = "_id";
+        static final String COURSE_ID = "course_id";
+        static final String COURSE_DETAIL = "course_detail";
+        static final String COURSE_SEMESTER= "course_semester";
         static final String SEMESTER = "semseter";
+        static final String SEMESTER_TABLE = "semseter";
+        static final String SEMESTER_ID= "semester_id";
+        static final String SEMESTER_CODE = "semester_code";
         static final String COURSE_CODE = "course_code";
         static final String COURSE_TITLE = "course_title";
         static final String COURSE_CREDIT = "course_credit";
@@ -104,7 +192,14 @@ public class SQLiteAdapter {
         static final String IS_ADDED = "is_added";
 
         static final String CREATE_TABLE = "create table "+TABLE_NAME +"("+ID +" INTEGER primary key autoincrement, "+SEMESTER+" varchar(50),"+ COURSE_CODE+" varchar(500), "+ COURSE_TITLE+" varchar(500),"+ COURSE_CREDIT +" varchar(50),"+ GRADE +" varchar(100),"+IS_ADDED+" INTEGER DEFAULT 0)";
+
+        static final String CREATE_SEMESTER_TABLE = "create table "+SEMESTER_TABLE+"("+SEMESTER_ID +" INTEGER primary key autoincrement, "+SEMESTER_CODE+" varchar(500)"+")";
+
+        private static final String CREATE_COURSE_TABLE = "create table " + COURSE + "(" + COURSE_ID+ " INTEGER primary key autoincrement," + COURSE_TITLE + " varchar(255), " + COURSE_CODE+ " varchar(255)," + COURSE_CREDIT + " REAL," + COURSE_DETAIL+ " varchar(1000)," + COURSE_SEMESTER + " varchar(255));";
+
         private static final String DROP_TABLE = "drop table if exists "+TABLE_NAME+" ";
+        private static final String DROP_COURSE_TABLE = "drop table if exists "+COURSE+" ";
+        private static final String DROP_SEMESTER_TABLE = "drop table if exists "+SEMESTER+" ";
 
 
 
@@ -118,6 +213,8 @@ public class SQLiteAdapter {
             Toast.makeText(context,"OnCreate",Toast.LENGTH_SHORT).show();
             try {
                 db.execSQL(CREATE_TABLE);
+                db.execSQL(CREATE_COURSE_TABLE);
+                db.execSQL(CREATE_SEMESTER_TABLE);
 
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -131,6 +228,8 @@ public class SQLiteAdapter {
             try {
                 Toast.makeText(context,"OnUpgrade",Toast.LENGTH_SHORT).show();
                 db.execSQL(DROP_TABLE);
+                db.execSQL(DROP_COURSE_TABLE);
+                db.execSQL(DROP_SEMESTER_TABLE);
                 onCreate(db);
             } catch (SQLException e) {
                 e.printStackTrace();

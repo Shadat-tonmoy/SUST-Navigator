@@ -67,6 +67,21 @@
         android:layout_above="@+id/course_credit"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+
+    <ImageView
+        android:id="@+id/delete_course_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:layout_marginRight="20dp"
+        app:srcCompat="@drawable/delete_forever_black_24"
+        android:layout_marginEnd="20dp"
+        android:visibility="gone"
+        android:layout_above="@+id/course_credit"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+
     <!--end of row 1-->
 
 
