@@ -114,7 +114,8 @@ public class SQLiteAdapter {
         List<String> semesters = new ArrayList<>();
         String [] columns = {SQLiteHelper.SEMESTER_CODE};
         SQLiteDatabase db = sqLiteHelper.getReadableDatabase();
-        Cursor cursor = db.query(SQLiteHelper.SEMESTER,columns,null,null,null,null,null);
+        String orderBy = sqLiteHelper.SEMESTER_CODE+" ASC ";
+        Cursor cursor = db.query(SQLiteHelper.SEMESTER,columns,null,null,null,null,orderBy);
 
         while (cursor.moveToNext()) {
 
@@ -169,6 +170,33 @@ public class SQLiteAdapter {
         int result = db.delete(sqLiteHelper.TABLE_NAME,whereClause,whereArgs);
         return result;
 
+    }
+
+    public int deleteSemester(String semester)
+    {
+        deleteCourse(semester);
+        SQLiteDatabase db = sqLiteHelper.getWritableDatabase();
+        String whereClause = sqLiteHelper.SEMESTER_CODE+"=?";
+        String[] whereArgs = {semester};
+        int result = db.delete(sqLiteHelper.SEMESTER,whereClause,whereArgs);
+        return result;
+    }
+
+    public int deleteCourse(String semester)
+    {
+        SQLiteDatabase db = sqLiteHelper.getWritableDatabase();
+        String whereClause = sqLiteHelper.SEMESTER_CODE+"=?";
+        String[] whereArgs = {semester};
+        int result = -1;
+        try {
+            result = db.delete(sqLiteHelper.COURSE,whereClause,whereArgs);
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+            return result;
+        }
+
+        return result;
     }
     public class SQLiteHelper extends SQLiteOpenHelper{
 

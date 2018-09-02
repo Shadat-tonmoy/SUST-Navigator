@@ -55,5 +55,16 @@
         android:textSize="12sp"
         />
 
+    <ImageView
+        android:id="@+id/delete_semester_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:src="@drawable/delete_forever_black_24"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/semester_title"
+        android:layout_marginRight="16dp"
+        />
+
 
 </RelativeLayout>

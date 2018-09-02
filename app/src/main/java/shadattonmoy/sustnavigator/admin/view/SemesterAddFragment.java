@@ -73,6 +73,7 @@ public class SemesterAddFragment extends android.app.Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        Log.e("LocalAdmin",Values.IS_LOCAL_ADMIN+" ");
         context =  getActivity().getApplicationContext();
         selectedSemesterMap = new HashMap<>();
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity().getApplicationContext(), R.array.semester_list, R.layout.spinner_layout);

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,9 +58,13 @@ public class SemesterListFragment extends android.app.Fragment {
     private double subTotalCredit = 0.0;
     private FloatingActionButton semesterAddFab;
     private boolean actAsAdminFlag = false;
+    private FragmentActivity activity;
 
-
-
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.activity = (FragmentActivity) context;
+    }
 
     public SemesterListFragment() {
         // Required empty public constructor
@@ -166,9 +171,10 @@ public class SemesterListFragment extends android.app.Fragment {
 
     public void loadFromLocalDB()
     {
+        Values.IS_LOCAL_ADMIN = true;
         SQLiteAdapter sqLiteAdapter = SQLiteAdapter.getInstance(context);
         List<String> semesterCodes = sqLiteAdapter.getSemesters();
-
+        semesters = new ArrayList<>();
         subTotalCredit=0;
         for(String semester: semesterCodes)
         {
@@ -213,7 +219,11 @@ public class SemesterListFragment extends android.app.Fragment {
         }
         if(semesters.size()>0)
         {
+            nothingFoundImage.setVisibility(View.GONE);
+            nothingFoundText.setVisibility(View.GONE);
+            actAsAdmin.setVisibility(View.GONE);
             SemesterAdapter adapter = new SemesterAdapter(getActivity().getApplicationContext(),R.layout.semester_single_row,R.id.semester_icon,semesters);
+            adapter.setActivity(activity);
             semesterList.setAdapter(adapter);
         }
         else
@@ -221,14 +231,7 @@ public class SemesterListFragment extends android.app.Fragment {
             nothingFoundImage.setVisibility(View.VISIBLE);
             nothingFoundText.setVisibility(View.VISIBLE);
             actAsAdmin.setVisibility(View.GONE);
-            semesterAddFab.setVisibility(View.VISIBLE);
-            semesterAddFab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    loadSemesterAddFragment();
-                }
-            });
-            nothingFoundText.setText("OOOPS!!! No Records found on local database Tap the + button to add. It will be saved only in your phone");
+            nothingFoundText.setText("No Records found on local database Tap the + button to add. It will be saved only in your phone");
             try{
                 Glide.with(context).load(context.getResources()
                         .getIdentifier("nothing_found", "drawable", context.getPackageName())).thumbnail(0.5f)
@@ -240,6 +243,13 @@ public class SemesterListFragment extends android.app.Fragment {
                 e.printStackTrace();
             }
         }
+        semesterAddFab.setVisibility(View.VISIBLE);
+        semesterAddFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loadSemesterAddFragment();
+            }
+        });
     }
 
     public void loadFromServer()
@@ -317,7 +327,7 @@ public class SemesterListFragment extends android.app.Fragment {
                             handleActAsAdmin();
                         }
                     });
-                    nothingFoundText.setText("OOOPS!!! No Records found for "+dept.getDeptTitle()+"  of "+session+" Session. Please Contact Admin");
+                    nothingFoundText.setText("No Records found for "+dept.getDeptTitle()+"  of "+session+" Session. Please Contact Admin");
                     try{
                         Glide.with(context).load(context.getResources()
                                 .getIdentifier("nothing_found", "drawable", context.getPackageName())).thumbnail(0.5f)
