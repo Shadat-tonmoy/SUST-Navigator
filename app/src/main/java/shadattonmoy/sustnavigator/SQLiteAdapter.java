@@ -12,6 +12,8 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import shadattonmoy.sustnavigator.utils.Values;
+
 /**
  * Created by Shadat Tonmoy on 7/9/2017.
  */
@@ -174,11 +176,13 @@ public class SQLiteAdapter {
 
     public int deleteSemester(String semester)
     {
-        deleteCourse(semester);
+//        deleteCourse(semester);
         SQLiteDatabase db = sqLiteHelper.getWritableDatabase();
         String whereClause = sqLiteHelper.SEMESTER_CODE+"=?";
-        String[] whereArgs = {semester};
-        int result = db.delete(sqLiteHelper.SEMESTER,whereClause,whereArgs);
+        String semesterCode = Values.getSemesterCode(semester);
+        String[] whereArgs = {semesterCode};
+        int result = db.delete(sqLiteHelper.SEMESTER_TABLE,whereClause,whereArgs);
+        Log.e("ResultOfDelete",result+" "+semesterCode+" "+semester);
         return result;
     }
 

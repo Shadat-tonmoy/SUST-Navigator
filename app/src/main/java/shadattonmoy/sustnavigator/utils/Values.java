@@ -160,5 +160,11 @@ public class Values {
         return calendar.getTime().toString();
     }
 
+    public static String getSemesterCode(String semester)
+    {
+
+        return semester.replace("/","_");
+    }
+
 
 }

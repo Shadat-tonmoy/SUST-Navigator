@@ -224,6 +224,7 @@ public class SemesterListFragment extends android.app.Fragment {
             actAsAdmin.setVisibility(View.GONE);
             SemesterAdapter adapter = new SemesterAdapter(getActivity().getApplicationContext(),R.layout.semester_single_row,R.id.semester_icon,semesters);
             adapter.setActivity(activity);
+            adapter.setLoadLocal(loadFromLocal);
             semesterList.setAdapter(adapter);
         }
         else

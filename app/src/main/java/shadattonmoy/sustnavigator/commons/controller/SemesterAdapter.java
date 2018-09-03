@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +26,7 @@ import java.util.List;
 import shadattonmoy.sustnavigator.R;
 import shadattonmoy.sustnavigator.SQLiteAdapter;
 import shadattonmoy.sustnavigator.commons.model.Semester;
+import shadattonmoy.sustnavigator.commons.view.SemesterListFragment;
 import shadattonmoy.sustnavigator.utils.Values;
 
 /**
@@ -39,6 +41,7 @@ public class SemesterAdapter extends ArrayAdapter<Semester> {
     private DatabaseReference databaseReference;
     private ImageView deleteSemesterIcon;
     private FragmentActivity activity;
+    private TextView loadLocal;
 
     public SemesterAdapter(@NonNull Context context, @LayoutRes int resource, @IdRes int textViewResourceId, @NonNull List<Semester> objects) {
         super(context, resource, textViewResourceId, objects);
@@ -47,7 +50,7 @@ public class SemesterAdapter extends ArrayAdapter<Semester> {
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View row = convertView;
         if(row == null)
         {
@@ -60,10 +63,10 @@ public class SemesterAdapter extends ArrayAdapter<Semester> {
             deleteSemesterIcon = (ImageView) row.findViewById(R.id.delete_semester_icon);
         }
         final Semester currentSemester = getItem(position);
-        semesterCode = currentSemester.getSemesterCode();
-        semesterName = currentSemester.getSemesterName();
-        totalCourse = currentSemester.getTotalCourse();
-        totalCredit = currentSemester.getTotalCredit();
+        final String semesterCode = currentSemester.getSemesterCode();
+        String semesterName = currentSemester.getSemesterName();
+        String totalCourse = currentSemester.getTotalCourse();
+        String totalCredit = currentSemester.getTotalCredit();
 
         if(Values.IS_LOCAL_ADMIN)
         {
@@ -71,7 +74,27 @@ public class SemesterAdapter extends ArrayAdapter<Semester> {
             deleteSemesterIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    showDeleteConfirmationDialog(currentSemester);
+                    AlertDialog.Builder builder;
+                    builder = new AlertDialog.Builder(activity);
+                    builder.setTitle("Sure to delete")
+                            .setMessage("Are you sure you want to delete entry of "+semesterCode+" ?")
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    SQLiteAdapter sqLiteAdapter = SQLiteAdapter.getInstance(context);
+                                    sqLiteAdapter.deleteSemester(semesterCode);
+                                    loadLocal.performClick();
+                                    Toast.makeText(context,"Removed",Toast.LENGTH_SHORT).show();
+
+
+                                }
+                            })
+                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
 
                 }
             });
@@ -101,37 +124,20 @@ public class SemesterAdapter extends ArrayAdapter<Semester> {
             semesterCodeView.setBackgroundResource(R.drawable.round_green3);
         else if(semesterCode.equals("4/2"))
             semesterCodeView.setBackgroundResource(R.drawable.round_yellow);
+        else if(semesterCode.equals("5/1"))
+            semesterCodeView.setBackgroundResource(R.drawable.round_light_green);
+        else if(semesterCode.equals("5/2"))
+            semesterCodeView.setBackgroundResource(R.drawable.round_red);
 
         return row;
     }
 
-    public void showDeleteConfirmationDialog(final Semester semester)
-    {
-
-        AlertDialog.Builder builder;
-        builder = new AlertDialog.Builder(activity);
-        builder.setTitle("Sure to delete")
-                .setMessage("Are you sure you want to delete this entry?")
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        SQLiteAdapter sqLiteAdapter = SQLiteAdapter.getInstance(context);
-                        sqLiteAdapter.deleteSemester(semesterCode);
-                        remove(semester);
-                        Toast.makeText(context,"Removed",Toast.LENGTH_SHORT).show();
-
-
-                    }
-                })
-                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show();
-    }
 
     public void setActivity(FragmentActivity activity) {
         this.activity = activity;
+    }
+
+    public void setLoadLocal(TextView loadLocal) {
+        this.loadLocal = loadLocal;
     }
 }
