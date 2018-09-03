@@ -165,6 +165,7 @@ public class SemesterListFragment extends android.app.Fragment {
     {
         Values.IS_LOCAL_ADMIN = true;
         actAsAdmin.setText(context.getResources().getString(R.string.tap_to_add_semester));
+        loadFromLocal.performClick();
         semesterAddFab.setVisibility(View.VISIBLE);
 
     }

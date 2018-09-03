@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 
 import shadattonmoy.sustnavigator.Course;
 import shadattonmoy.sustnavigator.R;
+import shadattonmoy.sustnavigator.SQLiteAdapter;
 import shadattonmoy.sustnavigator.utils.Values;
 
 
@@ -92,37 +94,58 @@ public class CourseEditFragment extends android.app.Fragment {
             public void onClick(View v) {
                 if(awesomeValidation.validate())
                 {
-                    final ProgressDialog progressDialog;
-                    progressDialog = new ProgressDialog(activity);
-                    progressDialog.setTitle("Adding Record");
-                    progressDialog.setMessage("Please Wait....");
-                    progressDialog.show();
                     String courseCode = courseCodeEdit.getText().toString();
                     String courseTitle = courseTitleEdit.getText().toString();
                     String courseCredit = courseCreditEdit.getText().toString();
                     Course updatedCourse = new Course(courseCode,courseTitle,courseCredit);
-                    firebaseDatabase = FirebaseDatabase.getInstance();
-                    databaseReference = firebaseDatabase.getReference().child("syllabus").child(session).child(dept).child(semester).child(courseId);
-                    databaseReference.setValue(updatedCourse, new DatabaseReference.CompletionListener() {
-                        @Override
-                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                            if(databaseError == null)
-                            {
-                                Snackbar snackbar = Snackbar.make(view,"Course Details has been updated",Snackbar.LENGTH_INDEFINITE);
-                                snackbar.setActionTextColor(context.getResources().getColor(R.color.blue));
-                                snackbar.setAction("Back", new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        android.app.FragmentManager manager = getFragmentManager();
-                                        manager.popBackStack();
-                                    }
-                                });
-                                snackbar.show();
-                                progressDialog.dismiss();
-                                Values.updateLastModified();
+                    updatedCourse.setCourse_id(courseId);
+                    if(Values.IS_LOCAL_ADMIN)
+                    {
+                        SQLiteAdapter sqLiteAdapter = SQLiteAdapter.getInstance(context);
+                        sqLiteAdapter.updateCourse(updatedCourse);
+                        Snackbar snackbar = Snackbar.make(view,"Course Details has been updated",Snackbar.LENGTH_INDEFINITE);
+                        snackbar.setActionTextColor(context.getResources().getColor(R.color.blue));
+                        snackbar.setAction("Back", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                android.app.FragmentManager manager = getFragmentManager();
+                                manager.popBackStack();
                             }
-                        }
-                    });
+                        });
+                        snackbar.show();
+
+                    }
+                    else
+                    {
+                        final ProgressDialog progressDialog;
+                        progressDialog = new ProgressDialog(activity);
+                        progressDialog.setTitle("Adding Record");
+                        progressDialog.setMessage("Please Wait....");
+                        progressDialog.show();
+                        firebaseDatabase = FirebaseDatabase.getInstance();
+                        databaseReference = firebaseDatabase.getReference().child("syllabus").child(session).child(dept).child(semester).child(courseId);
+                        databaseReference.setValue(updatedCourse, new DatabaseReference.CompletionListener() {
+                            @Override
+                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                if(databaseError == null)
+                                {
+                                    Snackbar snackbar = Snackbar.make(view,"Course Details has been updated",Snackbar.LENGTH_INDEFINITE);
+                                    snackbar.setActionTextColor(context.getResources().getColor(R.color.blue));
+                                    snackbar.setAction("Back", new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            android.app.FragmentManager manager = getFragmentManager();
+                                            manager.popBackStack();
+                                        }
+                                    });
+                                    snackbar.show();
+                                    progressDialog.dismiss();
+                                    Values.updateLastModified();
+                                }
+                            }
+                        });
+                    }
+
                 }
             }
         });

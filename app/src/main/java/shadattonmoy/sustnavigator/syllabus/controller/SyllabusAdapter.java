@@ -30,9 +30,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 
 import shadattonmoy.sustnavigator.Course;
+import shadattonmoy.sustnavigator.SQLiteAdapter;
 import shadattonmoy.sustnavigator.admin.view.CourseEditFragment;
 import shadattonmoy.sustnavigator.R;
 import shadattonmoy.sustnavigator.syllabus.view.SyllabusFragment;
+import shadattonmoy.sustnavigator.utils.Values;
 
 /**
  * Created by Shadat Tonmoy on 8/30/2017.
@@ -82,7 +84,7 @@ public class SyllabusAdapter extends ArrayAdapter<Course>{
         String courseIconText = courseCode.substring(0,3);
         courseIconView.setText(courseIconText);
         courseCreditView.setText(courseCredit + " Credits");
-        if(isEditable)
+        if(isEditable || Values.IS_LOCAL_ADMIN)
         {
             courseEditIcon.setVisibility(View.VISIBLE);
             courseEditIcon.setImageResource(R.drawable.more_vert_black);
@@ -128,7 +130,7 @@ class menuItemClickHandler implements PopupMenu.OnMenuItemClickListener{
             String courseTitle = course.getCourse_title();
             String courseCode = course.getCourse_code();
             String courseCredit = course.getCourse_credit();
-            CourseEditFragment courseEditFragment = new CourseEditFragment(dept,semester,courseCode,courseTitle,courseCredit,courseId,session);
+            CourseEditFragment courseEditFragment = new CourseEditFragment(dept,semester,courseCode,courseTitle,courseCredit,course.getCourse_id(),session);
             android.app.FragmentTransaction transaction = manager.beginTransaction();
             transaction.replace(R.id.main_content_root,courseEditFragment);
             transaction.addToBackStack("course_edit_fragment");
@@ -143,26 +145,38 @@ class menuItemClickHandler implements PopupMenu.OnMenuItemClickListener{
             builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    final ProgressDialog progressDialog;
-                    progressDialog = new ProgressDialog(activity);
-                    progressDialog.setTitle("Deleting Record");
-                    progressDialog.setMessage("Please Wait....");
-                    progressDialog.show();
-                    FirebaseDatabase database = FirebaseDatabase.getInstance();
-                    DatabaseReference databaseReference = database.getReference().child("syllabus").child(session).child(dept).child(semester).child(course.getCourse_id());
-                    databaseReference.removeValue(new DatabaseReference.CompletionListener() {
-                        @Override
-                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                            if(databaseError==null)
-                            {
-                                Snackbar snackbar = Snackbar.make(view,"Course has been removed",Snackbar.LENGTH_LONG);
-                                snackbar.show();
-                                progressDialog.dismiss();
-                                SyllabusFragment.adapter.remove(course);
+                    if(Values.IS_LOCAL_ADMIN)
+                    {
+                        SQLiteAdapter sqLiteAdapter = SQLiteAdapter.getInstance(context);
+                        sqLiteAdapter.deleteSingleCourse(course.getCourse_id());
+                        Snackbar snackbar = Snackbar.make(view,"Course has been removed",Snackbar.LENGTH_LONG);
+                        snackbar.show();
+                        SyllabusFragment.adapter.remove(course);
+                    }
+                    else
+                    {
+                        final ProgressDialog progressDialog;
+                        progressDialog = new ProgressDialog(activity);
+                        progressDialog.setTitle("Deleting Record");
+                        progressDialog.setMessage("Please Wait....");
+                        progressDialog.show();
+                        FirebaseDatabase database = FirebaseDatabase.getInstance();
+                        DatabaseReference databaseReference = database.getReference().child("syllabus").child(session).child(dept).child(semester).child(course.getCourse_id());
+                        databaseReference.removeValue(new DatabaseReference.CompletionListener() {
+                            @Override
+                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                if(databaseError==null)
+                                {
+                                    Snackbar snackbar = Snackbar.make(view,"Course has been removed",Snackbar.LENGTH_LONG);
+                                    snackbar.show();
+                                    progressDialog.dismiss();
+                                    SyllabusFragment.adapter.remove(course);
 
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
+
                 }
             });
 

@@ -33,21 +33,13 @@
         android:layout_centerInParent="true"
         android:gravity="center"
         android:textSize="16sp"
+        android:padding="8dp"
+        android:layout_margin="8dp"
         android:textColor="@color/blue"
         android:visibility="gone"
         android:text="TextView" />
 
-    <TextView
-        android:id="@+id/act_as_admin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/nothing_found_txt"
-        android:gravity="center"
-        android:textSize="16sp"
-        android:padding="8dp"
-        android:textColor="@color/cardBlue"
-        android:visibility="gone"
-        android:text="@string/act_as_admin" />
+
 
 
 

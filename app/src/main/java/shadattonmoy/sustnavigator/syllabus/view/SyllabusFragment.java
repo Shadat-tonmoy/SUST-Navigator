@@ -39,11 +39,14 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 import shadattonmoy.sustnavigator.Course;
 import shadattonmoy.sustnavigator.R;
+import shadattonmoy.sustnavigator.SQLiteAdapter;
 import shadattonmoy.sustnavigator.admin.view.ScanSyllabusFragment;
 import shadattonmoy.sustnavigator.commons.controller.SemesterAdapter;
+import shadattonmoy.sustnavigator.commons.model.Semester;
 import shadattonmoy.sustnavigator.dept.view.DeptFragment;
 import shadattonmoy.sustnavigator.syllabus.controller.SyllabusAdapter;
 import shadattonmoy.sustnavigator.admin.view.CourseAddFragment;
@@ -51,6 +54,7 @@ import shadattonmoy.sustnavigator.dept.model.Dept;
 import shadattonmoy.sustnavigator.teacher.controller.TeacherListAdapter;
 import shadattonmoy.sustnavigator.teacher.model.Teacher;
 import shadattonmoy.sustnavigator.utils.SyllabusSessionBottomSheet;
+import shadattonmoy.sustnavigator.utils.Values;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
@@ -70,7 +74,7 @@ public class SyllabusFragment extends android.app.Fragment {
     private ArrayList<Course> courses;
     public static SyllabusAdapter adapter;
     private String session;
-    private TextView nothingFoundText,actAsAdmin;
+    private TextView nothingFoundText;
     private ImageView nothingFoundImage;
     private Context context;
     private Activity activity;
@@ -86,26 +90,8 @@ public class SyllabusFragment extends android.app.Fragment {
         this.dept = dept;
         this.isEditable = isEditable;
         this.session = session;
-        if(semester.equals("1/1"))
-            this.semester = "1_1";
-        else if(semester.equals("1/2"))
-            this.semester = "1_2";
-        else if(semester.equals("2/1"))
-            this.semester = "2_1";
-        else if(semester.equals("2/2"))
-            this.semester = "2_2";
-        else if(semester.equals("3/1"))
-            this.semester = "3_1";
-        else if(semester.equals("3/2"))
-            this.semester = "3_2";
-        else if(semester.equals("4/1"))
-            this.semester = "4_1";
-        else if(semester.equals("4/2"))
-            this.semester = "4_2";
-        else if(semester.equals("5/1"))
-            this.semester = "5_1";
-        else if(semester.equals("5/2"))
-            this.semester = "5_2";
+        this.semester = Values.getSemesterCode(semester);
+
     }
 
     @Override
@@ -127,7 +113,6 @@ public class SyllabusFragment extends android.app.Fragment {
         syllabusLoadingProgress = (ProgressBar) view.findViewById(R.id.syllabus_loading);
         nothingFoundText = (TextView) view.findViewById(R.id.nothing_found_txt);
         nothingFoundImage = (ImageView) view.findViewById(R.id.nothing_found_image);
-        actAsAdmin = (TextView) view.findViewById(R.id.act_as_admin);
         return view;
     }
 
@@ -135,7 +120,9 @@ public class SyllabusFragment extends android.app.Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getSyllabusFromServer();
+        if(Values.IS_LOCAL_ADMIN)
+            getSyllabusFromLocalDB();
+        else getSyllabusFromServer();
 
     }
 
@@ -190,8 +177,7 @@ public class SyllabusFragment extends android.app.Fragment {
                     setHasOptionsMenu(false);
                     nothingFoundImage.setVisibility(View.VISIBLE);
                     nothingFoundText.setVisibility(View.VISIBLE);
-                    actAsAdmin.setVisibility(View.VISIBLE);
-                    nothingFoundText.setText("OOOPS!!! No Records found for "+dept.getDeptTitle()+"  of "+session+" Session. Tap + to add");
+                    nothingFoundText.setText("No Records found for "+dept.getDeptTitle()+"  of "+session+" Session. Tap + to add");
                     try{
                         Glide.with(context).load(context.getResources()
                                 .getIdentifier("nothing_found", "drawable", context.getPackageName())).thumbnail(0.5f)
@@ -218,27 +204,36 @@ public class SyllabusFragment extends android.app.Fragment {
 
         if(isEditable)
         {
-            customCourseButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    /*Toast.makeText(getActivity().getApplicationContext(),"Add for "+dept+" in "+semester,Toast.LENGTH_SHORT).show();*/
-                    android.app.FragmentManager manager = getFragmentManager();
-                    android.app.FragmentTransaction transaction = manager.beginTransaction();
-                    CourseAddFragment courseAddFragment = new CourseAddFragment(getActivity().getApplicationContext(),dept.getDeptCode().toLowerCase(),semester,session);
-                    transaction.replace(R.id.main_content_root, courseAddFragment);
-                    transaction.addToBackStack("syllabus_add_fragment");
-                    transaction.commit();
-                }
-            });
+            setFloatActionMenuHandler();
+        }
+        else
+        {
+            floatingActionMenu.setVisibility(View.GONE);
+        }
 
-            scanSyllabusButton.setOnClickListener(new View.OnClickListener() {
+    }
+
+    public void getSyllabusFromLocalDB()
+    {
+        courses = new ArrayList<Course>();
+        SQLiteAdapter sqLiteAdapter = SQLiteAdapter.getInstance(context);
+        List<Course> courses = sqLiteAdapter.getCourses(semester);
+        if(courses.size()>0)
+        {
+            setHasOptionsMenu(true);
+            adapter = new SyllabusAdapter(getActivity().getApplicationContext(),R.layout.fragment_syllabus2,R.id.course_code, (ArrayList<Course>) courses,isEditable,getFragmentManager(),dept.getDeptCode().toLowerCase(),semester,session,activity);
+            syllabusList.setAdapter(adapter);
+            floatingActionMenu.setVisibility(View.VISIBLE);
+            setFloatActionMenuHandler();
+            syllabusList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
-                public void onClick(View v) {
-                    /*Toast.makeText(getActivity().getApplicationContext(),"Add for "+dept+" in "+semester,Toast.LENGTH_SHORT).show();*/
-                    android.app.FragmentManager manager = getFragmentManager();
-                    android.app.FragmentTransaction transaction = manager.beginTransaction();
-                    ScanSyllabusFragment scanSyllabusFragment= new ScanSyllabusFragment();
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    /*Course clickedCourse = (Course) adapterView.getItemAtPosition(i);
+                    FragmentManager manager = getFragmentManager();
+                    FragmentTransaction transaction = manager.beginTransaction();
+                    SyllabusDetailFragment syllabusDetailFragment = new SyllabusDetailFragment();
                     Bundle args = new Bundle();
+                    args.putSerializable("course",clickedCourse);
                     args.putString("session",session);
                     args.putString("semester",semester);
                     args.putString("dept",dept.getDeptCode().toLowerCase());
@@ -246,14 +241,80 @@ public class SyllabusFragment extends android.app.Fragment {
                     {
                         args.putBoolean("isAdmin",true);
                     }
-                    scanSyllabusFragment.setArguments(args);
-//                    ScanSyllabusFragment scanSyllabusFragment= new ScanSyllabusFragment(getActivity().getApplicationContext(),dept.getDeptCode().toLowerCase(),semester,session);
-                    transaction.replace(R.id.main_content_root, scanSyllabusFragment);
-                    transaction.addToBackStack("syllabus_scan_fragment");
-                    transaction.commit();
+                    syllabusDetailFragment.setArguments(args);
+                    transaction.replace(R.id.main_content_root,syllabusDetailFragment);
+                    transaction.addToBackStack("syllabusDetailFragment");
+                    transaction.commit();*/
                 }
             });
+        }
+        else
+        {
+            setHasOptionsMenu(false);
+            nothingFoundImage.setVisibility(View.VISIBLE);
+            nothingFoundText.setVisibility(View.VISIBLE);
+            floatingActionMenu.setVisibility(View.VISIBLE);
+            setFloatActionMenuHandler();
+            nothingFoundText.setText("No Records found on local Database. Tap + to add");
+            try{
+                Glide.with(context).load(context.getResources()
+                        .getIdentifier("nothing_found", "drawable", context.getPackageName())).thumbnail(0.5f)
+                        .crossFade()
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(nothingFoundImage);
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+        syllabusLoadingProgress.setVisibility(View.GONE);
 
+    }
+
+    public void setFloatActionMenuHandler()
+    {
+        customCourseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /*Toast.makeText(getActivity().getApplicationContext(),"Add for "+dept+" in "+semester,Toast.LENGTH_SHORT).show();*/
+                android.app.FragmentManager manager = getFragmentManager();
+                android.app.FragmentTransaction transaction = manager.beginTransaction();
+                CourseAddFragment courseAddFragment = new CourseAddFragment(getActivity().getApplicationContext(),dept.getDeptCode().toLowerCase(),semester,session);
+                transaction.replace(R.id.main_content_root, courseAddFragment);
+                transaction.addToBackStack("syllabus_add_fragment");
+                transaction.commit();
+            }
+        });
+
+        scanSyllabusButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /*Toast.makeText(getActivity().getApplicationContext(),"Add for "+dept+" in "+semester,Toast.LENGTH_SHORT).show();*/
+                android.app.FragmentManager manager = getFragmentManager();
+                android.app.FragmentTransaction transaction = manager.beginTransaction();
+                ScanSyllabusFragment scanSyllabusFragment= new ScanSyllabusFragment();
+                Bundle args = new Bundle();
+                args.putString("session",session);
+                args.putString("semester",semester);
+                args.putString("dept",dept.getDeptCode().toLowerCase());
+                if(isEditable)
+                {
+                    args.putBoolean("isAdmin",true);
+                }
+                scanSyllabusFragment.setArguments(args);
+//                    ScanSyllabusFragment scanSyllabusFragment= new ScanSyllabusFragment(getActivity().getApplicationContext(),dept.getDeptCode().toLowerCase(),semester,session);
+                transaction.replace(R.id.main_content_root, scanSyllabusFragment);
+                transaction.addToBackStack("syllabus_scan_fragment");
+                transaction.commit();
+            }
+        });
+
+        if(Values.IS_LOCAL_ADMIN)
+        {
+            cloneSyllabusButton.setVisibility(View.GONE);
+        }
+        else
+        {
             cloneSyllabusButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -262,10 +323,7 @@ public class SyllabusFragment extends android.app.Fragment {
                 }
             });
         }
-        else
-        {
-            floatingActionMenu.setVisibility(View.GONE);
-        }
+
 
     }
 

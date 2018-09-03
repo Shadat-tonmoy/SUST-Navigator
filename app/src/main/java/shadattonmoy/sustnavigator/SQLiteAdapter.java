@@ -105,6 +105,7 @@ public class SQLiteAdapter {
             String courseSemester = cursor.getString(indexOfCourseSemester);
             String courseDetails = cursor.getString(indexOfCourseDetails);
             Course course = new Course(courseCode,courseTitle,courseCredit);
+            course.setCourse_id(String.valueOf(courseID));
             course.setCourseDetail(courseDetails);
             courses.add(course);
         }
@@ -164,6 +165,20 @@ public class SQLiteAdapter {
         return result;
     }
 
+    public int updateCourse(Course course)
+    {
+        SQLiteDatabase db = sqLiteHelper.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(SQLiteHelper.COURSE_CODE,course.getCourse_code());
+        contentValues.put(SQLiteHelper.COURSE_TITLE,course.getCourse_title());
+        contentValues.put(SQLiteHelper.COURSE_CREDIT,course.getCourse_credit());
+        String whereClause = sqLiteHelper.COURSE_ID+"=?";
+        String[] whereArgs = {course.getCourse_id()};
+        int result = db.update(sqLiteHelper.COURSE,contentValues,whereClause,whereArgs);
+        Log.e("UpdatedResult",course.toString());
+        return result;
+    }
+
     public int delete(String semester)
     {
         SQLiteDatabase db = sqLiteHelper.getWritableDatabase();
@@ -200,6 +215,23 @@ public class SQLiteAdapter {
             return result;
         }
 
+        return result;
+    }
+
+    public int deleteSingleCourse(String courseId)
+    {
+        SQLiteDatabase db = sqLiteHelper.getWritableDatabase();
+        String whereClause = sqLiteHelper.COURSE_ID+"=?";
+        String[] whereArgs = {courseId};
+        int result = -1;
+        try {
+            result = db.delete(sqLiteHelper.COURSE,whereClause,whereArgs);
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+            return result;
+        }
+        Log.e("CourseDelete",courseId+" result "+result);
         return result;
     }
     public class SQLiteHelper extends SQLiteOpenHelper{

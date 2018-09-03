@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import shadattonmoy.sustnavigator.Course;
 import shadattonmoy.sustnavigator.R;
+import shadattonmoy.sustnavigator.SQLiteAdapter;
 import shadattonmoy.sustnavigator.utils.Values;
 
 
@@ -91,36 +93,56 @@ public class CourseAddFragment extends android.app.Fragment {
             public void onClick(View v) {
                 if(awesomeValidation.validate())
                 {
-                    final ProgressDialog progressDialog;
-                    progressDialog = new ProgressDialog(activity);
-                    progressDialog.setTitle("Adding Record");
-                    progressDialog.setMessage("Please Wait....");
-                    progressDialog.show();
                     courseCode = courseCodeField.getText().toString().trim();
                     courseTitle = courseTitleField.getText().toString().trim();
                     courseCredit = courseCreditField.getText().toString().trim();
+                    if(Values.IS_LOCAL_ADMIN)
+                    {
+                        SQLiteAdapter sqLiteAdapter = SQLiteAdapter.getInstance(context);
+                        Course course = new Course(courseCode, courseTitle, courseCredit);
+                        sqLiteAdapter.addCourse(course,semester);
+                        Snackbar snackbar = Snackbar.make(view,"Course Has Been Added",Snackbar.LENGTH_INDEFINITE).setAction("Back", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                android.app.FragmentManager manager = getFragmentManager();
+                                manager.popBackStack();
+                            }
+                        }).setActionTextColor(context.getResources().getColor(R.color.blue));
+                        snackbar.show();
+                    }
+                    else
+                    {
+                        final ProgressDialog progressDialog;
+                        progressDialog = new ProgressDialog(activity);
+                        progressDialog.setTitle("Adding Record");
+                        progressDialog.setMessage("Please Wait....");
+                        progressDialog.show();
 
-                    firebaseDatabase = FirebaseDatabase.getInstance();
-                    databaseReference = firebaseDatabase.getReference().child("syllabus").child(session).child(dept.toLowerCase()).child(semester);
+
+                        firebaseDatabase = FirebaseDatabase.getInstance();
+                        databaseReference = firebaseDatabase.getReference().child("syllabus").child(session).child(dept.toLowerCase()).child(semester);
 
 
-                    databaseReference.push().setValue(new Course(courseCode, courseTitle, courseCredit), new DatabaseReference.CompletionListener() {
-                        @Override
-                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                            //Toast.makeText(getActivity().getApplicationContext(),"Added...",Toast.LENGTH_SHORT).show();
-                            Snackbar snackbar = Snackbar.make(view,"Course Has Been Added",Snackbar.LENGTH_INDEFINITE).setAction("Back", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    android.app.FragmentManager manager = getFragmentManager();
-                                    manager.popBackStack();
-                                }
-                            }).setActionTextColor(context.getResources().getColor(R.color.blue));
-                            progressDialog.dismiss();
-                            snackbar.show();
-                            Values.updateLastModified();
+                        databaseReference.push().setValue(new Course(courseCode, courseTitle, courseCredit), new DatabaseReference.CompletionListener() {
+                            @Override
+                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                //Toast.makeText(getActivity().getApplicationContext(),"Added...",Toast.LENGTH_SHORT).show();
+                                Snackbar snackbar = Snackbar.make(view,"Course Has Been Added",Snackbar.LENGTH_INDEFINITE).setAction("Back", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        android.app.FragmentManager manager = getFragmentManager();
+                                        manager.popBackStack();
+                                    }
+                                }).setActionTextColor(context.getResources().getColor(R.color.blue));
+                                progressDialog.dismiss();
+                                snackbar.show();
+                                Values.updateLastModified();
 
-                        }
-                    });
+                            }
+                        });
+
+                    }
+
                 }
             }
         });
