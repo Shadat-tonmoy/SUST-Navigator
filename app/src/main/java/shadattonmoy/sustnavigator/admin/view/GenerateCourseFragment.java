@@ -41,6 +41,7 @@ import java.util.regex.Pattern;
 import shadattonmoy.sustnavigator.AllCourseListAdapter;
 import shadattonmoy.sustnavigator.Course;
 import shadattonmoy.sustnavigator.R;
+import shadattonmoy.sustnavigator.SQLiteAdapter;
 import shadattonmoy.sustnavigator.proctor.model.Proctor;
 import shadattonmoy.sustnavigator.utils.Values;
 
@@ -188,7 +189,9 @@ public class GenerateCourseFragment extends android.app.Fragment {
         courseAddDoneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addCourseToServer();
+                if(Values.IS_LOCAL_ADMIN)
+                    addCourseToLocalDB();
+                else addCourseToServer();
             }
         });
 
@@ -302,6 +305,40 @@ public class GenerateCourseFragment extends android.app.Fragment {
 
         }
 
+    }
+
+    public void addCourseToLocalDB()
+    {
+        if(courses.size()==0)
+        {
+            Toast.makeText(context,"No Course To Add. Tap 'Add New Course' to add course",Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+            SQLiteAdapter sqLiteAdapter = SQLiteAdapter.getInstance(context);
+            counter = 0;
+            for(Course course:courses)
+            {
+                sqLiteAdapter.addCourse(course,semester);
+                counter++;
+                if(counter>=courses.size())
+                {
+                    Snackbar snackbar = Snackbar.make(view, "Course Added successfully", Snackbar.LENGTH_INDEFINITE);
+                    snackbar.setAction("Back", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            getFragmentManager().popBackStack();
+                        }
+                    }).setActionTextColor(context.getResources().getColor(R.color.blue));
+                    snackbar.show();
+                    Values.updateLastModified();
+
+                }
+            }
+
+
+
+        }
     }
 
     public void generateDetectedTextsLayout(LayoutInflater inflater) {
