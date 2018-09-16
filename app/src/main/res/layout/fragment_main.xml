@@ -48,7 +48,6 @@
                             android:id="@+id/textView27"
                             android:layout_height="wrap_content"
                             android:layout_width="match_parent"
-                            android:background="#3798D3"
                             android:text="Teacher"
                             style="@style/homeScreenText"
                             />
@@ -79,7 +78,6 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Syllabus"
-                            android:background="#FD9209"
                             style="@style/homeScreenText"/>
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
@@ -102,13 +100,12 @@
                             android:onClick="openProctorFragment"
                             android:layout_gravity="center"
                             android:padding="15dp"
-                            app:srcCompat="@drawable/proctor" />
+                            app:srcCompat="@drawable/teacher" />
                         <TextView
                             android:id="@+id/textView29"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Proctor"
-                            android:background="#E53935"
                             style="@style/homeScreenText"/>
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
@@ -146,7 +143,6 @@
                             style="@style/homeScreenText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="#00796B"
                             android:text="CGPA" />
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
@@ -176,7 +172,6 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Holidays"
-                            android:background="#FBAF3F"
                             style="@style/homeScreenText"/>
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
@@ -206,7 +201,6 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Staff"
-                            android:background="#3798D3"
                             style="@style/homeScreenText"/>
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
@@ -243,7 +237,6 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="About"
-                            android:background="#0776B8"
                             style="@style/homeScreenText"/>
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
@@ -273,7 +266,6 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Help"
-                            android:background="#FDC057"
                             style="@style/homeScreenText"/>
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
@@ -297,13 +289,12 @@
                             android:layout_height="96dp"
                             android:layout_weight="1"
                             android:onClick="openAdminFragment"
-                            app:srcCompat="@drawable/teacher"/>
+                            app:srcCompat="@drawable/proctor"/>
                         <TextView
                             android:id="@+id/textView35"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Admin"
-                            android:background="#2F2F2F"
                             style="@style/homeScreenText"/>
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
