@@ -551,4 +551,10 @@ public class SyllabusFragment extends android.app.Fragment {
         fragmentActivity=(FragmentActivity) activity;
         super.onAttach(activity);
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Values.IS_LOCAL_ADMIN = false;
+    }
 }

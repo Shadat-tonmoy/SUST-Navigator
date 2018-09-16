@@ -415,7 +415,7 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
 
                 CGPAShowFragment cgpaShowFragment = new CGPAShowFragment(String.format("%.2f", finalGPA), String.format("%.2f", finalCGPA), manager, semester, String.format("%.2f", passedCredit), String.format("%.2f", totalCredit), String.format("%.2f", extraCredit), String.format("%.2f", subTotalCredit));
                 cgpaShowFragment.setCourseList(cgpaForCourse);
-                transaction.replace(R.id.main_content_root, cgpaShowFragment, "cgpa_final_show");
+                transaction.add(R.id.main_content_root, cgpaShowFragment, "cgpa_final_show");
                 transaction.commit();
             }
         } else if (v.getId() == R.id.cgpa_reset_button) {
@@ -451,5 +451,11 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
             moreFab.setVisibility(View.GONE);
             isFabOpen = false;
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Values.IS_LOCAL_ADMIN = false;
     }
 }

@@ -139,8 +139,15 @@ public class SchoolListAdapter extends RecyclerView.Adapter<SchoolListAdapter.My
         transaction.replace(R.id.main_content_root,fragment,tag);
         transaction.addToBackStack(tag);
         transaction.commit();
+    }
 
-
+    public void addFragment(Fragment fragment,String tag)
+    {
+        FragmentManager manager = fragmentManager;
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.add(R.id.main_content_root,fragment,tag);
+        transaction.addToBackStack(tag);
+        transaction.commit();
     }
     @Override
     public int getItemCount() {
