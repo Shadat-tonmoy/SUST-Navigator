@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -41,6 +42,7 @@ public class Values {
     public static final int DETECTED_TYPE_COURSE_CODE = 1;
     public static final int DETECTED_TYPE_COURSE_TITLE = 2;
     public static final int DETECTED_TYPE_COURSE_CREDIT = 3;
+    public static final String GITHUB_LINK = "https://github.com/Shadat-tonmoy/SUST-Navigator";
     public static boolean IS_LOCAL_ADMIN = false;
     private static Map<String,String> semesterCodeMap = new HashMap<>();
     public static List<String> getSessions()
@@ -164,6 +166,13 @@ public class Values {
     {
 
         return semester.replace("/","_");
+    }
+
+    public static void openLink(Context context,String url)
+    {
+        Uri uri = Uri.parse(url); // missing 'http://' will cause crashed
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        context.startActivity(intent);
     }
 
 

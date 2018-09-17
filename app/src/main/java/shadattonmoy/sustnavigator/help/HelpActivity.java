@@ -10,15 +10,18 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import com.cunoraz.gifview.library.GifView;
 
 import shadattonmoy.sustnavigator.R;
+import shadattonmoy.sustnavigator.utils.Values;
 
 public class HelpActivity extends AppCompatActivity {
     private Context context;
     private ActionBar supportActionBar;
     private GifView tiredGif;
+    private TextView contributeTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +57,8 @@ public class HelpActivity extends AppCompatActivity {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
         }
+
+
     }
 
     public void initComponents()
@@ -62,6 +67,14 @@ public class HelpActivity extends AppCompatActivity {
         tiredGif.setVisibility(View.VISIBLE);
         tiredGif.setGifResource(R.drawable.tired_dev);
         tiredGif.play();
+
+        contributeTextView = (TextView) findViewById(R.id.contribute_link);
+        contributeTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Values.openLink(context,Values.GITHUB_LINK);
+            }
+        });
     }
 
 
