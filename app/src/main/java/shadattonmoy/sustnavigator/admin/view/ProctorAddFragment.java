@@ -144,7 +144,7 @@ public class ProctorAddFragment extends android.app.Fragment implements View.OnC
                             progressDialog.setMessage("Please Wait....");
                             progressDialog.show();
                             firebaseDatabase = FirebaseDatabase.getInstance();
-                            databaseReference = firebaseDatabase.getReference().child("proctor").child(proctor.getProctorId());
+                            databaseReference = firebaseDatabase.getReference().child("admin").child(proctor.getProctorId());
                             databaseReference.setValue(new Proctor(name, finalDesignation, finalRoomNo, finalContactNo), new DatabaseReference.CompletionListener() {
                                 @Override
                                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -168,7 +168,7 @@ public class ProctorAddFragment extends android.app.Fragment implements View.OnC
                             progressDialog.setMessage("Please Wait....");
                             progressDialog.show();
                             firebaseDatabase = FirebaseDatabase.getInstance();
-                            databaseReference = firebaseDatabase.getReference().child("proctor");
+                            databaseReference = firebaseDatabase.getReference().child("admin");
                             databaseReference.push().setValue(new Proctor(name, finalDesignation, finalRoomNo, finalContactNo), new DatabaseReference.CompletionListener() {
                                 @Override
                                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {

@@ -194,7 +194,7 @@ class clickHandlerProctor implements PopupMenu.OnMenuItemClickListener{
                 public void onClick(DialogInterface dialog, int id) {
 
                     FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-                    DatabaseReference databaseReference = firebaseDatabase.getReference().child("proctor").child(proctor.getProctorId());
+                    DatabaseReference databaseReference = firebaseDatabase.getReference().child("admin").child(proctor.getProctorId());
                     dialog.dismiss();
                     final ProgressDialog progressDialog;
                     progressDialog = new ProgressDialog(activity);

@@ -100,7 +100,7 @@
                             android:onClick="openProctorFragment"
                             android:layout_gravity="center"
                             android:padding="15dp"
-                            app:srcCompat="@drawable/teacher" />
+                            app:srcCompat="@drawable/proctor" />
                         <TextView
                             android:id="@+id/textView29"
                             android:layout_width="match_parent"
@@ -195,7 +195,7 @@
                             android:layout_width="96dp"
                             android:layout_height="96dp"
                             android:layout_weight="1"
-                            app:srcCompat="@drawable/teacher"/>
+                            app:srcCompat="@drawable/staff"/>
                         <TextView
                             android:id="@+id/textView34"
                             android:layout_width="match_parent"
@@ -289,7 +289,7 @@
                             android:layout_height="96dp"
                             android:layout_weight="1"
                             android:onClick="openAdminFragment"
-                            app:srcCompat="@drawable/proctor"/>
+                            app:srcCompat="@drawable/admin"/>
                         <TextView
                             android:id="@+id/textView35"
                             android:layout_width="match_parent"

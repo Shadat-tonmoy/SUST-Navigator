@@ -48,6 +48,7 @@ import shadattonmoy.sustnavigator.admin.view.AdminFragment;
 import shadattonmoy.sustnavigator.admin.view.AdminManage;
 import shadattonmoy.sustnavigator.admin.view.AdminPanelFragment;
 import shadattonmoy.sustnavigator.dept.view.DeptFragment;
+import shadattonmoy.sustnavigator.help.HelpActivity;
 import shadattonmoy.sustnavigator.holiday.view.HolidaysFragment;
 import shadattonmoy.sustnavigator.mlkit.CameraActivity;
 import shadattonmoy.sustnavigator.proctor.view.ProctorialBodyFragment;
@@ -393,7 +394,9 @@ public class MainActivity extends AppCompatActivity
 
     public void openHelpFragment(View view)
     {
-        Toast.makeText(getApplicationContext(),"Not Ready Yet",Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(MainActivity.this, HelpActivity.class);
+        startActivity(intent);
+
 
     }
     public void openAboutFragment(View view)

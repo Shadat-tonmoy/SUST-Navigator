@@ -4,18 +4,18 @@
 
     <meta-data
         android:name="com.google.firebase.ml.vision.DEPENDENCIES"
-        android:value="text"
-        />
+        android:value="text" />
 
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
+
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
-        android:name="shadattonmoy.sustnavigator.utils.FirebaseOfflineCapabilities"
+        android:name=".utils.FirebaseOfflineCapabilities"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -24,8 +24,8 @@
         android:theme="@style/MyMaterialTheme">
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name"
-            android:alwaysRetainTaskState="true">
+            android:alwaysRetainTaskState="true"
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -60,7 +60,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
         </activity>
-        <activity android:name=".mlkit.CameraActivity"></activity>
+        <activity android:name=".mlkit.CameraActivity" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -69,11 +69,14 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
+                android:resource="@xml/file_paths" />
         </provider>
-        <meta-data android:name="com.google.android.gms.vision.DEPENDENCIES" android:value="ocr"/>
 
+        <meta-data
+            android:name="com.google.android.gms.vision.DEPENDENCIES"
+            android:value="ocr" />
 
+        <activity android:name=".help.HelpActivity"></activity>
     </application>
 
 </manifest>

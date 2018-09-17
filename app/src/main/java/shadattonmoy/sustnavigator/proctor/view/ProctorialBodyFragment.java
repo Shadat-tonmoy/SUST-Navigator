@@ -89,7 +89,7 @@ public class ProctorialBodyFragment extends android.app.Fragment {
         proctors = new ArrayList<Proctor>();
         progressBar.setVisibility(View.VISIBLE);
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference().child("proctor");
+        databaseReference = firebaseDatabase.getReference().child("admin");
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
