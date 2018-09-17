@@ -53,30 +53,32 @@
 
     <TextView
         android:id="@+id/cgpa_list"
-        android:layout_width="wrap_content"
+        android:layout_width="64dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
-        android:padding="16dp"
+        android:padding="10dp"
         android:text="F"
+        android:textAlignment="center"
         android:textColor="@color/textBlack"
         android:textSize="16sp"
+        android:background="@drawable/filter_chip"
         app:layout_constraintBottom_toBottomOf="@+id/holiday_days"
         app:layout_constraintEnd_toStartOf="@+id/more_option_cgpa"
         app:layout_constraintTop_toTopOf="@+id/holiday_name" />
 
     <ImageView
         android:id="@+id/more_option_cgpa"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginRight="20dp"
         android:layout_marginTop="8dp"
-        android:src="@drawable/more"
+        android:src="@drawable/more_vert_black"
         app:layout_constraintBottom_toBottomOf="@+id/cgpa_list"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/cgpa_list" />
 
 
 

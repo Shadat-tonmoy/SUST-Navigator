@@ -88,7 +88,7 @@ public class CGPAAdapter extends ArrayAdapter<Course> {
             TextView courseCreditView = (TextView) row.findViewById(R.id.holiday_days);
             TextView cgpaListView = (TextView) row.findViewById(R.id.cgpa_list);
             final ImageView moreOption = (ImageView) row.findViewById(R.id.more_option_cgpa);
-            moreOption.setImageResource(R.drawable.more);
+            moreOption.setImageResource(R.drawable.more_vert_black);
 
             final ArrayAdapter adapter = ArrayAdapter.createFromResource(getContext(),R.array.cgpa,R.layout.spinner_layout);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
