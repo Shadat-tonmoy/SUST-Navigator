@@ -184,50 +184,33 @@ public class MainActivity extends AppCompatActivity
             DeptFragment deptFragment = new DeptFragment();
             if(id == R.id.teacher)
             {
-                deptFragment.setPurpose("TEACHER");
-                fragment = deptFragment;
+                openTeacherFragment(null);
             }
             else if(id == R.id.syllabus)
             {
-                deptFragment.setPurpose("SYLLABUS");
-                fragment = deptFragment;
+                openSyllabusFragment(null);
             }
             else if (id == R.id.CGPA) {
-                deptFragment.setPurpose("CGPA");
-                fragment = deptFragment;
+                openCGPAFragment(null);
             }
         }
         else if (id == R.id.staff) {
-            fragment = new StaffFragment();
+            openStaffFragment(null);
 
         }
         else if (id == R.id.holidays) {
-            fragment = new HolidaysFragment();
+            openHolidayFragment(null);
 
        }
         else if (id == R.id.proctorial_body) {
-            fragment = new ProctorialBodyFragment(false);
-
+            openProctorFragment(null);
         }
-        /*else if (id == R.id.admission_info) {
-            fragment = new AdmissionInfoFragment();
-
-        }*/
-
-        if(fragment!=null)
-        {
-            FragmentTransaction transaction = manager.beginTransaction();
-            transaction.replace(R.id.main_content_root,fragment);
-            transaction.addToBackStack("replace_fragment");
-            transaction.commit();
+        else if (id == R.id.nav_help) {
+            openHelpFragment(null);
         }
-        else
-        {
-            Toast.makeText(this,"Sorry No Fragment Found!!!",Toast.LENGTH_SHORT).show();
+        else if (id == R.id.nav_about) {
+            openAboutFragment(null);
         }
-
-
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
