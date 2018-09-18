@@ -6,7 +6,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +20,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -48,15 +49,13 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
     private ArrayList<Course> cgpaForCourse;
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
-    private FloatingActionButton floatingActionButton, addFromCurrentFab, addFromCustomFab;
     private FragmentManager manager;
     private ProgressBar progressBar;
     public static CGPAAdapter adapter;
     public static float removedCredit;
     public static float extraCredit;
-    private LinearLayout moreFab;
-    private Animation fabOpen, fabClose, rotateForward, rotateBackward;
-    private boolean isFabOpen = false;
+    FloatingActionButton addFromCurrentFab, addFromCustomFab;;
+    private FloatingActionMenu floatingActionMenu;
     String session;
     private double subTotalCredit;
     private Context context;
@@ -115,10 +114,9 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
             cgpaLoadButton = (TextView) view.findViewById(R.id.cgpa_load_button);
             cgpaCalculateButton = (TextView) view.findViewById(R.id.cgpa_calculate_button);
             cgpaResetButton = (TextView) view.findViewById(R.id.cgpa_reset_button);
-            floatingActionButton = (FloatingActionButton) view.findViewById(R.id.add_in_cgpa_fab);
+            floatingActionMenu = (FloatingActionMenu) view.findViewById(R.id.add_in_cgpa_fab);
             addFromCurrentFab = (FloatingActionButton) view.findViewById(R.id.addFromCurrentFab);
             addFromCustomFab = (FloatingActionButton) view.findViewById(R.id.addFromCustomFab);
-            moreFab = (LinearLayout) view.findViewById(R.id.more_fab);
             progressBar = (ProgressBar) view.findViewById(R.id.cgpa_fragment_loading);
         }
         return view;
@@ -143,11 +141,6 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        fabOpen = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.fab_open);
-        fabClose = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.fab_close);
-        rotateForward = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.rotate_forward);
-        rotateBackward = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.rotate_backward);
-
         removedCredit = (float) 0.0;
         extraCredit = (float) 0.0;
         progressBar.setVisibility(View.VISIBLE);
@@ -161,7 +154,6 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
         cgpaLoadButton.setOnClickListener(this);
         cgpaCalculateButton.setOnClickListener(this);
         cgpaResetButton.setOnClickListener(this);
-        floatingActionButton.setOnClickListener(this);
         addFromCurrentFab.setOnClickListener(this);
         addFromCustomFab.setOnClickListener(this);
 
@@ -176,13 +168,10 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 if (mLastFirstVisibleItem < firstVisibleItem) {
-                    floatingActionButton.setAnimation(fabClose);
-                    floatingActionButton.setVisibility(View.GONE);
-                    moreFab.setVisibility(View.GONE);
+                    floatingActionMenu.setVisibility(View.GONE);
                 }
                 if (mLastFirstVisibleItem > firstVisibleItem) {
-                    floatingActionButton.setAnimation(fabOpen);
-                    floatingActionButton.setVisibility(View.VISIBLE);
+                    floatingActionMenu.setVisibility(View.VISIBLE);
                 }
                 mLastFirstVisibleItem = firstVisibleItem;
 
@@ -423,33 +412,12 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
             CGPAAdapter.isReset = true;
             CGPAAdapter.record.clear();
             courseList.setAdapter(new CGPAAdapter(getActivity().getApplicationContext(), R.layout.fragment_cgpa, R.id.cgpa_calculate_button, cgpaForCourse, getFragmentManager()));
-        } else if (v.getId() == R.id.add_in_cgpa_fab) {
-            if (!isFabOpen) {
-                floatingActionButton.startAnimation(rotateForward);
-                moreFab.startAnimation(fabOpen);
-                moreFab.setVisibility(View.VISIBLE);
-                isFabOpen = true;
-            } else {
-                floatingActionButton.startAnimation(rotateBackward);
-                moreFab.startAnimation(fabClose);
-                moreFab.setVisibility(View.GONE);
-                isFabOpen = false;
-
-            }
         } else if (v.getId() == R.id.addFromCurrentFab) {
             CourseAddForCGPADialog dialog = new CourseAddForCGPADialog(dept.getDeptCode().toLowerCase(), semester, session);
             dialog.show(manager, "course_add_for_cgpa_dialog");
-            floatingActionButton.startAnimation(rotateBackward);
-            moreFab.startAnimation(fabClose);
-            moreFab.setVisibility(View.GONE);
-            isFabOpen = false;
         } else if (v.getId() == R.id.addFromCustomFab) {
             CustomCourseAddForCGPA dialog = new CustomCourseAddForCGPA();
             dialog.show(manager, "custom_course_add_for_cgpa_dialog");
-            floatingActionButton.startAnimation(rotateBackward);
-            moreFab.startAnimation(fabClose);
-            moreFab.setVisibility(View.GONE);
-            isFabOpen = false;
         }
     }
 

@@ -63,89 +63,73 @@
 
     </LinearLayout>
 
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-    </LinearLayout>
-
-    <android.support.design.widget.FloatingActionButton
+    <com.github.clans.fab.FloatingActionMenu
         android:id="@+id/add_in_cgpa_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="16dp"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_above="@id/cgpa_button_panel"
-        android:src="@drawable/add"
-        app:layout_anchor="@id/cgpa_button_panel"
-        app:layout_anchorGravity="top|end"/>
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="48dp"
+        android:layout_marginLeft="10dp"
+        android:layout_gravity="bottom|end"
+        app:menu_fab_size="normal"
+        app:menu_showShadow="true"
+        app:menu_shadowColor="#66000000"
+        app:menu_shadowRadius="4dp"
+        app:menu_shadowXOffset="1dp"
+        app:menu_shadowYOffset="3dp"
+        app:menu_colorNormal="@color/colorAccent"
+        app:menu_colorPressed="@color/textBlack"
+        app:menu_colorRipple="#99FFFFFF"
+        app:menu_animationDelayPerItem="50"
+        app:menu_icon="@drawable/ic_add_white_24dp"
+        app:menu_buttonSpacing="0dp"
+        app:menu_labels_margin="0dp"
+        app:menu_labels_showAnimation="@anim/fab_slide_in_from_right"
+        app:menu_labels_hideAnimation="@anim/fab_slide_out_to_right"
+        app:menu_labels_paddingTop="4dp"
+        app:menu_labels_paddingRight="8dp"
+        app:menu_labels_paddingBottom="4dp"
+        app:menu_labels_paddingLeft="8dp"
+        app:menu_labels_padding="8dp"
+        app:menu_labels_textColor="#FFFFFF"
+        app:menu_labels_textSize="14sp"
+        app:menu_labels_cornerRadius="3dp"
+        app:menu_labels_colorNormal="#333333"
+        app:menu_labels_colorPressed="#444444"
+        app:menu_labels_colorRipple="#66FFFFFF"
+        app:menu_labels_showShadow="true"
+        app:menu_labels_singleLine="false"
+        app:menu_labels_ellipsize="none"
+        app:menu_labels_maxLines="-1"
+        app:menu_labels_position="left"
+        app:menu_openDirection="up"
+        app:menu_backgroundColor="@android:color/transparent">
 
-
-    <LinearLayout
-        android:id="@+id/more_fab"
-        android:visibility="invisible"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_anchor="@id/add_in_cgpa_fab">
-        <LinearLayout
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/addFromCustomFab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:src="@drawable/ic_add_white_24dp"
+            app:fab_size="mini"
+            app:fab_label="Add Custom Course" />
 
-            <TextView
-                android:elevation="5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginLeft="10dp"
-                android:textColor="#FFFFFF"
-                android:padding="5dp"
-                android:background="#34495e"
-                android:text="Add Your Custom Course"/>
-
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/addFromCustomFab"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="5dp"
-                app:backgroundTint="@color/fab1"
-                android:src="@drawable/add"
-                app:fabSize="mini" />
-
-        </LinearLayout>
-
-        <LinearLayout
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/addFromCurrentFab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:src="@drawable/ic_add_white_24dp"
+            app:fab_size="mini"
+            app:fab_label="Scan From Syllabus" />
 
-            <TextView
-                android:elevation="5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="6dp"
-                android:textColor="#FFFFFF"
-                android:padding="5dp"
-                android:background="#34495e"
-                android:text="Add From Current Syllabus"/>
+    </com.github.clans.fab.FloatingActionMenu>
 
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/addFromCurrentFab"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="100dp"
-                android:layout_marginRight="20dp"
-                android:src="@drawable/add"
-                app:backgroundTint="@color/fab2"
-                app:fabSize="mini" />
 
-        </LinearLayout>
 
-    </LinearLayout>
+
+
+
 
 
     <ProgressBar
