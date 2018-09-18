@@ -44,6 +44,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
+import shadattonmoy.sustnavigator.about.AboutActivity;
 import shadattonmoy.sustnavigator.admin.view.AdminFragment;
 import shadattonmoy.sustnavigator.admin.view.AdminManage;
 import shadattonmoy.sustnavigator.admin.view.AdminPanelFragment;
@@ -401,7 +402,8 @@ public class MainActivity extends AppCompatActivity
     }
     public void openAboutFragment(View view)
     {
-        Toast.makeText(getApplicationContext(),"Not Ready Yet",Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(MainActivity.this, AboutActivity.class);
+        startActivity(intent);
 
     }
 

@@ -19,6 +19,16 @@
     <string name="copyright_msg">\u00A9 Department of CSE, SUST</string>
     <string name="tired_dev">🙄 Guess What? The developer was too tired to help you!! Wanna Help Him? </string>
     <string name="contribute_git"><b>Contribute on GitHub</b></string>
+    <string name="copyright">Copyright &#169; Dept. of CSE, SUST</string>
+    <string name="design_developer_header">Designed, Developed and Maintain by </string>
+    <string name="supervisor_header">Supervised by </string>
+    <string name="design_developer_desc">Undergraduate Student\nDepartment of CSE, SUST\n2014-15 Session </string>
+    <string name="sup1_desc">Assistant Professor\nDept of CSE, SUST</string>
+    <string name="sup2_desc">Lecturer\nDept. of CSE, SUST</string>
+    <string name="rate_header">Love SUST Navigator?</string>
+    <string name="rate_playstore">Rate on Play Store</string>
+    <string name="rate_github">Star on GitHub</string>
+    <string name="find_on">Find Me On</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
