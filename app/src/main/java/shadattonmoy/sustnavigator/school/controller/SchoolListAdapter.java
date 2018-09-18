@@ -16,6 +16,7 @@ import shadattonmoy.sustnavigator.R;
 
 import java.util.List;
 
+import shadattonmoy.sustnavigator.StaffFragment;
 import shadattonmoy.sustnavigator.commons.view.SemesterListFragment;
 import shadattonmoy.sustnavigator.teacher.view.TeacherFragment;
 import shadattonmoy.sustnavigator.dept.model.Dept;
@@ -124,6 +125,15 @@ public class SchoolListAdapter extends RecyclerView.Adapter<SchoolListAdapter.My
                         SemesterListFragment semesterListFragment = new SemesterListFragment(dept,purpose,session);
                         semesterListFragment.setSyllabusEditable(false);
                         loadFragment(semesterListFragment,"cgpaFragment");
+                    }
+                });
+            } else if(purpose.equals("staff"))
+            {
+                deptCell.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        StaffFragment staffFragment = new StaffFragment(dept);
+                        loadFragment(staffFragment,"staffFragment");
                     }
                 });
             }

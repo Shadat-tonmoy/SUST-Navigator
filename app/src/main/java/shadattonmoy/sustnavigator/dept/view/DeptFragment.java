@@ -39,7 +39,7 @@ import shadattonmoy.sustnavigator.utils.SyllabusSessionBottomSheet;
 import shadattonmoy.sustnavigator.utils.Values;
 
 
-public class DeptFragment extends android.app.Fragment implements View.OnClickListener{
+public class DeptFragment extends android.app.Fragment{
 
     private String purpose;
     private AppBarLayout appBarLayout;
@@ -98,27 +98,6 @@ public class DeptFragment extends android.app.Fragment implements View.OnClickLi
         appBarLayout.setExpanded(false);
         getSchoolsFromServer(purpose);
 
-    }
-
-    @Override
-    public void onClick(View v) {
-        int id = v.getId();
-        int id_cse = getActivity().findViewById(R.id.dept_code_cse).getId();
-        if(purpose.equals("STAFF"))
-        {
-
-            if(id==id_cse)
-            {
-                FragmentManager manager = getFragmentManager();
-                StaffFragment staffFragment= new StaffFragment ("cse");
-                FragmentTransaction transaction = manager.beginTransaction();
-                transaction.replace(R.id.main_content_root,staffFragment,"staff_fragment");
-                transaction.addToBackStack("staff_fragment");
-                transaction.commit();
-            }
-
-
-        }
     }
 
     public void getSchoolsFromServer(final String purpose)

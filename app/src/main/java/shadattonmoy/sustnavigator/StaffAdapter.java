@@ -80,7 +80,7 @@ public class StaffAdapter extends ArrayAdapter<Staff> {
 
         }
         else {
-            imageView.setImageResource(R.drawable.phone_final);
+            imageView.setImageResource(R.drawable.phone_black_24);
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

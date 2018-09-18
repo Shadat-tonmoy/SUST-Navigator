@@ -280,7 +280,7 @@ public class MainActivity extends AppCompatActivity
         FragmentManager manager = getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         DeptFragment deptFragment = new DeptFragment();
-        deptFragment.setPurpose("STAFF");
+        deptFragment.setPurpose("staff");
         transaction.replace(R.id.main_content_root,deptFragment);
         transaction.addToBackStack("staff_fragment");
         transaction.commit();
