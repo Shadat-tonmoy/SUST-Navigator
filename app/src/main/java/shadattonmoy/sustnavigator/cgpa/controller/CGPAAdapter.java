@@ -139,13 +139,6 @@ public class CGPAAdapter extends ArrayAdapter<Course> {
                                 Toast.makeText(context,courseCode+" is removed",Toast.LENGTH_SHORT).show();
                                 return true;
                             }
-                            else if(item.getItemId() == R.id.edit_course_for_cgpa_menu)
-                            {
-                                Toast.makeText(context,"Edit Course "+courseCode,Toast.LENGTH_SHORT).show();
-                                return true;
-                            }
-
-
                             return false;
                         }
                     });

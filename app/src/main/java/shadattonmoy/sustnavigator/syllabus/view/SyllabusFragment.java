@@ -483,7 +483,7 @@ public class SyllabusFragment extends android.app.Fragment {
         searchView = new SearchView(getActivity());
         searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setQueryHint("Search Here");
-        searchView.setQueryHint(Html.fromHtml("<font color = #ecf0f1>" + getResources().getString(R.string.teacher_search_hint) + "</font>"));
+        searchView.setQueryHint(Html.fromHtml("<font color = #ecf0f1>" + getResources().getString(R.string.course_search_hint) + "</font>"));
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override

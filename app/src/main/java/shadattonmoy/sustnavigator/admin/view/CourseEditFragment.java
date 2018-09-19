@@ -44,6 +44,7 @@ public class CourseEditFragment extends android.app.Fragment {
     private AwesomeValidation awesomeValidation;
     private Activity activity;
     private Context context;
+    private boolean forCGPA = false;
     public CourseEditFragment() {
         // Required empty public constructor
     }

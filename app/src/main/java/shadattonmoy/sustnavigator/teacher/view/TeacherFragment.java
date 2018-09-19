@@ -166,7 +166,7 @@ public class TeacherFragment extends android.app.Fragment {
                     setHasOptionsMenu(false);
                     nothingFoundImage.setVisibility(View.VISIBLE);
                     nothingFoundText.setVisibility(View.VISIBLE);
-                    nothingFoundText.setText("OOOPS!!! No Records found for " + dept.getDeptTitle() + "Please Contact Admin");
+                    nothingFoundText.setText("Sorry!! No Records found for " + dept.getDeptTitle() + "Please Contact Admin");
                     try {
                         Glide.with(context).load(context.getResources()
                                 .getIdentifier("nothing_found", "drawable", context.getPackageName())).thumbnail(0.5f)

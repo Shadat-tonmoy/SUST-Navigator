@@ -6,7 +6,6 @@
     tools:context=".admin.view.ScanSyllabusFragment">
 
 
-
     <ImageView
         android:id="@+id/output_image"
         android:layout_width="wrap_content"
@@ -35,6 +34,7 @@
 
     </com.theartofdev.edmodo.cropper.CropImageView>
 
+
     <LinearLayout
         android:id="@+id/buttonPanel"
         android:layout_width="match_parent"
@@ -44,41 +44,71 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
+        android:orientation="vertical"
         android:padding="8dp"
-        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-
-        <Button
-            android:id="@+id/open_camera_button"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Open" />
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="4dp">
 
-        <Button
-            android:id="@+id/start_scanning_button"
-            android:layout_width="wrap_content"
+            <Button
+                android:id="@+id/open_camera_button"
+                style="@style/camera_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="8dp"
+                android:drawableLeft="@drawable/camera_white_24"
+                android:drawablePadding="8dp"
+                android:text="Open Camera" />
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Scan" />
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="4dp">
 
-        <Button
-            android:id="@+id/crop_image_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Crop" />
+            <Button
+                android:id="@+id/start_scanning_button"
+                style="@style/camera_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="8dp"
+                android:drawableLeft="@drawable/camera_white_24"
+                android:drawablePadding="8dp"
+                android:text="Scan" />
 
+            <Button
+                android:id="@+id/crop_image_button"
+                style="@style/camera_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="8dp"
+                android:drawableLeft="@drawable/crop_white_24"
+                android:drawablePadding="8dp"
+                android:text="Crop" />
 
-        <Button
-            android:id="@+id/crop_done_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Done" />
+            <Button
+                android:id="@+id/crop_done_button"
+                style="@style/camera_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="8dp"
+                android:drawableLeft="@drawable/done_all_white_24"
+                android:drawablePadding="8dp"
+                android:text="Done" />
+        </LinearLayout>
     </LinearLayout>
-
-
-
 
 
 </android.support.constraint.ConstraintLayout>

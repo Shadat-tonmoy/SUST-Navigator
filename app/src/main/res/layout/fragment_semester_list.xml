@@ -30,7 +30,7 @@
             android:drawableLeft="@drawable/dashboard_black_24"
             android:drawablePadding="8dp"
             android:padding="10dp"
-            android:text="Choose Semester for Syllabus"
+            android:text="Choose Semester"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

@@ -109,18 +109,7 @@
                 android:drawablePadding="8dp"
                 android:drawableLeft="@drawable/done_all_white_24"
                 android:text="Done" />
-
-
-
-
-
-
         </LinearLayout>
-
-
-
-
-
     </LinearLayout>
 
 

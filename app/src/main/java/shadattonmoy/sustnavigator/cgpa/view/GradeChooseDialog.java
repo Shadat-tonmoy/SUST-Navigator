@@ -35,7 +35,7 @@ import shadattonmoy.sustnavigator.cgpa.controller.CGPAAdapter;
 public class GradeChooseDialog  extends DialogFragment {
     private View view;
     private Context context;
-    private TextView aPlus,a,aMinus,bPlus,b,bMinus,cPlus,c,cMinus,f;
+    private TextView aPlus,a,aMinus,bPlus,b,bMinus,cPlus,c,cMinus,f,fRange;
     private String courseCredit,courseCode;
     private TextView listGradeView;
 
@@ -56,7 +56,7 @@ public class GradeChooseDialog  extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
         context = getActivity().getApplicationContext();
-        LayoutInflater inflater = (LayoutInflater) getActivity().getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         view = inflater.inflate(R.layout.grade_choose_dialog,null);
         aPlus = (TextView) view.findViewById(R.id.a_plus);
         a = (TextView) view.findViewById(R.id.a);

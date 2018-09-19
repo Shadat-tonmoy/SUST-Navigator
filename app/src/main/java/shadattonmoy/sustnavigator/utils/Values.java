@@ -43,6 +43,9 @@ public class Values {
     public static final int DETECTED_TYPE_COURSE_TITLE = 2;
     public static final int DETECTED_TYPE_COURSE_CREDIT = 3;
     public static final String GITHUB_LINK = "https://github.com/Shadat-tonmoy/SUST-Navigator";
+    public static final String DEV_GITHUB_LINK = "https://github.com/Shadat-tonmoy/";
+    public static final String DEV_FB_LINK = "https://www.facebook.com/shadat.tonmoy";
+    public static final String DEV_LINKEDIN_LINK = "https://www.linkedin.com/in/shadat-tonmoy-06266b27/";
     public static boolean IS_LOCAL_ADMIN = false;
     private static Map<String,String> semesterCodeMap = new HashMap<>();
     public static List<String> getSessions()
