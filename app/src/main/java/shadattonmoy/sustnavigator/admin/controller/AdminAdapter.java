@@ -85,7 +85,7 @@ public class AdminAdapter extends ArrayAdapter<Admin>{
 
         if(!admin.isVarified())
         {
-            approveIcon.setImageResource(R.drawable.admin_approve_icon);
+            approveIcon.setImageResource(R.drawable.baseline_done_black_24);
             approveIcon.setVisibility(View.VISIBLE);
             notApprovedMsg.setText("Not Approved Yet");
             approveIcon.setOnClickListener(new View.OnClickListener() {
@@ -102,7 +102,7 @@ public class AdminAdapter extends ArrayAdapter<Admin>{
             notApprovedMsg.setVisibility(View.GONE);
         }
 
-        removeIcon.setImageResource(R.drawable.admin_remove);
+        removeIcon.setImageResource(R.drawable.clear_black_24);
 
         removeIcon.setOnClickListener(new View.OnClickListener() {
             @Override

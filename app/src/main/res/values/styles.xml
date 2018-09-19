@@ -138,6 +138,13 @@
     </style>
 
 
+    <style name="camera_button">
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:background">@color/colorPrimaryDark</item>
+    </style>
+
+
     <style name="bottomSheetHeader">
         <item name="android:background">@color/colorPrimaryDark</item>
         <item name="android:padding">15dp</item>
