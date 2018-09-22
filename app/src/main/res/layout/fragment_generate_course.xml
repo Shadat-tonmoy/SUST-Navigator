@@ -237,101 +237,139 @@
         </android.support.constraint.ConstraintLayout>
     </ScrollView>
 
-    <android.support.v7.widget.CardView
+    <android.support.constraint.ConstraintLayout
         android:id="@+id/generated_text_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        app:cardBackgroundColor="@color/textBlack"
-        app:cardElevation="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/course_field_container">
 
         <LinearLayout
+            android:id="@+id/tab_button_panel"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimaryDark"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/course_code_button"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="@color/colorPrimaryDark"
-                android:orientation="horizontal">
+                android:layout_weight="1"
+                android:paddingBottom="8dp"
+                android:paddingLeft="8dp"
+                android:paddingTop="8dp"
+                android:text="Course Code"
+                android:textColor="@color/textWhite" />
 
-                <TextView
-                    android:id="@+id/course_code_button"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:paddingBottom="8dp"
-                    android:paddingLeft="8dp"
-                    android:paddingTop="8dp"
-                    android:text="Course Code"
-                    android:textColor="@color/textWhite" />
+            <TextView
+                android:id="@+id/course_title_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingBottom="8dp"
+                android:paddingLeft="8dp"
+                android:paddingTop="8dp"
+                android:text="Course Title"
+                android:textColor="@color/textWhite" />
 
-                <TextView
-                    android:id="@+id/course_title_button"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:paddingBottom="8dp"
-                    android:paddingLeft="8dp"
-                    android:paddingTop="8dp"
-                    android:text="Course Title"
-                    android:textColor="@color/textWhite" />
-
-                <TextView
-                    android:id="@+id/course_credit_button"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:paddingBottom="8dp"
-                    android:paddingLeft="8dp"
-                    android:paddingTop="8dp"
-                    android:text="Course Credit"
-                    android:textColor="@color/textWhite" />
-            </LinearLayout>
-
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/textBlack"
-                android:paddingTop="2dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <com.google.android.flexbox.FlexboxLayout
-                        android:id="@+id/detected_code_container"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        app:alignContent="stretch"
-                        app:alignItems="stretch"
-                        app:flexWrap="wrap"></com.google.android.flexbox.FlexboxLayout>
-
-                    <com.google.android.flexbox.FlexboxLayout
-                        android:id="@+id/detected_title_container"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        app:alignContent="stretch"
-                        app:alignItems="stretch"
-                        app:flexWrap="wrap"></com.google.android.flexbox.FlexboxLayout>
-
-                    <com.google.android.flexbox.FlexboxLayout
-                        android:id="@+id/detected_credit_container"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        app:alignContent="stretch"
-                        app:alignItems="stretch"
-                        app:flexWrap="wrap"></com.google.android.flexbox.FlexboxLayout>
-                </LinearLayout>
-            </ScrollView>
+            <TextView
+                android:id="@+id/course_credit_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingBottom="8dp"
+                android:paddingLeft="8dp"
+                android:paddingTop="8dp"
+                android:text="Course Credit"
+                android:textColor="@color/textWhite" />
         </LinearLayout>
 
 
-    </android.support.v7.widget.CardView>
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fillViewport="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:background="@color/textBlack"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tab_button_panel">
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.flexbox.FlexboxLayout
+                    android:id="@+id/detected_code_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    app:alignContent="stretch"
+                    app:alignItems="stretch"
+                    app:flexWrap="wrap"
+                    app:layout_constraintEnd_toEndOf="@+id/detected_credit_container"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+
+                </com.google.android.flexbox.FlexboxLayout>
+
+                <com.google.android.flexbox.FlexboxLayout
+                    android:id="@+id/detected_title_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    app:alignContent="stretch"
+                    app:alignItems="stretch"
+                    app:flexWrap="wrap"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/detected_credit_container"></com.google.android.flexbox.FlexboxLayout>
+
+                <com.google.android.flexbox.FlexboxLayout
+                    android:id="@+id/detected_credit_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    app:alignContent="stretch"
+                    app:alignItems="stretch"
+                    app:flexWrap="wrap"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"></com.google.android.flexbox.FlexboxLayout>
+            </android.support.constraint.ConstraintLayout>
+        </HorizontalScrollView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:orientation="vertical">
+
+
+
+
+        </LinearLayout>
+
+
+    </android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>

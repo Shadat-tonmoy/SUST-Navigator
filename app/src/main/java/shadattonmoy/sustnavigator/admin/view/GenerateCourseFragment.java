@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
@@ -61,7 +62,8 @@ public class GenerateCourseFragment extends android.app.Fragment {
     private Button courseAddSubmitButton;
     private Boolean sendToServer = false;
     private Context context;
-    private CardView generatedTextContainer,courseListContainer;
+    private CardView courseListContainer;
+    private ConstraintLayout generatedTextContainer;
     private ScrollView courseFieldContainer;
     private String session,semester,dept;
     private TextView courseAddDoneButton;
@@ -105,7 +107,7 @@ public class GenerateCourseFragment extends android.app.Fragment {
         detectedTitleContainer = (FlexboxLayout) view.findViewById(R.id.detected_title_container);
         detectedCreditContainer = (FlexboxLayout) view.findViewById(R.id.detected_credit_container);
         courseListContainer = (CardView) view.findViewById(R.id.course_list_container);
-        generatedTextContainer = (CardView) view.findViewById(R.id.generated_text_container);
+        generatedTextContainer = (ConstraintLayout) view.findViewById(R.id.generated_text_container);
         courseFieldContainer = (ScrollView) view.findViewById(R.id.course_field_container);
         courseCodeField = (EditText) view.findViewById(R.id.course_code_field);
         courseCreditField = (EditText) view.findViewById(R.id.course_credit_field);
@@ -360,16 +362,19 @@ public class GenerateCourseFragment extends android.app.Fragment {
             if(getDetectedTextType(text)==Values.DETECTED_TYPE_COURSE_CODE)
             {
                 detectedCodeContainer.addView(detectedTextView);
+                Log.e("Code",text);
 
             }
             else if(getDetectedTextType(text)==Values.DETECTED_TYPE_COURSE_TITLE)
             {
                 detectedTitleContainer.addView(detectedTextView);
+                Log.e("Title",text);
 
             }
             else if(getDetectedTextType(text)==Values.DETECTED_TYPE_COURSE_CREDIT)
             {
                 detectedCreditContainer.addView(detectedTextView);
+                Log.e("Credit",text);
 
             }
             else {
