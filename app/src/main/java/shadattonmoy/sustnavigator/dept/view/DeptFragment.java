@@ -7,6 +7,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -43,6 +44,7 @@ import shadattonmoy.sustnavigator.dept.model.Dept;
 import shadattonmoy.sustnavigator.school.controller.SchoolListAdapter;
 import shadattonmoy.sustnavigator.school.model.School;
 import shadattonmoy.sustnavigator.syllabus.controller.SyllabusAdapter;
+import shadattonmoy.sustnavigator.syllabus.view.SyllabusDetailFragment;
 import shadattonmoy.sustnavigator.utils.SyllabusSessionBottomSheet;
 import shadattonmoy.sustnavigator.utils.Values;
 
@@ -63,6 +65,7 @@ public class DeptFragment extends android.app.Fragment{
     public static int bottomSheetSelectedPosition=0;
     private String selectedSession;
     private SearchView searchView;
+    private FloatingActionButton deptAddFab;
 
     public DeptFragment() {
 
@@ -94,6 +97,7 @@ public class DeptFragment extends android.app.Fragment{
         sessionMsg = (TextView) view.findViewById(R.id.session_msg);
         appBarLayout = (AppBarLayout) getActivity().findViewById(R.id.appbar_layout);
         progressBar = (ProgressBar) view.findViewById(R.id.dept_progressbar);
+        deptAddFab = (FloatingActionButton) view.findViewById(R.id.add_dept_fab);
         return view;
     }
 
@@ -106,6 +110,7 @@ public class DeptFragment extends android.app.Fragment{
         headerText.setText(Html.fromHtml("Dept. for <b>"+ purposeFormatted +"</b>"));
         appBarLayout.setExpanded(false);
         getSchoolsFromServer(purpose);
+
 
     }
 
@@ -146,6 +151,23 @@ public class DeptFragment extends android.app.Fragment{
                     });
                     schoolListAdapter.setSession(sessionText.getText().toString());
                 }
+                if(purpose.equals(Values.PURPOSE_SYLLABUS_MANAGE) || purpose.equals(Values.PURPOSE_TEACHER_MANAGE))
+                {
+                    deptAddFab.setVisibility(View.VISIBLE);
+                    deptAddFab.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            FragmentManager manager = getFragmentManager();
+                            FragmentTransaction transaction = manager.beginTransaction();
+                            DeptAddFragment deptAddFragment = new DeptAddFragment();
+                            transaction.replace(R.id.main_content_root,deptAddFragment);
+                            transaction.addToBackStack("deptAddFragment");
+                            transaction.commit();
+
+                        }
+                    });
+                }
+                else deptAddFab.setVisibility(View.GONE);
             }
 
             @Override
