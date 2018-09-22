@@ -11,8 +11,8 @@
 
     <ImageView
         android:id="@+id/output_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_marginTop="8dp"
         android:scaleType="fitCenter"
         app:layout_constraintEnd_toEndOf="parent"
@@ -23,8 +23,8 @@
 
     <com.theartofdev.edmodo.cropper.CropImageView xmlns:custom="http://schemas.android.com/apk/res-auto"
         android:id="@+id/cropImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
@@ -67,7 +67,30 @@
                 style="@style/camera_button"
                 android:drawablePadding="8dp"
                 android:drawableLeft="@drawable/camera_white_24"
-                android:text="Open Camera" />
+                android:text="Camera" />
+
+            <Button
+                android:id="@+id/crop_image_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/camera_button"
+                android:drawablePadding="8dp"
+                android:layout_marginRight="8dp"
+                android:drawableLeft="@drawable/crop_white_24"
+                android:text="Crop" />
+
+
+            <Button
+                android:id="@+id/crop_done_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="8dp"
+                style="@style/camera_button"
+                android:drawablePadding="8dp"
+                android:drawableLeft="@drawable/done_all_white_24"
+                android:text="Done" />
+
+
 
 
         </LinearLayout>
@@ -82,33 +105,18 @@
 
             <Button
                 android:id="@+id/start_scanning_button"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="8dp"
+                android:layout_marginRight="24dp"
+                android:layout_marginLeft="24dp"
                 style="@style/camera_button"
                 android:drawablePadding="8dp"
-                android:drawableLeft="@drawable/camera_white_24"
+                android:drawableLeft="@drawable/scan_white_24"
                 android:text="Scan" />
 
-            <Button
-                android:id="@+id/crop_image_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/camera_button"
-                android:drawablePadding="8dp"
-                android:layout_marginRight="8dp"
-                android:drawableLeft="@drawable/crop_white_24"
-                android:text="Crop" />
 
-            <Button
-                android:id="@+id/crop_done_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="8dp"
-                style="@style/camera_button"
-                android:drawablePadding="8dp"
-                android:drawableLeft="@drawable/done_all_white_24"
-                android:text="Done" />
+
+
         </LinearLayout>
     </LinearLayout>
 

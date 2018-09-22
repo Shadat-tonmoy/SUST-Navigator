@@ -42,6 +42,8 @@ public class Values {
     public static final int DETECTED_TYPE_COURSE_CODE = 1;
     public static final int DETECTED_TYPE_COURSE_TITLE = 2;
     public static final int DETECTED_TYPE_COURSE_CREDIT = 3;
+    public static final int VIEW_TYPE_TEXTVIEW = 1;
+    public static final int VIEW_TYPE_EDITTEXT = 2;
     public static final String GITHUB_LINK = "https://github.com/Shadat-tonmoy/SUST-Navigator";
     public static final String DEV_GITHUB_LINK = "https://github.com/Shadat-tonmoy/";
     public static final String DEV_FB_LINK = "https://www.facebook.com/shadat.tonmoy";

@@ -85,6 +85,7 @@ public class ScanSyllabusFragment extends android.app.Fragment {
     private final String TAG = "CameraActivity";
     private String session,semester,dept;
     private boolean isAdmin;
+    private int rotationDegree = 0;
 
     public ScanSyllabusFragment() {
 
@@ -108,6 +109,7 @@ public class ScanSyllabusFragment extends android.app.Fragment {
         cropDoneButton = (Button) view.findViewById(R.id.crop_done_button);
         outputImage = (ImageView) view.findViewById(R.id.output_image);
         cropImageView = (CropImageView) view.findViewById(R.id.cropImageView);
+
 
         return view;
     }
@@ -175,6 +177,7 @@ public class ScanSyllabusFragment extends android.app.Fragment {
             isAdmin = args.getBoolean("isAdmin");
 
         }
+
 
     }
 
