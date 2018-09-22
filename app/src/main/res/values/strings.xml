@@ -16,6 +16,7 @@
     <string name="home_title">SUST Navigator</string>
     <string name="teacher_search_hint">Name, Designation, Room No</string>
     <string name="course_search_hint">Code, Title, Credit</string>
+    <string name="dept_search_hint">Dept Code, Dept Title</string>
     <string name="copyright_msg">\u00A9 Department of CSE, SUST</string>
     <string name="tired_dev">🙄 Guess What? The developer was too tired to help you!! Wanna Help Him? </string>
     <string name="contribute_git"><b>Contribute on GitHub</b></string>

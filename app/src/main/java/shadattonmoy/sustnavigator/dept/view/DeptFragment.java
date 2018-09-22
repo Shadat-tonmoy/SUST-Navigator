@@ -8,12 +8,17 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
@@ -31,10 +36,13 @@ import org.apache.commons.lang3.text.WordUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import shadattonmoy.sustnavigator.Course;
 import shadattonmoy.sustnavigator.R;
 import shadattonmoy.sustnavigator.StaffFragment;
+import shadattonmoy.sustnavigator.dept.model.Dept;
 import shadattonmoy.sustnavigator.school.controller.SchoolListAdapter;
 import shadattonmoy.sustnavigator.school.model.School;
+import shadattonmoy.sustnavigator.syllabus.controller.SyllabusAdapter;
 import shadattonmoy.sustnavigator.utils.SyllabusSessionBottomSheet;
 import shadattonmoy.sustnavigator.utils.Values;
 
@@ -54,6 +62,7 @@ public class DeptFragment extends android.app.Fragment{
     private FragmentActivity fragmentActivity;
     public static int bottomSheetSelectedPosition=0;
     private String selectedSession;
+    private SearchView searchView;
 
     public DeptFragment() {
 
@@ -122,6 +131,7 @@ public class DeptFragment extends android.app.Fragment{
                 deptList.setAdapter(schoolListAdapter);
                 if(purpose.equals("syllabus") || purpose.equals("cgpa") || purpose.equals("syllabus_manage"))
                 {
+                    setHasOptionsMenu(true);
                     sessionText.setVisibility(View.VISIBLE);
                     sessionMsg.setVisibility(View.VISIBLE);
                     sessionText.setText(Values.getSessions().get(0));
@@ -151,5 +161,62 @@ public class DeptFragment extends android.app.Fragment{
     public void onAttach(Activity activity) {
         fragmentActivity=(FragmentActivity) activity;
         super.onAttach(activity);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        Log.e("OnCreateOption","Menu");
+        inflater.inflate(R.menu.dept_fragment_menu, menu);
+        MenuItem searchItem = menu.findItem(R.id.search_dept);
+        searchView = new SearchView(getActivity());
+        searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setQueryHint(Html.fromHtml("<font color = #ecf0f1>" + getResources().getString(R.string.dept_search_hint) + "</font>"));
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filterData(newText);
+                return false;
+            }
+        });
+
+    }
+
+    public void filterData(String query)
+    {
+        if(searchView!=null && !query.equals("") && query.length()>0)
+        {
+            ArrayList<School> filteredSchool = new ArrayList<School>();
+            for(School school:schoolList)
+            {
+                List<Dept> depts = school.getDepts();
+                List<Dept> filteredDepts = new ArrayList<>();
+                for(Dept dept:depts)
+                {
+                    if(dept.getDeptTitle().toLowerCase().startsWith(query.toLowerCase()) || dept.getDeptTitle().toLowerCase().endsWith(query.toLowerCase())|| dept.getDeptCode().toLowerCase().startsWith(query.toLowerCase()) || dept.getDeptCode().endsWith(query.toLowerCase()))
+                    {
+                        filteredSchool.add(school);
+                        filteredDepts.add(dept);
+                    }
+                }
+//                school.setDepts(filteredDepts);
+                schoolListAdapter.setSchools(filteredSchool);
+                schoolListAdapter.notifyDataSetChanged();
+
+            }
+        }
+        else
+        {
+            schoolListAdapter.setSchools(schoolList);
+            schoolListAdapter.notifyDataSetChanged();
+
+        }
+
     }
 }

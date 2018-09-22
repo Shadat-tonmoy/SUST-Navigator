@@ -180,4 +180,8 @@ public class SchoolListAdapter extends RecyclerView.Adapter<SchoolListAdapter.My
 
         }
     }
+
+    public void setSchools(List<School> schools) {
+        this.schools = schools;
+    }
 }
