@@ -81,36 +81,76 @@ public class AdminAdapter extends ArrayAdapter<Admin>{
         final String email = admin.getEmail();
         final String password = admin.getPassword();
         String iconText = String.valueOf(name.charAt(0));
-
-
-        if(!admin.isVarified())
+        if(Values.LOGGED_IN_ADMIN.isSuperAdmin())
         {
-            approveIcon.setImageResource(R.drawable.baseline_done_black_24);
-            approveIcon.setVisibility(View.VISIBLE);
-            notApprovedMsg.setText("Not Approved Yet");
-            approveIcon.setOnClickListener(new View.OnClickListener() {
+            if(!admin.isVarified())
+            {
+                approveIcon.setImageResource(R.drawable.baseline_done_black_24);
+                approveIcon.setVisibility(View.VISIBLE);
+                notApprovedMsg.setText("Not Approved Yet");
+                approveIcon.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(context,"Approve Admin"+id,Toast.LENGTH_SHORT).show();
+                        approveAdmin(id,email,password);
+                    }
+                });
+            }
+            else
+            {
+                approveIcon.setVisibility(View.GONE);
+                notApprovedMsg.setVisibility(View.GONE);
+            }
+            removeIcon.setImageResource(R.drawable.clear_black_24);
+            removeIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
-                    Toast.makeText(context,"Approve Admin"+id,Toast.LENGTH_SHORT).show();
-                    approveAdmin(id,email,password);
+                public void onClick(View view) {
+                    removeAdmin(admin);
+
                 }
             });
+
         }
         else
         {
-            approveIcon.setVisibility(View.GONE);
-            notApprovedMsg.setVisibility(View.GONE);
-        }
+            if(admin.getDept().toLowerCase().equals(Values.LOGGED_IN_ADMIN.getDept().toLowerCase()))
+            {
+                if(!admin.isVarified())
+                {
+                    approveIcon.setImageResource(R.drawable.baseline_done_black_24);
+                    approveIcon.setVisibility(View.VISIBLE);
+                    notApprovedMsg.setText("Not Approved Yet");
+                    approveIcon.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Toast.makeText(context,"Approve Admin"+id,Toast.LENGTH_SHORT).show();
+                            approveAdmin(id,email,password);
+                        }
+                    });
+                }
+                else
+                {
+                    approveIcon.setVisibility(View.GONE);
+                    notApprovedMsg.setVisibility(View.GONE);
+                }
+                removeIcon.setImageResource(R.drawable.clear_black_24);
+                removeIcon.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        removeAdmin(admin);
 
-        removeIcon.setImageResource(R.drawable.clear_black_24);
-
-        removeIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                removeAdmin(admin);
+                    }
+                });
 
             }
-        });
+            else
+            {
+                removeIcon.setVisibility(View.GONE);
+                approveIcon.setVisibility(View.GONE);
+                notApprovedMsg.setVisibility(View.GONE);
+            }
+
+        }
 
 
 

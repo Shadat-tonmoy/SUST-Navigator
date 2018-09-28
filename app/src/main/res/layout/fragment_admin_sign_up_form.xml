@@ -107,10 +107,12 @@ tools:context="shadattonmoy.sustnavigator.admin.view.AdminFragment">
 
                 </android.support.v7.widget.CardView>
 
-                <ScrollView
+                <android.support.v4.widget.NestedScrollView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layout_constraintEnd_toEndOf="parent"
+                    android:paddingBottom="80dp"
+                    android:clipToPadding="false"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/admin_signup_confirmation_msg">
 
@@ -259,7 +261,7 @@ tools:context="shadattonmoy.sustnavigator.admin.view.AdminFragment">
                     </LinearLayout>
 
 
-                </ScrollView>
+                </android.support.v4.widget.NestedScrollView>
 
 
 

@@ -7,17 +7,18 @@ package shadattonmoy.sustnavigator.admin.model;
 public class Admin {
 
     private String name,regNo,dept,email,password,id;
-    private boolean isVarified;
+    private boolean isVarified,isSuperAdmin=false;
     public Admin() {
     }
 
-    public Admin(String name, String regNo, String dept, String email, String password,boolean isVarified) {
+    public Admin(String name, String regNo, String dept, String email, String password,boolean isVarified,boolean isSuperAdmin) {
         this.name = name;
         this.regNo = regNo;
         this.dept = dept;
         this.email = email;
         this.password = password;
         this.isVarified = isVarified;
+        this.isSuperAdmin = isSuperAdmin;
     }
 
     public String getName() {
@@ -74,6 +75,14 @@ public class Admin {
 
     public void setVarified(boolean varified) {
         isVarified = varified;
+    }
+
+    public boolean isSuperAdmin() {
+        return isSuperAdmin;
+    }
+
+    public void setSuperAdmin(boolean superAdmin) {
+        isSuperAdmin = superAdmin;
     }
 
     @Override

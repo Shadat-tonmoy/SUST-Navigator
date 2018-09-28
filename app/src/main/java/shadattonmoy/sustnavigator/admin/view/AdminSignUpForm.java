@@ -151,7 +151,7 @@ public class AdminSignUpForm extends android.app.Fragment {
                     DatabaseReference databaseReference;
                     firebaseDatabase = FirebaseDatabase.getInstance();
                     databaseReference = firebaseDatabase.getReference().child("admin");
-                    databaseReference.push().setValue(new Admin(name,regNo,dept,email,password,false)).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    databaseReference.push().setValue(new Admin(name,regNo,dept,email,password,false,false)).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
 
