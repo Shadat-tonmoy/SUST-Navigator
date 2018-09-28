@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import shadattonmoy.sustnavigator.R;
 
@@ -21,6 +22,7 @@ import shadattonmoy.sustnavigator.commons.view.SemesterListFragment;
 import shadattonmoy.sustnavigator.teacher.view.TeacherFragment;
 import shadattonmoy.sustnavigator.dept.model.Dept;
 import shadattonmoy.sustnavigator.school.model.School;
+import shadattonmoy.sustnavigator.utils.Values;
 
 public class SchoolListAdapter extends RecyclerView.Adapter<SchoolListAdapter.MyViewHolder>{
 
@@ -86,14 +88,25 @@ public class SchoolListAdapter extends RecyclerView.Adapter<SchoolListAdapter.My
             }
             else if(purpose.equals("teacher_manage"))
             {
-                deptCell.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        TeacherFragment teacherFragment = new TeacherFragment(dept);
-                        teacherFragment.setAdmin(true);
-                        loadFragment(teacherFragment,"deptFragment");
-                    }
-                });
+
+                    deptCell.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if(dept.getDeptCode().toLowerCase().equals(Values.LOGGED_IN_ADMIN.getDept().toLowerCase()))
+                            {
+                                TeacherFragment teacherFragment = new TeacherFragment(dept);
+                                teacherFragment.setAdmin(true);
+                                loadFragment(teacherFragment,"deptFragment");
+                            }
+                            else
+                            {
+                                Toast.makeText(context,"Sorry! You only have access to "+ Values.LOGGED_IN_ADMIN.getDept()+" Department ",Toast.LENGTH_LONG).show();
+                            }
+
+                        }
+                    });
+
+
             }
             else if(purpose.equals("syllabus"))
             {
@@ -111,9 +124,18 @@ public class SchoolListAdapter extends RecyclerView.Adapter<SchoolListAdapter.My
                 deptCell.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        SemesterListFragment semesterListFragment = new SemesterListFragment(dept,purpose,session);
-                        semesterListFragment.setSyllabusEditable(true);
-                        loadFragment(semesterListFragment,"syllabusManageFragment");
+                        if(dept.getDeptCode().toLowerCase().equals(Values.LOGGED_IN_ADMIN.getDept().toLowerCase()))
+                        {
+                            SemesterListFragment semesterListFragment = new SemesterListFragment(dept,purpose,session);
+                            semesterListFragment.setSyllabusEditable(true);
+                            loadFragment(semesterListFragment,"syllabusManageFragment");
+
+                        }
+                        else
+                        {
+                            Toast.makeText(context,"Sorry! You only have access to "+ Values.LOGGED_IN_ADMIN.getDept()+" Department ",Toast.LENGTH_LONG).show();
+                        }
+
                     }
                 });
             }
