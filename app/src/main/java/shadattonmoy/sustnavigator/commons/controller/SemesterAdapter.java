@@ -42,6 +42,7 @@ public class SemesterAdapter extends ArrayAdapter<Semester> {
     private ImageView deleteSemesterIcon;
     private FragmentActivity activity;
     private TextView loadLocal;
+    private View row;
 
     public SemesterAdapter(@NonNull Context context, @LayoutRes int resource, @IdRes int textViewResourceId, @NonNull List<Semester> objects) {
         super(context, resource, textViewResourceId, objects);
@@ -51,17 +52,17 @@ public class SemesterAdapter extends ArrayAdapter<Semester> {
     @NonNull
     @Override
     public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        View row = convertView;
+        row = convertView;
         if(row == null)
         {
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             row = inflater.inflate(R.layout.semester_single_row,parent,false);
-            semesterCodeView = (TextView) row.findViewById(R.id.semester_icon);
-            semesterNameView = (TextView) row.findViewById(R.id.semester_title);
-            totalCreditView = (TextView) row.findViewById(R.id.total_credit_in_semester);
-            totalCourseView = (TextView) row.findViewById(R.id.number_of_course_in_semester);
-            deleteSemesterIcon = (ImageView) row.findViewById(R.id.delete_semester_icon);
         }
+        semesterCodeView = (TextView) row.findViewById(R.id.semester_icon);
+        semesterNameView = (TextView) row.findViewById(R.id.semester_title);
+        totalCreditView = (TextView) row.findViewById(R.id.total_credit_in_semester);
+        totalCourseView = (TextView) row.findViewById(R.id.number_of_course_in_semester);
+        deleteSemesterIcon = (ImageView) row.findViewById(R.id.delete_semester_icon);
         final Semester currentSemester = getItem(position);
         final String semesterCode = currentSemester.getSemesterCode();
         String semesterName = currentSemester.getSemesterName();
