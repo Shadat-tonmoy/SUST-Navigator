@@ -1,5 +1,8 @@
 package shadattonmoy.sustnavigator.admin.view;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -7,12 +10,19 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.basgeekball.awesomevalidation.AwesomeValidation;
 import com.basgeekball.awesomevalidation.ValidationStyle;
@@ -25,16 +35,25 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import shadattonmoy.sustnavigator.R;
 import shadattonmoy.sustnavigator.admin.model.Admin;
+import shadattonmoy.sustnavigator.dept.model.Dept;
+import shadattonmoy.sustnavigator.dept.view.DeptAddFragment;
+import shadattonmoy.sustnavigator.school.controller.SchoolListAdapter;
+import shadattonmoy.sustnavigator.school.model.School;
+import shadattonmoy.sustnavigator.utils.SyllabusSessionBottomSheet;
 import shadattonmoy.sustnavigator.utils.Values;
 
 
 public class AdminSignUpForm extends android.app.Fragment {
 
-    private EditText nameField,emailField,passwordField,regNoField,deptField;
-    private TextInputLayout nameLayout,emailLayout,passwordLayout,regNoLayout,deptLayout;
+    private EditText nameField,emailField,passwordField,regNoField;
+    private TextInputLayout nameLayout,emailLayout,passwordLayout,regNoLayout;
     private View view;
+    private Spinner deptSpinner;
     private Button signUpButton;
     private boolean isValid;
     private FirebaseDatabase firebaseDatabase;
@@ -43,6 +62,8 @@ public class AdminSignUpForm extends android.app.Fragment {
     private AwesomeValidation awesomeValidation;
     private TextView signUpMessage;
     private Context context;
+    private ProgressDialog progressDialog;
+    private List<String> depts;
     public AdminSignUpForm() {
 
     }
@@ -67,11 +88,10 @@ public class AdminSignUpForm extends android.app.Fragment {
         emailField = (EditText) view.findViewById(R.id.admin_signup_email_field);
         passwordField = (EditText) view.findViewById(R.id.admin_signup_password_field);
         regNoField = (EditText) view.findViewById(R.id.admin_signup_regNo_field);
-        deptField = (EditText) view.findViewById(R.id.admin_signup_dept_field);
+        deptSpinner = (Spinner) view.findViewById(R.id.dept_spinner);
         nameLayout = (TextInputLayout) view.findViewById(R.id.admin_signup_name_layout);
         emailLayout = (TextInputLayout) view.findViewById(R.id.admin_signup_email_layout);
         passwordLayout = (TextInputLayout) view.findViewById(R.id.admin_signup_password_layout);
-        deptLayout = (TextInputLayout) view.findViewById(R.id.admin_signup_dept_layout);
         regNoLayout = (TextInputLayout) view.findViewById(R.id.admin_signup_regNo_layout);
         signUpButton = (Button) view.findViewById(R.id.admin_signup_submit_btn);
         signUpConfirmation = (CardView) view.findViewById(R.id.admin_signup_confirmation_msg);
@@ -82,16 +102,50 @@ public class AdminSignUpForm extends android.app.Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        initDeptSpinner();
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 isValid = true;
                 formValidate();
-                if (awesomeValidation.validate())
+                if (awesomeValidation.validate() && isValid)
                     sendRequest();
             }
         });
 
+    }
+
+    public void initDeptSpinner()
+    {
+        depts = new ArrayList<>();
+        depts.add("Choose Your Department");
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = firebaseDatabase.getReference().child("schools");
+
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot child : dataSnapshot.getChildren())
+                {
+                    School school= child.getValue(School.class);
+                    List<Dept> deptList = school.getDepts();
+                    for(Dept dept:deptList)
+                    {
+                        depts.add(dept.getDeptCode());
+//                        Log.e("DeptFromServer",dept.getDeptCode());
+                    }
+                }
+                ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, depts);
+                dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                deptSpinner.setAdapter(dataAdapter);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     void formValidate()
@@ -109,7 +163,11 @@ public class AdminSignUpForm extends android.app.Fragment {
 
         awesomeValidation.addValidation(getActivity(), R.id.admin_signup_regNo_field, "^\\d{10}$", R.string.reg_no_error);
 
-        awesomeValidation.addValidation(getActivity(), R.id.admin_signup_dept_field, "^[A-Za-z]+$", R.string.dept_error);
+        if(deptSpinner.getSelectedItem().toString().equals("Choose Your Department"))
+        {
+            isValid = false;
+            Toast.makeText(context,"Please Choose a department",Toast.LENGTH_SHORT).show();
+        }
 
     }
 
@@ -119,21 +177,23 @@ public class AdminSignUpForm extends android.app.Fragment {
         final String email = emailField.getText().toString();
         final String password = passwordField.getText().toString();
         final String regNo = regNoField.getText().toString();
-        final String dept = deptField.getText().toString();
+        final String dept = deptSpinner.getSelectedItem().toString();
 
         signUpButton.setClickable(false);
         signUpButton.setText("Please wait...");
 
         final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference databaseReference = firebaseDatabase.getReference();
+        DatabaseReference databaseReference = firebaseDatabase.getReference().child("admin");
         Query queryRef = databaseReference.child("admin").orderByChild("email").equalTo(email);
-        queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        Log.e("EmailToMatch",email);
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             boolean found = false;
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot child : dataSnapshot.getChildren() )
                 {
                     Admin admin = child.getValue(Admin.class);
+//                    Log.e("AdminToMatch",admin.getEmail());
                     if(admin.getEmail().equals(email))
                     {
                         found = true;
