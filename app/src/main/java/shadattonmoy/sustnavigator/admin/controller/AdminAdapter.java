@@ -68,7 +68,8 @@ public class AdminAdapter extends ArrayAdapter<Admin>{
         TextView adminName = (TextView) row.findViewById(R.id.admin_name);
         TextView adminDept = (TextView) row.findViewById(R.id.admin_dept);
         TextView adminRegNo = (TextView) row.findViewById(R.id.admin_regNo);
-        notApprovedMsg = (TextView) row.findViewById(R.id.not_varified_msg);
+        TextView makeSuperAdmin = (TextView) row.findViewById(R.id.make_super_admin);
+        TextView notApprovedMsg = (TextView) row.findViewById(R.id.not_varified_msg);
 
         approveIcon = (ImageView) row.findViewById(R.id.approve_admin);
         removeIcon = (ImageView) row.findViewById(R.id.remove_admin);
@@ -100,6 +101,18 @@ public class AdminAdapter extends ArrayAdapter<Admin>{
             {
                 approveIcon.setVisibility(View.GONE);
                 notApprovedMsg.setVisibility(View.GONE);
+                if(!admin.getEmail().equals(Values.LOGGED_IN_ADMIN.getEmail()))
+                {
+                    makeSuperAdmin.setVisibility(View.VISIBLE);
+                    makeSuperAdmin.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            makeSuperAdmin(id);
+
+                        }
+                    });
+                }
+
             }
             removeIcon.setImageResource(R.drawable.clear_black_24);
             removeIcon.setOnClickListener(new View.OnClickListener() {
@@ -183,6 +196,19 @@ public class AdminAdapter extends ArrayAdapter<Admin>{
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 createAdmin(email,password);
+            }
+        });
+
+    }void makeSuperAdmin(String id)
+    {
+        progressBar.setVisibility(View.VISIBLE);
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference().child("admin").child(id).child("superAdmin");
+        databaseReference.setValue(new Boolean(true)).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Toast.makeText(context,"Super Admin Made",Toast.LENGTH_SHORT).show();
+                progressBar.setVisibility(View.GONE);
             }
         });
 
