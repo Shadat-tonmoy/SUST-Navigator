@@ -9,6 +9,11 @@ public class Dept {
         this.deptCode = deptCode;
     }
 
+    public Dept(String deptTitle, String deptCode) {
+        this.deptTitle = deptTitle;
+        this.deptCode = deptCode;
+    }
+
     public Dept() {
     }
 

@@ -92,7 +92,7 @@ public class SchoolListAdapter extends RecyclerView.Adapter<SchoolListAdapter.My
                     deptCell.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            if(dept.getDeptCode().toLowerCase().equals(Values.LOGGED_IN_ADMIN.getDept().toLowerCase()))
+                            if(dept.getDeptCode().toLowerCase().equals(Values.LOGGED_IN_ADMIN.getDept().toLowerCase()) || Values.LOGGED_IN_ADMIN.isSuperAdmin())
                             {
                                 TeacherFragment teacherFragment = new TeacherFragment(dept);
                                 teacherFragment.setAdmin(true);
@@ -124,7 +124,7 @@ public class SchoolListAdapter extends RecyclerView.Adapter<SchoolListAdapter.My
                 deptCell.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if(dept.getDeptCode().toLowerCase().equals(Values.LOGGED_IN_ADMIN.getDept().toLowerCase()))
+                        if(dept.getDeptCode().toLowerCase().equals(Values.LOGGED_IN_ADMIN.getDept().toLowerCase()) || Values.LOGGED_IN_ADMIN.isSuperAdmin())
                         {
                             SemesterListFragment semesterListFragment = new SemesterListFragment(dept,purpose,session);
                             semesterListFragment.setSyllabusEditable(true);

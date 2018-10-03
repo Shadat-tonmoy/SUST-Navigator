@@ -124,7 +124,7 @@
                             android:layout_marginStart="8dp"
                             android:layout_marginTop="8dp"
                             android:background="@drawable/edit_text_bg"
-                            android:drawableLeft="@drawable/person_black_24"
+                            android:drawableLeft="@drawable/edit_black"
                             android:drawablePadding="8dp"
                             android:ems="10"
                             android:hint="Department Name" />
@@ -132,7 +132,7 @@
                     </android.support.design.widget.TextInputLayout>
 
                     <View
-                        android:id="@+id/teacher_name_divider"
+                        android:id="@+id/dept_name_divider"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginEnd="8dp"
@@ -143,6 +143,42 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/name_layout" />
 
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/code_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/dept_name_divider">
+
+                        <EditText
+                            android:id="@+id/dept_add_code_field"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="8dp"
+                            android:background="@drawable/edit_text_bg"
+                            android:drawableLeft="@drawable/edit_black"
+                            android:drawablePadding="8dp"
+                            android:ems="10"
+                            android:hint="Department Code" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <View
+                        android:id="@+id/dept_code_divider"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:background="?android:attr/listDivider"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/code_layout" />
+
 
                     <LinearLayout
                         android:id="@+id/teacher_designation_layout"
@@ -151,7 +187,7 @@
                         android:orientation="horizontal"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/teacher_name_divider">
+                        app:layout_constraintTop_toBottomOf="@+id/dept_code_divider">
 
                         <ImageView
                             android:layout_width="wrap_content"
@@ -187,7 +223,7 @@
 
 
                     <Button
-                        android:id="@+id/proctor_add_submit_btn"
+                        android:id="@+id/dept_add_submit_btn"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="8dp"
