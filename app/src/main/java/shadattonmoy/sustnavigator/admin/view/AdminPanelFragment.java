@@ -60,33 +60,12 @@ public class AdminPanelFragment extends android.app.Fragment {
         return view;
     }
 
-    public void getCurrentAdmin()
-    {
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference databaseReference = firebaseDatabase.getReference();
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        String email = user.getEmail();
-        Query queryRef = databaseReference.child("admin").orderByChild("email").equalTo(email);
-        queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot child : dataSnapshot.getChildren()) {
-                    Admin admin = child.getValue(Admin.class);
-                    Values.LOGGED_IN_ADMIN = admin;
-                }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getCurrentAdmin();
+        Values.getCurrentAdmin();
         Values.getAdminRequest(context);
     }
 

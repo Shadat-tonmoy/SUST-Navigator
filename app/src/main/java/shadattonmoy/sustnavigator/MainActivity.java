@@ -1,9 +1,11 @@
 package shadattonmoy.sustnavigator;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -39,12 +41,15 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ThrowOnExtraProperties;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import shadattonmoy.sustnavigator.about.AboutActivity;
+import shadattonmoy.sustnavigator.admin.model.Admin;
 import shadattonmoy.sustnavigator.admin.view.AdminFragment;
 import shadattonmoy.sustnavigator.admin.view.AdminManage;
 import shadattonmoy.sustnavigator.admin.view.AdminPanelFragment;
@@ -72,6 +77,8 @@ public class MainActivity extends AppCompatActivity
     private RelativeLayout root;
     private TextView lastModifiedText;
     private LastModified lastModified;
+    private List<Admin> adminRequests;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +88,7 @@ public class MainActivity extends AppCompatActivity
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("SUST Navigator");
         setSupportActionBar(toolbar);
+        context = MainActivity.this;
 
 
         sqLiteAdapter = SQLiteAdapter.getInstance(MainActivity.this);
@@ -140,9 +148,124 @@ public class MainActivity extends AppCompatActivity
         }
 
         getLastModified();
+        getAdminRequest();
 //        addCourse();
     }
     /*end of onCreate Method*/
+
+
+
+    public void getAdminRequest()
+    {
+        Log.e("GetAdminReq","Calling");
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = firebaseDatabase.getReference().child("admin");
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                adminRequests = new ArrayList<>();
+                for(DataSnapshot child : dataSnapshot.getChildren() )
+                {
+                    Admin admin = child.getValue(Admin.class);
+                    String pushId = child.getKey();
+                    admin.setId(pushId);
+                    if(!admin.isVarified())
+                    {
+                        adminRequests.add(admin);
+                    }
+                }
+                if(adminRequests.size()>0)
+                {
+                    Log.e("GetAdminReq","Total Req "+adminRequests.size());
+                    FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+                    DatabaseReference databaseReference = firebaseDatabase.getReference();
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    if(user!=null)
+                    {
+                        String email = user.getEmail();
+                        Query queryRef = databaseReference.child("admin").orderByChild("email").equalTo(email);
+                        queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                                    Admin loggedInAdmin = child.getValue(Admin.class);
+                                    Values.LOGGED_IN_ADMIN = loggedInAdmin;
+                                    if(Values.LOGGED_IN_ADMIN!=null)
+                                    {
+                                        Log.e("GetAdminReq","LoggedInAsAAdmin");
+                                        if(Values.LOGGED_IN_ADMIN.isSuperAdmin())
+                                        {
+                                            Log.e("GetAdminReq","LoggedInAsASuperAdmin");
+                                            showAdminRequestDialog(adminRequests.size());
+                                        }
+                                        else{
+                                            int count = 0;
+                                            for(Admin admin:adminRequests)
+                                            {
+                                                if(admin.getDept().toLowerCase().equals(Values.LOGGED_IN_ADMIN.getDept().toLowerCase()))
+                                                {
+                                                    count++;
+                                                }
+                                            }
+                                            if(count>0)
+                                            {
+                                                showAdminRequestDialog(count);
+                                            }
+                                        }
+
+                                    }
+                                    else
+                                    {
+                                        Log.e("GetAdminReq","CurrentAdminNull");
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+                }
+                else
+                {
+                    Log.e("GetAdminReq","NoNewRequest");
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    private void showAdminRequestDialog(int numOfRequest)
+    {
+        Log.e("GetAdminReq","ShowingDialog");
+        AlertDialog.Builder builder;
+        builder = new AlertDialog.Builder(context);
+        builder.setTitle("New Admin Request!")
+                .setMessage(numOfRequest+" Admin Requests are Pending. Want to approve them?")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        openAdminManageFragment();
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+
+
+
+    }
 
     @Override
     public void onBackPressed() {
@@ -337,6 +460,16 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void openAdminManageFragment(View view) {
+        FragmentManager manager = getFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        AdminManage adminManage = new AdminManage();
+        transaction.replace(R.id.main_content_root, adminManage);
+        transaction.addToBackStack("admin_manage_fragment");
+        transaction.commit();
+
+
+    }
+    public void openAdminManageFragment() {
         FragmentManager manager = getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         AdminManage adminManage = new AdminManage();

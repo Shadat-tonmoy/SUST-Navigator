@@ -2,6 +2,7 @@ package shadattonmoy.sustnavigator.admin.view;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,7 @@ public class AdminManage extends android.app.Fragment {
     private ProgressBar adminLoading;
     private RelativeLayout relativeLayout;
     private View view;
+    private AppBarLayout appBarLayout;
 
     public AdminManage() {
         // Required empty public constructor
@@ -47,6 +49,7 @@ public class AdminManage extends android.app.Fragment {
                              Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragment_admin_manage, container, false);
+        appBarLayout = (AppBarLayout) getActivity().findViewById(R.id.appbar_layout);
         return view;
     }
 
@@ -87,6 +90,8 @@ public class AdminManage extends android.app.Fragment {
 
     void init()
     {
+
+        appBarLayout.setExpanded(false);
         adminArray =  new ArrayList<Admin>();
         adminList = (ListView) view.findViewById(R.id.admin_list);
         adminLoading = (ProgressBar) view.findViewById(R.id.admin_loading);

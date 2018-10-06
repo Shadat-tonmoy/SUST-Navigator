@@ -171,6 +171,32 @@ public class Values {
 
     }
 
+    public static void getCurrentAdmin()
+    {
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = firebaseDatabase.getReference();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user!=null)
+        {
+            String email = user.getEmail();
+            Query queryRef = databaseReference.child("admin").orderByChild("email").equalTo(email);
+            queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot child : dataSnapshot.getChildren()) {
+                        Admin admin = child.getValue(Admin.class);
+                        Values.LOGGED_IN_ADMIN = admin;
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
+    }
+
     public static String getTimeString(long timeStamp)
     {
         Calendar calendar = Calendar.getInstance();
