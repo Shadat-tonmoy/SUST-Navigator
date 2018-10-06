@@ -51,10 +51,13 @@ public class AdminFragment extends android.app.Fragment {
     private TextInputLayout emailLayout, passwordLayout;
     private boolean isValid;
     private CardView loginErrorMsg;
+    private TextView loginErrorText;
     private TextView notAnAdminView, forgetPasswordView;
     private AppBarLayout appBarLayout;
     private FragmentActivity fragmentActivity;
     private AwesomeValidation awesomeValidation;
+    private String email,password;
+    private Admin admin;
 
     public AdminFragment() {
 
@@ -82,6 +85,7 @@ public class AdminFragment extends android.app.Fragment {
         emailLayout = (TextInputLayout) view.findViewById(R.id.login_email_layout);
         passwordLayout = (TextInputLayout) view.findViewById(R.id.login_password_layout);
         loginErrorMsg = (CardView) view.findViewById(R.id.login_error_msg);
+        loginErrorText = (TextView) view.findViewById(R.id.login_error_txt);
         notAnAdminView = (TextView) view.findViewById(R.id.not_an_admint_btn);
         forgetPasswordView = (TextView) view.findViewById(R.id.forget_password_btn);
         appBarLayout = (AppBarLayout) getActivity().findViewById(R.id.appbar_layout);
@@ -155,46 +159,71 @@ public class AdminFragment extends android.app.Fragment {
         loginButton.setClickable(false);
         loginButton.setText("Please wait...");
         loginButton.setBackgroundColor(Color.parseColor("#80CBC4"));
-        String email = loginEmail.getText().toString();
-        String password = loginPassword.getText().toString();
-        firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+        email = loginEmail.getText().toString();
+        password = loginPassword.getText().toString();
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = firebaseDatabase.getReference();
+        Query queryRef = databaseReference.child("admin").orderByChild("email").equalTo(email);
+        queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()) {
-                    FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-                    DatabaseReference databaseReference = firebaseDatabase.getReference();
-                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                    String email = user.getEmail();
-                    Query queryRef = databaseReference.child("admin").orderByChild("email").equalTo(email);
-                    queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            for (DataSnapshot child : dataSnapshot.getChildren()) {
-                                Admin admin = child.getValue(Admin.class);
-                                Values.LOGGED_IN_ADMIN = admin;
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                admin = null;
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    admin = child.getValue(Admin.class);
+                }
+                if(admin!=null)
+                {
+                    if(admin.isVarified())
+                    {
+                        firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    Values.LOGGED_IN_ADMIN = admin;
+                                    android.app.FragmentManager manager = getFragmentManager();
+                                    FragmentTransaction transaction = manager.beginTransaction();
+                                    AdminPanelFragment adminPanelFragment = new AdminPanelFragment();
+                                    transaction.replace(R.id.main_content_root, adminPanelFragment);
+                                    transaction.addToBackStack("admin_panel_fragment");
+                                    transaction.commit();
+
+
+                                } else {
+                                    loginErrorMsg.setVisibility(View.VISIBLE);
+                                    loginErrorText.setText("An error occurred. Please try agai.");
+                                    loginButton.setClickable(true);
+                                    loginButton.setText("LOGIN");
+                                    loginButton.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+
+
+                                }
                             }
-                            android.app.FragmentManager manager = getFragmentManager();
-                            FragmentTransaction transaction = manager.beginTransaction();
-                            AdminPanelFragment adminPanelFragment = new AdminPanelFragment();
-                            transaction.replace(R.id.main_content_root, adminPanelFragment);
-                            transaction.addToBackStack("admin_panel_fragment");
-                            transaction.commit();
-                        }
+                        });
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
-
-
-                } else {
+                    }
+                    else
+                    {
+                        loginErrorMsg.setVisibility(View.VISIBLE);
+                        loginErrorText.setText("Your admin request is pending. Please wait until it is approved.");
+                        loginButton.setClickable(true);
+                        loginButton.setText("LOGIN");
+                        loginButton.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                    }
+                }
+                else
+                {
                     loginErrorMsg.setVisibility(View.VISIBLE);
+                    loginErrorText.setText("Email and/or Password is not correct.");
                     loginButton.setClickable(true);
                     loginButton.setText("LOGIN");
                     loginButton.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
 
                 }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
 
