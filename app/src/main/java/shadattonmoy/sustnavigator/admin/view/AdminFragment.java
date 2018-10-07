@@ -2,6 +2,7 @@ package shadattonmoy.sustnavigator.admin.view;
 
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -22,6 +23,9 @@ import android.widget.TextView;
 
 import com.basgeekball.awesomevalidation.AwesomeValidation;
 import com.basgeekball.awesomevalidation.ValidationStyle;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -58,6 +62,7 @@ public class AdminFragment extends android.app.Fragment {
     private AwesomeValidation awesomeValidation;
     private String email,password;
     private Admin admin;
+    private GoogleApiClient mGoogleApiClient;
 
     public AdminFragment() {
 
@@ -155,6 +160,7 @@ public class AdminFragment extends android.app.Fragment {
     }
 
     void sendLoginRequest() {
+
         loginErrorMsg.setVisibility(View.GONE);
         loginButton.setClickable(false);
         loginButton.setText("Please wait...");

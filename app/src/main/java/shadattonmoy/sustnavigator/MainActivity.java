@@ -33,6 +33,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -153,104 +158,118 @@ public class MainActivity extends AppCompatActivity
     }
     /*end of onCreate Method*/
 
-
-
-    public void getAdminRequest()
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        Log.e("GetAdminReq","Calling");
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference databaseReference = firebaseDatabase.getReference().child("admin");
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                adminRequests = new ArrayList<>();
-                for(DataSnapshot child : dataSnapshot.getChildren() )
-                {
-                    Admin admin = child.getValue(Admin.class);
-                    String pushId = child.getKey();
-                    admin.setId(pushId);
-                    if(!admin.isVarified())
-                    {
-                        adminRequests.add(admin);
-                    }
-                }
-                if(adminRequests.size()>0)
-                {
-                    Log.e("GetAdminReq","Total Req "+adminRequests.size());
-                    FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-                    DatabaseReference databaseReference = firebaseDatabase.getReference();
-                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                    if(user!=null)
-                    {
-                        String email = user.getEmail();
-                        Query queryRef = databaseReference.child("admin").orderByChild("email").equalTo(email);
-                        queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                for (DataSnapshot child : dataSnapshot.getChildren()) {
-                                    Admin loggedInAdmin = child.getValue(Admin.class);
-                                    Values.LOGGED_IN_ADMIN = loggedInAdmin;
-                                    if(Values.LOGGED_IN_ADMIN!=null)
-                                    {
-                                        Log.e("GetAdminReq","LoggedInAsAAdmin");
-                                        if(Values.LOGGED_IN_ADMIN.isSuperAdmin())
-                                        {
-                                            Log.e("GetAdminReq","LoggedInAsASuperAdmin");
-                                            showAdminRequestDialog(adminRequests.size());
-                                        }
-                                        else{
-                                            int count = 0;
-                                            for(Admin admin:adminRequests)
-                                            {
-                                                if(admin.getDept().toLowerCase().equals(Values.LOGGED_IN_ADMIN.getDept().toLowerCase()))
-                                                {
-                                                    count++;
-                                                }
-                                            }
-                                            if(count>0)
-                                            {
-                                                showAdminRequestDialog(count);
-                                            }
-                                        }
-
-                                    }
-                                    else
-                                    {
-                                        Log.e("GetAdminReq","CurrentAdminNull");
-                                    }
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                            }
-                        });
-                    }
-                }
-                else
-                {
-                    Log.e("GetAdminReq","NoNewRequest");
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Values.REQUEST_CODE_SIGN_IN)
+        {
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            handleSignInResult(task);
+        }
 
     }
 
-    private void showAdminRequestDialog(int numOfRequest)
-    {
-        Log.e("GetAdminReq","ShowingDialog");
+    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
+        try {
+            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+
+            Values.showToast(context,account.getEmail()+" is signed in");
+            Log.e("SignIn", account.getEmail()+" is signed in");
+        } catch (ApiException e) {
+            // The ApiException status code indicates the detailed failure reason.
+            // Please refer to the GoogleSignInStatusCodes class reference for more information.
+            Log.e("Error", "signInResult:failed code=" + e.getMessage());
+//            updateUI(null);
+        }
+    }
+
+
+
+
+    public void getAdminRequest() {
+        if (isNetworkAvailable()) {
+            FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+            DatabaseReference databaseReference = firebaseDatabase.getReference().child("admin");
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    adminRequests = new ArrayList<>();
+                    for (DataSnapshot child : dataSnapshot.getChildren()) {
+                        Admin admin = child.getValue(Admin.class);
+                        String pushId = child.getKey();
+                        admin.setId(pushId);
+                        if (!admin.isVarified()) {
+                            adminRequests.add(admin);
+                        }
+                    }
+                    if (adminRequests.size() > 0) {
+                        Log.e("GetAdminReq", "Total Req " + adminRequests.size());
+                        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+                        DatabaseReference databaseReference = firebaseDatabase.getReference();
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        if (user != null) {
+                            String email = user.getEmail();
+                            Query queryRef = databaseReference.child("admin").orderByChild("email").equalTo(email);
+                            queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    for (DataSnapshot child : dataSnapshot.getChildren()) {
+                                        Admin loggedInAdmin = child.getValue(Admin.class);
+                                        Values.LOGGED_IN_ADMIN = loggedInAdmin;
+                                        if (Values.LOGGED_IN_ADMIN != null) {
+                                            Log.e("GetAdminReq", "LoggedInAsAAdmin");
+                                            if (Values.LOGGED_IN_ADMIN.isSuperAdmin()) {
+                                                Log.e("GetAdminReq", "LoggedInAsASuperAdmin");
+                                                showAdminRequestDialog(adminRequests.size());
+                                            } else {
+                                                int count = 0;
+                                                for (Admin admin : adminRequests) {
+                                                    if (admin.getDept().toLowerCase().equals(Values.LOGGED_IN_ADMIN.getDept().toLowerCase())) {
+                                                        count++;
+                                                    }
+                                                }
+                                                if (count > 0) {
+                                                    showAdminRequestDialog(count);
+                                                }
+                                            }
+
+                                        } else {
+                                            Log.e("GetAdminReq", "CurrentAdminNull");
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+                        }
+                    } else {
+                        Log.e("GetAdminReq", "NoNewRequest");
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+        }
+
+
+    }
+
+    private void showAdminRequestDialog(int numOfRequest) {
+        Log.e("GetAdminReq", "ShowingDialog");
         AlertDialog.Builder builder;
         builder = new AlertDialog.Builder(context);
         builder.setTitle("New Admin Request!")
-                .setMessage(numOfRequest+" Admin Requests are Pending. Want to approve them?")
+                .setMessage(numOfRequest + " Admin Requests are Pending. Want to approve them?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         openAdminManageFragment();
@@ -262,7 +281,6 @@ public class MainActivity extends AppCompatActivity
                     }
                 })
                 .show();
-
 
 
     }
@@ -469,6 +487,7 @@ public class MainActivity extends AppCompatActivity
 
 
     }
+
     public void openAdminManageFragment() {
         FragmentManager manager = getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();

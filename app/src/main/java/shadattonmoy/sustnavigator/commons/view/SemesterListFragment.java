@@ -3,12 +3,19 @@ package shadattonmoy.sustnavigator.commons.view;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.SearchView;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -16,9 +23,21 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.drive.Drive;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -59,6 +78,9 @@ public class SemesterListFragment extends android.app.Fragment {
     private FloatingActionButton semesterAddFab;
     private boolean actAsAdminFlag = false;
     private FragmentActivity activity;
+    private GoogleSignInClient googleSignInClient;
+    private GoogleApiClient mGoogleApiClient;
+    private MenuItem signOutMenu;
 
     @Override
     public void onAttach(Context context) {
@@ -106,6 +128,7 @@ public class SemesterListFragment extends android.app.Fragment {
         loadFromServer();
         if(purpose.equals("cgpa"))
         {
+            setHasOptionsMenu(true);
             semesterList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -383,5 +406,108 @@ public class SemesterListFragment extends android.app.Fragment {
         transaction.addToBackStack("semester_add_fragment");
         transaction.commit();
 
+    }
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.cgpa_backup_menu, menu);
+        signOutMenu = menu.findItem(R.id.sign_out);
+        if(!isSignedIn())
+            signOutMenu.setVisible(false);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.backup_data:
+                Toast.makeText(getActivity(),
+                        "Backup Data",
+                        Toast.LENGTH_SHORT).show();
+                startBackupProcess();
+                return true;
+            case R.id.restore_data:
+                Toast.makeText(getActivity(),
+                        "Restore Data",
+                        Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.sign_out:
+                signOut();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void startBackupProcess()
+    {
+        if(Values.isNetworkAvailable(context))
+        {
+            checkForSignIn();
+        }
+        else {
+            Values.showToast(context,"No Internet Connection");
+        }
+
+
+
+    }
+
+    private void checkForSignIn() {
+        if(!isSignedIn())
+        {
+            GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestEmail()
+                    .build();
+            mGoogleApiClient = new GoogleApiClient.Builder(context)
+                    .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                    .build();
+            Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+            getActivity().startActivityForResult(signInIntent, Values.REQUEST_CODE_SIGN_IN);
+            signOutMenu.setVisible(true);
+        }
+
+    }
+    private boolean isSignedIn() {
+        return GoogleSignIn.getLastSignedInAccount(context) != null;
+    }
+
+    private void signOut()
+    {
+        if(isSignedIn())
+        {
+
+            try{
+                GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                        .requestEmail()
+                        .build();
+
+                mGoogleApiClient = new GoogleApiClient.Builder(context)
+                        .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                        .build();
+                mGoogleApiClient.connect();
+                PendingResult<Status> result = Auth.GoogleSignInApi.signOut(mGoogleApiClient);
+                result.addStatusListener(new PendingResult.StatusListener() {
+                    @Override
+                    public void onComplete(Status status) {
+                        handleSignOutResult();
+
+                    }
+                });
+
+            }catch (Exception e)
+            {
+
+            }
+
+        }
+
+    }
+
+    private void handleSignOutResult() {
+        Values.showToast(context,"You are signed out");
+        signOutMenu.setVisible(false);
     }
 }

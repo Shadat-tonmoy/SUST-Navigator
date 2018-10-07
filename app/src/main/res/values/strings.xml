@@ -85,4 +85,7 @@
 
     <string name="act_as_admin">Admin is not listening? Try as Local Admin</string>
     <string name="tap_to_add_semester">Tap the + Button to add new semeser</string>
+    <string name="create_backup">Backup Data To Cloud</string>
+    <string name="restore_backup">Restore Data From Cloud</string>
+    <string name="sign_out">Sign Out</string>
 </resources>
