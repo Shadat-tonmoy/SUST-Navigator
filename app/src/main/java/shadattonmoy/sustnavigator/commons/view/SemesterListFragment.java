@@ -82,7 +82,7 @@ public class SemesterListFragment extends android.app.Fragment {
     private FragmentActivity activity;
     private GoogleSignInClient googleSignInClient;
     private GoogleApiClient mGoogleApiClient;
-    private MenuItem signOutMenu;
+    public static MenuItem signOutMenu;
 
     @Override
     public void onAttach(Context context) {
@@ -258,6 +258,7 @@ public class SemesterListFragment extends android.app.Fragment {
             nothingFoundImage.setVisibility(View.VISIBLE);
             nothingFoundText.setVisibility(View.VISIBLE);
             actAsAdmin.setVisibility(View.GONE);
+            semesterList.setVisibility(View.GONE);
             nothingFoundText.setText("No Records found on local database Tap the + button to add. It will be saved only in your phone");
             try{
                 Glide.with(context).load(context.getResources()
@@ -469,7 +470,7 @@ public class SemesterListFragment extends android.app.Fragment {
                 public void run() {
                     progressDialog.dismiss();
                 }
-            }, 2000);
+            }, 1000);
             GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                     .requestEmail()
                     .build();
@@ -478,7 +479,6 @@ public class SemesterListFragment extends android.app.Fragment {
                     .build();
             Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
             getActivity().startActivityForResult(signInIntent, Values.REQUEST_CODE_SIGN_IN);
-            signOutMenu.setVisible(true);
 
         }
 

@@ -58,6 +58,7 @@ import shadattonmoy.sustnavigator.admin.model.Admin;
 import shadattonmoy.sustnavigator.admin.view.AdminFragment;
 import shadattonmoy.sustnavigator.admin.view.AdminManage;
 import shadattonmoy.sustnavigator.admin.view.AdminPanelFragment;
+import shadattonmoy.sustnavigator.commons.view.SemesterListFragment;
 import shadattonmoy.sustnavigator.dept.view.DeptFragment;
 import shadattonmoy.sustnavigator.help.HelpActivity;
 import shadattonmoy.sustnavigator.holiday.view.HolidaysFragment;
@@ -175,6 +176,7 @@ public class MainActivity extends AppCompatActivity
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
 
             Values.showToast(context,account.getEmail()+" is signed in");
+            SemesterListFragment.signOutMenu.setVisible(true);
             Log.e("SignIn", account.getEmail()+" is signed in");
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
