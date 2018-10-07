@@ -2,9 +2,11 @@ package shadattonmoy.sustnavigator.commons.view;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentActivity;
@@ -458,6 +460,16 @@ public class SemesterListFragment extends android.app.Fragment {
     private void checkForSignIn() {
         if(!isSignedIn())
         {
+            final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+            progressDialog.setTitle("Please Wait");
+            progressDialog.setMessage("Wait Until Sign in is ready");
+            progressDialog.show();
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                public void run() {
+                    progressDialog.dismiss();
+                }
+            }, 2000);
             GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                     .requestEmail()
                     .build();
@@ -467,6 +479,7 @@ public class SemesterListFragment extends android.app.Fragment {
             Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
             getActivity().startActivityForResult(signInIntent, Values.REQUEST_CODE_SIGN_IN);
             signOutMenu.setVisible(true);
+
         }
 
     }
@@ -480,6 +493,7 @@ public class SemesterListFragment extends android.app.Fragment {
         {
 
             try{
+                handleSignOutResult();
                 GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                         .requestEmail()
                         .build();
@@ -492,7 +506,6 @@ public class SemesterListFragment extends android.app.Fragment {
                 result.addStatusListener(new PendingResult.StatusListener() {
                     @Override
                     public void onComplete(Status status) {
-                        handleSignOutResult();
 
                     }
                 });
