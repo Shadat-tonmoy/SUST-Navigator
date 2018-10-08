@@ -51,6 +51,7 @@ public class Values {
     public static final int REQUEST_CODE_SIGN_IN_FOR_BACKUP = 1;
     public static final int REQUEST_CODE_SIGN_IN_FOR_RESTORE = 2;
     public static final String GITHUB_LINK = "https://github.com/Shadat-tonmoy/SUST-Navigator";
+    public static final String DATABASE_NAME = "sust_nav_database";
     public static final String DEV_GITHUB_LINK = "https://github.com/Shadat-tonmoy/";
     public static final String DEV_FB_LINK = "https://www.facebook.com/shadat.tonmoy";
     public static final String DEV_LINKEDIN_LINK = "https://www.linkedin.com/in/shadat-tonmoy-06266b27/";

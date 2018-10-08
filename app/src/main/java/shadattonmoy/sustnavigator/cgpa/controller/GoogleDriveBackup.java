@@ -19,6 +19,8 @@ import com.google.android.gms.drive.DriveFile;
 import com.google.android.gms.drive.DriveFolder;
 import com.google.android.gms.drive.DriveId;
 import com.google.android.gms.drive.DriveResourceClient;
+import com.google.android.gms.drive.Metadata;
+import com.google.android.gms.drive.MetadataBuffer;
 import com.google.android.gms.drive.MetadataChangeSet;
 import com.google.android.gms.drive.OpenFileActivityOptions;
 import com.google.android.gms.drive.query.Filters;
@@ -30,6 +32,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
 
+import org.apache.commons.io.IOUtils;
+
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
@@ -53,6 +59,13 @@ public class GoogleDriveBackup {
 
     public void saveDBToDrive()
     {
+        String dbname = Values.DATABASE_NAME;
+        File database = context.getDatabasePath(dbname);
+        if(database!=null)
+        {
+            Log.e("DatabasePath",database.getAbsolutePath()+" "+database.getName());
+        }
+        else Log.e("DatabasePath","Null");
         String packageName = context.getPackageName();
         driveResourceClient = Drive.getDriveResourceClient(context, signInAccount);
         driveClient = Drive.getDriveClient(context, signInAccount);
@@ -63,16 +76,13 @@ public class GoogleDriveBackup {
                     DriveFolder parent = appFolderTask.getResult();
                     DriveContents contents = createContentsTask.getResult();
                     OutputStream outputStream = contents.getOutputStream();
-                    try (Writer writer = new OutputStreamWriter(outputStream)) {
-                        writer.write("Hello World!");
-                    }
-
+                    FileInputStream fileInputStream = new FileInputStream(database);
+                    IOUtils.copy(fileInputStream, outputStream);
                     MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
-                            .setTitle("SUSTNAVFILE")
+                            .setTitle("sust_nav_backup")
                             .setMimeType("text/plain")
                             .setStarred(true)
                             .build();
-
                     return driveResourceClient.createFile(parent, changeSet, contents);
                 })
                 .addOnSuccessListener(new OnSuccessListener<DriveFile>() {
@@ -86,6 +96,7 @@ public class GoogleDriveBackup {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Values.showToast(context,"Error Saving File");
+                        Log.e("Error",e.getMessage());
                     }
                 });
     }
@@ -95,9 +106,39 @@ public class GoogleDriveBackup {
         String packageName = context.getPackageName();
         driveResourceClient = Drive.getDriveResourceClient(context, signInAccount);
         final Task<DriveFolder> appFolderTask = driveResourceClient.getAppFolder();
-        Tasks.whenAll(appFolderTask)
+        Tasks.whenAll(appFolderTask).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                DriveFolder parent = appFolderTask.getResult();
+                Log.e("DriveFolder",parent.getDriveId().asDriveFolder().toString());
+                Task<MetadataBuffer> files = driveResourceClient.listChildren(parent);
+                files.addOnSuccessListener(new OnSuccessListener<MetadataBuffer>() {
+                    @Override
+                    public void onSuccess(MetadataBuffer metadatas) {
+                        for(Metadata metadata:metadatas)
+                        {
+                            Log.e("Files are ",metadata.getOriginalFilename()+"."+metadata.getFileExtension());
+                        }
+                    }
+                });
+
+            }
+        });
+
+        /*Tasks.whenAll(appFolderTask)
                 .continueWithTask(task -> {
                     DriveFolder parent = appFolderTask.getResult();
+                    Log.e("DriveFolder",parent.getDriveId().asDriveFolder().toString());
+                    Task<MetadataBuffer> files = driveResourceClient.listChildren(parent);
+                    files.addOnSuccessListener(new OnSuccessListener<MetadataBuffer>() {
+                        @Override
+                        public void onSuccess(MetadataBuffer metadatas) {
+                            for(Metadata metadata:metadatas)
+                            {
+                                Log.e("Files are ",metadata.getOriginalFilename()+"."+metadata.getFileExtension());
+                            }
+                        }
+                    });
                     return driveResourceClient.openFile(parent.getDriveId().asDriveFile(),DriveFile.MODE_READ_ONLY);
                 })
                 .addOnSuccessListener(new OnSuccessListener<DriveContents>() {
@@ -114,6 +155,6 @@ public class GoogleDriveBackup {
                         Values.showToast(context,"Error Saving File");
                         Log.e("Error",e.getMessage());
                     }
-                });
+                });*/
     }
 }

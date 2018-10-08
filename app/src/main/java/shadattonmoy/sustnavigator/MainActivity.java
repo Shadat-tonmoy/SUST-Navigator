@@ -50,6 +50,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ThrowOnExtraProperties;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,6 +98,12 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         context = MainActivity.this;
 
+        String dbname = Values.DATABASE_NAME;
+        File database = context.getDatabasePath(dbname);
+        if(database!=null)
+        {
+            Log.e("DatabasePath",database.getAbsolutePath()+" "+database.getName());
+        }
 
         sqLiteAdapter = SQLiteAdapter.getInstance(MainActivity.this);
         firebaseAuth = FirebaseAuth.getInstance();
