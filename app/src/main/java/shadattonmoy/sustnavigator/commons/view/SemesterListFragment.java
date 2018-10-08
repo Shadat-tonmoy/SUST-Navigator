@@ -51,6 +51,7 @@ import java.util.List;
 
 import shadattonmoy.sustnavigator.SQLiteAdapter;
 import shadattonmoy.sustnavigator.admin.view.SemesterAddFragment;
+import shadattonmoy.sustnavigator.cgpa.controller.GoogleDriveBackup;
 import shadattonmoy.sustnavigator.cgpa.view.CGPAFragment;
 import shadattonmoy.sustnavigator.Course;
 import shadattonmoy.sustnavigator.R;
@@ -429,9 +430,10 @@ public class SemesterListFragment extends android.app.Fragment {
                 Toast.makeText(getActivity(),
                         "Backup Data",
                         Toast.LENGTH_SHORT).show();
-                startBackupProcess();
+                startBackupProcess(true);
                 return true;
             case R.id.restore_data:
+                startBackupProcess(false);
                 Toast.makeText(getActivity(),
                         "Restore Data",
                         Toast.LENGTH_SHORT).show();
@@ -444,11 +446,24 @@ public class SemesterListFragment extends android.app.Fragment {
         }
     }
 
-    private void startBackupProcess()
+    private void startBackupProcess(boolean toBackup)
     {
         if(Values.isNetworkAvailable(context))
         {
-            checkForSignIn();
+            checkForSignIn(toBackup);
+        }
+        else {
+            Values.showToast(context,"No Internet Connection");
+        }
+
+
+
+    }
+    private void startRestoreProcess()
+    {
+        if(Values.isNetworkAvailable(context))
+        {
+            checkForSignIn(false);
         }
         else {
             Values.showToast(context,"No Internet Connection");
@@ -458,7 +473,7 @@ public class SemesterListFragment extends android.app.Fragment {
 
     }
 
-    private void checkForSignIn() {
+    private void checkForSignIn(boolean toBackup) {
         if(!isSignedIn())
         {
             final ProgressDialog progressDialog = new ProgressDialog(getActivity());
@@ -473,13 +488,21 @@ public class SemesterListFragment extends android.app.Fragment {
             }, 1000);
             GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                     .requestEmail()
+                    .requestScopes(Drive.SCOPE_APPFOLDER,Drive.SCOPE_FILE)
                     .build();
             mGoogleApiClient = new GoogleApiClient.Builder(context)
                     .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                     .build();
             Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-            getActivity().startActivityForResult(signInIntent, Values.REQUEST_CODE_SIGN_IN);
-
+            if(toBackup)
+                getActivity().startActivityForResult(signInIntent, Values.REQUEST_CODE_SIGN_IN_FOR_BACKUP);
+            else getActivity().startActivityForResult(signInIntent, Values.REQUEST_CODE_SIGN_IN_FOR_RESTORE);
+        }
+        else {
+            GoogleDriveBackup googleDriveBackup = new GoogleDriveBackup(context,GoogleSignIn.getLastSignedInAccount(context));
+            if(toBackup)
+                googleDriveBackup.saveDBToDrive();
+            else googleDriveBackup.readDBFromDrive();
         }
 
     }

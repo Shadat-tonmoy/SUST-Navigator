@@ -58,6 +58,7 @@ import shadattonmoy.sustnavigator.admin.model.Admin;
 import shadattonmoy.sustnavigator.admin.view.AdminFragment;
 import shadattonmoy.sustnavigator.admin.view.AdminManage;
 import shadattonmoy.sustnavigator.admin.view.AdminPanelFragment;
+import shadattonmoy.sustnavigator.cgpa.controller.GoogleDriveBackup;
 import shadattonmoy.sustnavigator.commons.view.SemesterListFragment;
 import shadattonmoy.sustnavigator.dept.view.DeptFragment;
 import shadattonmoy.sustnavigator.help.HelpActivity;
@@ -163,20 +164,28 @@ public class MainActivity extends AppCompatActivity
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Values.REQUEST_CODE_SIGN_IN)
+        Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+        if (requestCode == Values.REQUEST_CODE_SIGN_IN_FOR_BACKUP)
         {
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            handleSignInResult(task);
+            startTask(task,true);
         }
+        else if (requestCode == Values.REQUEST_CODE_SIGN_IN_FOR_RESTORE)
+        {
+            startTask(task,false);
+        }
+
 
     }
 
-    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
+    private void startTask(Task<GoogleSignInAccount> completedTask,boolean toBackup) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-
             Values.showToast(context,account.getEmail()+" is signed in");
             SemesterListFragment.signOutMenu.setVisible(true);
+            GoogleDriveBackup googleDriveBackup = new GoogleDriveBackup(context,account);
+            if(toBackup)
+                googleDriveBackup.saveDBToDrive();
+            else googleDriveBackup.readDBFromDrive();
             Log.e("SignIn", account.getEmail()+" is signed in");
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
