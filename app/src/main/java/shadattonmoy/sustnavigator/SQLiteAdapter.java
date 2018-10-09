@@ -237,7 +237,7 @@ public class SQLiteAdapter {
     public class SQLiteHelper extends SQLiteOpenHelper{
 
         static final String DB_NAME = "sust_nav_database";
-        static final int DB_VERSION = 21;
+        static final int DB_VERSION = 22;
         static final String TABLE_NAME = "cgpa";
         static final String COURSE = "course";
         static final String ID = "_id";

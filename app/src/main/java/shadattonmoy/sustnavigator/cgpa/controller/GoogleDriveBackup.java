@@ -36,6 +36,9 @@ import org.apache.commons.io.IOUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
@@ -117,6 +120,24 @@ public class GoogleDriveBackup {
                     public void onSuccess(MetadataBuffer metadatas) {
                         for(Metadata metadata:metadatas)
                         {
+                            DriveFile driveFile = metadata.getDriveId().asDriveFile();
+                            driveResourceClient.openFile(driveFile,DriveFile.MODE_READ_ONLY).addOnSuccessListener(new OnSuccessListener<DriveContents>() {
+                                @Override
+                                public void onSuccess(DriveContents driveContents) {
+                                    InputStream inputStream = driveContents.getInputStream();
+                                    int i;
+                                    try {
+                                        while((i = inputStream.read())!=-1) {
+                                            char c = (char)i;
+                                            Log.e("Char",c+"");
+                                        }
+                                    }catch (Exception e)
+                                    {
+
+                                    }
+
+                                }
+                            });
                             Log.e("Files are ",metadata.getOriginalFilename()+"."+metadata.getFileExtension());
                         }
                     }
