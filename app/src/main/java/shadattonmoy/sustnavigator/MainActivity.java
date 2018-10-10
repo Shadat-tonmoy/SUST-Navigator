@@ -67,6 +67,7 @@ import shadattonmoy.sustnavigator.holiday.view.HolidaysFragment;
 import shadattonmoy.sustnavigator.mlkit.CameraActivity;
 import shadattonmoy.sustnavigator.proctor.view.ProctorialBodyFragment;
 import shadattonmoy.sustnavigator.school.model.School;
+import shadattonmoy.sustnavigator.utils.DataBaseHelper;
 import shadattonmoy.sustnavigator.utils.DummyValues;
 import shadattonmoy.sustnavigator.utils.LastModified;
 import shadattonmoy.sustnavigator.utils.Values;
@@ -107,6 +108,8 @@ public class MainActivity extends AppCompatActivity
 
         sqLiteAdapter = SQLiteAdapter.getInstance(MainActivity.this);
         firebaseAuth = FirebaseAuth.getInstance();
+
+        DataBaseHelper dataBaseHelper = new DataBaseHelper(context);
 
 
         final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
