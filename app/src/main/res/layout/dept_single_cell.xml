@@ -22,7 +22,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/round"
+            android:background="@drawable/round_carrot3"
             android:gravity="center"
             android:text="CSE"
             android:textStyle="bold"
@@ -32,17 +32,18 @@
 
         <TextView
             android:id="@+id/dept_title"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="64dp"
+            android:layout_marginLeft="64dp"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
             android:text="Computer Science and Engineering"
-            android:textAlignment="center"
             android:textColor="@color/textBlack"
-            android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="@+id/dept_code"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/dept_code"
             app:layout_constraintTop_toTopOf="parent" />
 

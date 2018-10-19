@@ -164,9 +164,44 @@ public class TeacherFragment extends android.app.Fragment {
 
                 } else {
                     setHasOptionsMenu(false);
+                    if (isAdmin) {
+                        addMoreTeacherFab.setVisibility(View.VISIBLE);
+                        addMoreTeacherFab.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                android.app.FragmentManager manager = getFragmentManager();
+                                android.app.FragmentTransaction transaction = manager.beginTransaction();
+                                TeacherAddFragment teacherAddFragment = new TeacherAddFragment(dept.getDeptCode());
+                                transaction.replace(R.id.main_content_root, teacherAddFragment);
+                                transaction.addToBackStack("teacher_add_fragment");
+                                transaction.commit();
+                            }
+                        });
+                        /*teacherListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+
+                            @Override
+                            public void onScrollStateChanged(AbsListView absListView, int scrollState) {
+                                if(scrollState == SCROLL_STATE_IDLE){
+                                    addMoreTeacherFab.animate().cancel();
+                                    addMoreTeacherFab.setVisibility(View.GONE);
+                                }else{
+                                    addMoreTeacherFab.animate().cancel();
+                                    addMoreTeacherFab.setVisibility(View.VISIBLE);
+                                }
+                            }
+
+                            @Override
+                            public void onScroll(AbsListView absListView, int i, int i1, int i2) {
+
+                            }
+                        });*/
+
+                    }
                     nothingFoundImage.setVisibility(View.VISIBLE);
                     nothingFoundText.setVisibility(View.VISIBLE);
-                    nothingFoundText.setText("Sorry!! No Records found for " + dept.getDeptTitle() + "Please Contact Admin");
+                    if(isAdmin)
+                        nothingFoundText.setText("Sorry!! No Records found for " + dept.getDeptTitle() + "Tap the '+' Button to add");
+                    else nothingFoundText.setText("Sorry!! No Records found for " + dept.getDeptTitle() + "Please Contact Admin");
                     try {
                         Glide.with(context).load(context.getResources()
                                 .getIdentifier("nothing_found", "drawable", context.getPackageName())).thumbnail(0.5f)

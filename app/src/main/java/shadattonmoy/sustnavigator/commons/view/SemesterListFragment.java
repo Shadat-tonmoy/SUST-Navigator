@@ -349,14 +349,19 @@ public class SemesterListFragment extends android.app.Fragment {
                 {
                     nothingFoundImage.setVisibility(View.VISIBLE);
                     nothingFoundText.setVisibility(View.VISIBLE);
-                    actAsAdmin.setVisibility(View.VISIBLE);
-                    actAsAdmin.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            handleActAsAdmin();
-                        }
-                    });
-                    nothingFoundText.setText("No Records found for "+dept.getDeptTitle()+"  of "+session+" Session. Please Contact Admin");
+                    if(!isSyllabusEditable)
+                    {
+                        actAsAdmin.setVisibility(View.VISIBLE);
+                        actAsAdmin.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                handleActAsAdmin();
+                            }
+                        });
+                    }
+                    if(isSyllabusEditable)
+                        nothingFoundText.setText("No Records found for "+dept.getDeptTitle()+"  of "+session+" Session. Tap the '+' Button to add");
+                    else nothingFoundText.setText("No Records found for "+dept.getDeptTitle()+"  of "+session+" Session. Please Contact Admin");
                     try{
                         Glide.with(context).load(context.getResources()
                                 .getIdentifier("nothing_found", "drawable", context.getPackageName())).thumbnail(0.5f)
