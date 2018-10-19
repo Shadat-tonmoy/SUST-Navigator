@@ -427,16 +427,10 @@ public class SemesterListFragment extends android.app.Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.backup_data:
-                Toast.makeText(getActivity(),
-                        "Backup Data",
-                        Toast.LENGTH_SHORT).show();
                 startBackupProcess(true);
                 return true;
             case R.id.restore_data:
                 startBackupProcess(false);
-                Toast.makeText(getActivity(),
-                        "Restore Data",
-                        Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.sign_out:
                 signOut();
@@ -455,22 +449,6 @@ public class SemesterListFragment extends android.app.Fragment {
         else {
             Values.showToast(context,"No Internet Connection");
         }
-
-
-
-    }
-    private void startRestoreProcess()
-    {
-        if(Values.isNetworkAvailable(context))
-        {
-            checkForSignIn(false);
-        }
-        else {
-            Values.showToast(context,"No Internet Connection");
-        }
-
-
-
     }
 
     private void checkForSignIn(boolean toBackup) {
@@ -499,10 +477,10 @@ public class SemesterListFragment extends android.app.Fragment {
             else getActivity().startActivityForResult(signInIntent, Values.REQUEST_CODE_SIGN_IN_FOR_RESTORE);
         }
         else {
-            GoogleDriveBackup googleDriveBackup = new GoogleDriveBackup(context,GoogleSignIn.getLastSignedInAccount(context));
+            GoogleDriveBackup googleDriveBackup = new GoogleDriveBackup(context,GoogleSignIn.getLastSignedInAccount(context),activity);
             if(toBackup)
-                googleDriveBackup.saveDBToDrive();
-            else googleDriveBackup.readDBFromDrive();
+                googleDriveBackup.startBackupTask();
+            else googleDriveBackup.startRestoreTask();
         }
 
     }

@@ -1,9 +1,13 @@
 package shadattonmoy.sustnavigator.cgpa.controller;
 
+import android.app.ProgressDialog;
+import android.content.AsyncQueryHandler;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -42,12 +46,14 @@ public class GoogleDriveBackup {
     private DriveResourceClient driveResourceClient;
     private DriveClient driveClient;
     private TaskCompletionSource mOpenItemTaskSource;
+    private FragmentActivity activity;
     protected static final int REQUEST_CODE_OPEN_ITEM = 1;
 
 
-    public GoogleDriveBackup(Context context,GoogleSignInAccount signInAccount) {
+    public GoogleDriveBackup(Context context,GoogleSignInAccount signInAccount,FragmentActivity activity) {
         this.context = context;
         this.signInAccount = signInAccount;
+        this.activity = activity;
     }
 
     public void saveDBToDrive()
@@ -55,22 +61,6 @@ public class GoogleDriveBackup {
         deleteExistingFiles();
         String dbname = Values.DATABASE_NAME;
         File database = context.getDatabasePath(dbname);
-        try (BufferedReader br = new BufferedReader(new FileReader(database))) {
-
-            String sCurrentLine;
-            while ((sCurrentLine = br.readLine()) != null) {
-                Log.e("ReadingDB",sCurrentLine);
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        if(database!=null)
-        {
-            Log.e("DatabasePath",database.getAbsolutePath()+" "+database.getName());
-        }
-        else Log.e("DatabasePath","Null");
         String packageName = context.getPackageName();
         driveResourceClient = Drive.getDriveResourceClient(context, signInAccount);
         driveClient = Drive.getDriveClient(context, signInAccount);
@@ -79,7 +69,7 @@ public class GoogleDriveBackup {
         Tasks.whenAll(appFolderTask, createContentsTask)
                 .continueWithTask(task -> {
                     DriveFolder parent = appFolderTask.getResult();
-                    Log.e("ParentFolder",parent.getDriveId()+"");
+//                    Log.e("ParentFolder",parent.getDriveId()+"");
 
                     DriveContents contents = createContentsTask.getResult();
                     OutputStream outputStream = contents.getOutputStream();
@@ -95,7 +85,6 @@ public class GoogleDriveBackup {
                 .addOnSuccessListener(new OnSuccessListener<DriveFile>() {
                     @Override
                     public void onSuccess(DriveFile driveFile) {
-                        Values.showToast(context,"Data Backup Successfully");
 
                     }
                 })
@@ -117,22 +106,22 @@ public class GoogleDriveBackup {
             @Override
             public void onSuccess(Void aVoid) {
                 DriveFolder parent = appFolderTask.getResult();
-                Log.e("DriveFolder",parent.getDriveId().asDriveFolder().toString());
+//                Log.e("DriveFolder",parent.getDriveId().asDriveFolder().toString());
                 Task<MetadataBuffer> files = driveResourceClient.listChildren(parent);
                 files.addOnSuccessListener(new OnSuccessListener<MetadataBuffer>() {
                     @Override
                     public void onSuccess(MetadataBuffer metadatas) {
-                        Log.e("ReadingData","Success "+metadatas.toString());
+//                        Log.e("ReadingData","Success "+metadatas.toString());
                         for(Metadata metadata:metadatas)
                         {
                             DriveFile driveFile = metadata.getDriveId().asDriveFile();
                             driveResourceClient.delete(driveFile).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
-                                    Log.e("Deleting","AllFiles");
+//                                    Log.e("Deleting","AllFiles");
                                 }
                             });
-                            Log.e("Files are ",metadata.getOriginalFilename()+"."+metadata.getFileExtension());
+//                            Log.e("Files are ",metadata.getOriginalFilename()+"."+metadata.getFileExtension());
                         }
                     }
                 });
@@ -140,7 +129,7 @@ public class GoogleDriveBackup {
                 files.addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.e("DeletingFalied",e.getMessage());
+//                        Log.e("DeletingFalied",e.getMessage());
                     }
                 });
 
@@ -156,12 +145,12 @@ public class GoogleDriveBackup {
             @Override
             public void onSuccess(Void aVoid) {
                 DriveFolder parent = appFolderTask.getResult();
-                Log.e("DriveFolder",parent.getDriveId().asDriveFolder().toString());
+//                Log.e("DriveFolder",parent.getDriveId().asDriveFolder().toString());
                 Task<MetadataBuffer> files = driveResourceClient.listChildren(parent);
                 files.addOnSuccessListener(new OnSuccessListener<MetadataBuffer>() {
                     @Override
                     public void onSuccess(MetadataBuffer metadatas) {
-                        Log.e("ReadingData","Success "+metadatas.toString());
+//                        Log.e("ReadingData","Success "+metadatas.toString());
                         for(Metadata metadata:metadatas)
                         {
                             DriveFile driveFile = metadata.getDriveId().asDriveFile();
@@ -176,7 +165,7 @@ public class GoogleDriveBackup {
                                     }
                                 }
                             });
-                            Log.e("Files are ",metadata.getOriginalFilename()+"."+metadata.getFileExtension());
+//                            Log.e("Files are ",metadata.getOriginalFilename()+"."+metadata.getFileExtension());
                         }
                     }
                 });
@@ -221,7 +210,7 @@ public class GoogleDriveBackup {
 
             SQLiteDatabase dbFromCloud = SQLiteDatabase.openOrCreateDatabase(file, null);
             copyData(dbFromCloud);
-            Log.e("TMPDB",context.getDatabasePath(Values.DATABASE_NAME + "_tmp.db")+"");
+//            Log.e("TMPDB",context.getDatabasePath(Values.DATABASE_NAME + "_tmp.db")+"");
 
         } catch (Exception e) {
 //            e.printStackTrace();
@@ -253,6 +242,80 @@ public class GoogleDriveBackup {
 //        context.deleteDatabase(cloudDBName);
         boolean deleteDB = context.deleteDatabase(Values.DATABASE_NAME + "_tmp");
         Log.e("DBDelete",deleteDB+" ");
+    }
+
+    public void startBackupTask()
+    {
+        DriveBackupTask driveBackupTask = new DriveBackupTask();
+        driveBackupTask.execute();
+    }
+
+    public void startRestoreTask()
+    {
+        DriveRestoreTask driveRestoreTask = new DriveRestoreTask();
+        driveRestoreTask.execute();
+    }
+
+    private class DriveBackupTask extends AsyncTask<Void,Void,Void>{
+
+        ProgressDialog progressDialog;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(activity);
+            progressDialog.setTitle("Please Wait");
+            progressDialog.setMessage("Backup Data is in progress. This may take a while");
+            progressDialog.show();
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            saveDBToDrive();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            progressDialog.dismiss();
+            Values.showToast(context,"Data Backup Successfully");
+        }
+    }
+
+    private class DriveRestoreTask extends AsyncTask<Void,Void,Void>{
+
+        ProgressDialog progressDialog;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(activity);
+            progressDialog.setTitle("Please Wait");
+            progressDialog.setMessage("Restoring Data is in progress. This may take a while");
+            progressDialog.show();
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            readDBFromDrive();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            progressDialog.dismiss();
+            Values.showToast(context,"Data Backup Successfully");
+        }
     }
 
 

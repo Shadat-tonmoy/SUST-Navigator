@@ -182,10 +182,10 @@ public class MainActivity extends AppCompatActivity
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             Values.showToast(context,account.getEmail()+" is signed in");
             SemesterListFragment.signOutMenu.setVisible(true);
-            GoogleDriveBackup googleDriveBackup = new GoogleDriveBackup(context,account);
+            GoogleDriveBackup googleDriveBackup = new GoogleDriveBackup(context,account,MainActivity.this);
             if(toBackup)
-                googleDriveBackup.saveDBToDrive();
-            else googleDriveBackup.readDBFromDrive();
+                googleDriveBackup.startBackupTask();
+            else googleDriveBackup.startRestoreTask();
             Log.e("SignIn", account.getEmail()+" is signed in");
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
