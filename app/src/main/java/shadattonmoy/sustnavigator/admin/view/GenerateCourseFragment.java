@@ -96,6 +96,7 @@ public class GenerateCourseFragment extends android.app.Fragment {
 
         courses = new ArrayList<>();
         courseListAdapter = new AllCourseListAdapter(context,R.layout.syllabus_single_row,R.id.course_icon, (ArrayList<Course>) courses);
+        courseListAdapter.setDeletable(true);
 
     }
 

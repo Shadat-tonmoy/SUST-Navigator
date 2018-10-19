@@ -42,7 +42,7 @@ public class SQLiteAdapter {
     /*
     * method to insert teacher data in sqlite
     */
-    public long insertCourse(String semester,String code,String title,String credit, String grade,int isAdded)
+    public long insertCourseCGPA(String semester, String code, String title, String credit, String grade, int isAdded)
     {
         SQLiteDatabase db = sqLiteHelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -52,10 +52,24 @@ public class SQLiteAdapter {
         contentValues.put(SQLiteHelper.COURSE_CREDIT,credit);
         contentValues.put(SQLiteHelper.GRADE,grade);
         contentValues.put(SQLiteHelper.IS_ADDED,isAdded);
-        long id = db.insert(SQLiteHelper.TABLE_NAME,null,contentValues);
+        long id = db.insert(SQLiteHelper.CGPA_TABLE,null,contentValues);
         return id;
 
-    };
+    }
+
+    public void initDB()
+    {
+        SQLiteDatabase db = sqLiteHelper.getWritableDatabase();
+    }
+
+    public void recreateCGPATable()
+    {
+        SQLiteDatabase db = sqLiteHelper.getWritableDatabase();
+        db.execSQL(SQLiteHelper.DROP_CGPA_TABLE);
+        db.execSQL(SQLiteHelper.CREATE_CGPA_TABLE);
+
+
+    }
 
     public long addCourse(Course course,String semesterCode)
     {
@@ -146,7 +160,7 @@ public class SQLiteAdapter {
         }
         for(String selectionarg:selectionArgs)
             Log.e("Selections",selectionarg);
-        Cursor cursor = db.query(SQLiteHelper.TABLE_NAME,columns,selection,selectionArgs,null,null,null);
+        Cursor cursor = db.query(SQLiteHelper.CGPA_TABLE,columns,selection,selectionArgs,null,null,null);
 
         return cursor;
     }
@@ -161,7 +175,7 @@ public class SQLiteAdapter {
         contentValues.put(SQLiteHelper.GRADE,grade);
         String whereClause = sqLiteHelper.SEMESTER+"=?";
         String[] whereArgs = {semester};
-        int result = db.update(sqLiteHelper.TABLE_NAME,contentValues,whereClause,whereArgs);
+        int result = db.update(sqLiteHelper.CGPA_TABLE,contentValues,whereClause,whereArgs);
         return result;
     }
 
@@ -184,7 +198,7 @@ public class SQLiteAdapter {
         SQLiteDatabase db = sqLiteHelper.getWritableDatabase();
         String whereClause = sqLiteHelper.SEMESTER+"=?";
         String[] whereArgs = {semester};
-        int result = db.delete(sqLiteHelper.TABLE_NAME,whereClause,whereArgs);
+        int result = db.delete(sqLiteHelper.CGPA_TABLE,whereClause,whereArgs);
         return result;
 
     }
@@ -236,32 +250,32 @@ public class SQLiteAdapter {
     }
     public class SQLiteHelper extends SQLiteOpenHelper{
 
-        static final String DB_NAME = "sust_nav_database";
-        static final int DB_VERSION = 22;
-        static final String TABLE_NAME = "cgpa";
-        static final String COURSE = "course";
-        static final String ID = "_id";
-        static final String COURSE_ID = "course_id";
-        static final String COURSE_DETAIL = "course_detail";
-        static final String COURSE_SEMESTER= "course_semester";
-        static final String SEMESTER = "semseter";
-        static final String SEMESTER_TABLE = "semseter";
-        static final String SEMESTER_ID= "semester_id";
-        static final String SEMESTER_CODE = "semester_code";
-        static final String COURSE_CODE = "course_code";
-        static final String COURSE_TITLE = "course_title";
-        static final String COURSE_CREDIT = "course_credit";
-        static final String GRADE = "grade";
-        static final String SEMESTER_INT = "semester_int";
-        static final String IS_ADDED = "is_added";
+        public static final String DB_NAME = "sust_nav_database";
+        public static final int DB_VERSION = 22;
+        public static final String CGPA_TABLE = "cgpa";
+        public static final String COURSE = "course";
+        public static final String ID = "_id";
+        public static final String COURSE_ID = "course_id";
+        public static final String COURSE_DETAIL = "course_detail";
+        public static final String COURSE_SEMESTER= "course_semester";
+        public static final String SEMESTER = "semseter";
+        public static final String SEMESTER_TABLE = "semseter";
+        public static final String SEMESTER_ID= "semester_id";
+        public static final String SEMESTER_CODE = "semester_code";
+        public static final String COURSE_CODE = "course_code";
+        public static final String COURSE_TITLE = "course_title";
+        public static final String COURSE_CREDIT = "course_credit";
+        public static final String GRADE = "grade";
+        public static final String SEMESTER_INT = "semester_int";
+        public static final String IS_ADDED = "is_added";
 
-        static final String CREATE_TABLE = "create table "+TABLE_NAME +"("+ID +" INTEGER primary key autoincrement, "+SEMESTER+" varchar(50),"+ COURSE_CODE+" varchar(500), "+ COURSE_TITLE+" varchar(500),"+ COURSE_CREDIT +" varchar(50),"+ GRADE +" varchar(100),"+IS_ADDED+" INTEGER DEFAULT 0)";
+        static final String CREATE_CGPA_TABLE = "create table "+ CGPA_TABLE +"("+ID +" INTEGER primary key autoincrement, "+SEMESTER+" varchar(50),"+ COURSE_CODE+" varchar(500), "+ COURSE_TITLE+" varchar(500),"+ COURSE_CREDIT +" varchar(50),"+ GRADE +" varchar(100),"+IS_ADDED+" INTEGER DEFAULT 0)";
 
         static final String CREATE_SEMESTER_TABLE = "create table "+SEMESTER_TABLE+"("+SEMESTER_ID +" INTEGER primary key autoincrement, "+SEMESTER_CODE+" varchar(500)"+")";
 
         private static final String CREATE_COURSE_TABLE = "create table " + COURSE + "(" + COURSE_ID+ " INTEGER primary key autoincrement," + COURSE_TITLE + " varchar(255), " + COURSE_CODE+ " varchar(255)," + COURSE_CREDIT + " REAL," + COURSE_DETAIL+ " varchar(1000)," + COURSE_SEMESTER + " varchar(255));";
 
-        private static final String DROP_TABLE = "drop table if exists "+TABLE_NAME+" ";
+        private static final String DROP_CGPA_TABLE = "drop table if exists "+ CGPA_TABLE +" ";
         private static final String DROP_COURSE_TABLE = "drop table if exists "+COURSE+" ";
         private static final String DROP_SEMESTER_TABLE = "drop table if exists "+SEMESTER+" ";
 
@@ -276,7 +290,7 @@ public class SQLiteAdapter {
         public void onCreate(SQLiteDatabase db) {
             Toast.makeText(context,"OnCreate",Toast.LENGTH_SHORT).show();
             try {
-                db.execSQL(CREATE_TABLE);
+                db.execSQL(CREATE_CGPA_TABLE);
                 db.execSQL(CREATE_COURSE_TABLE);
                 db.execSQL(CREATE_SEMESTER_TABLE);
 
@@ -291,7 +305,7 @@ public class SQLiteAdapter {
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             try {
                 Toast.makeText(context,"OnUpgrade",Toast.LENGTH_SHORT).show();
-                db.execSQL(DROP_TABLE);
+                db.execSQL(DROP_CGPA_TABLE);
                 db.execSQL(DROP_COURSE_TABLE);
                 db.execSQL(DROP_SEMESTER_TABLE);
                 onCreate(db);

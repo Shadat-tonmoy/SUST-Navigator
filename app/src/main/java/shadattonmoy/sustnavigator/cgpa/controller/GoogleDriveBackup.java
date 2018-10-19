@@ -1,31 +1,21 @@
 package shadattonmoy.sustnavigator.cgpa.controller;
 
 import android.content.Context;
-import android.content.IntentSender;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.util.Log;
-import android.webkit.MimeTypeMap;
-import android.widget.Toast;
 
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.SignInAccount;
-import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.drive.Drive;
-import com.google.android.gms.drive.DriveApi;
 import com.google.android.gms.drive.DriveClient;
 import com.google.android.gms.drive.DriveContents;
 import com.google.android.gms.drive.DriveFile;
 import com.google.android.gms.drive.DriveFolder;
-import com.google.android.gms.drive.DriveId;
 import com.google.android.gms.drive.DriveResourceClient;
 import com.google.android.gms.drive.Metadata;
 import com.google.android.gms.drive.MetadataBuffer;
 import com.google.android.gms.drive.MetadataChangeSet;
-import com.google.android.gms.drive.OpenFileActivityOptions;
-import com.google.android.gms.drive.query.Filters;
-import com.google.android.gms.drive.query.SearchableField;
-import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -34,16 +24,16 @@ import com.google.android.gms.tasks.Tasks;
 
 import org.apache.commons.io.IOUtils;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.security.acl.LastOwnerException;
 
+import shadattonmoy.sustnavigator.SQLiteAdapter;
 import shadattonmoy.sustnavigator.utils.Values;
 
 public class GoogleDriveBackup {
@@ -62,8 +52,21 @@ public class GoogleDriveBackup {
 
     public void saveDBToDrive()
     {
+
+
         String dbname = Values.DATABASE_NAME;
         File database = context.getDatabasePath(dbname);
+        try (BufferedReader br = new BufferedReader(new FileReader(database))) {
+
+            String sCurrentLine;
+            while ((sCurrentLine = br.readLine()) != null) {
+                Log.e("ReadingDB",sCurrentLine);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         if(database!=null)
         {
             Log.e("DatabasePath",database.getAbsolutePath()+" "+database.getName());
@@ -77,6 +80,8 @@ public class GoogleDriveBackup {
         Tasks.whenAll(appFolderTask, createContentsTask)
                 .continueWithTask(task -> {
                     DriveFolder parent = appFolderTask.getResult();
+                    Log.e("ParentFolder",parent.getDriveId()+"");
+
                     DriveContents contents = createContentsTask.getResult();
                     OutputStream outputStream = contents.getOutputStream();
                     FileInputStream fileInputStream = new FileInputStream(database);
@@ -118,6 +123,7 @@ public class GoogleDriveBackup {
                 files.addOnSuccessListener(new OnSuccessListener<MetadataBuffer>() {
                     @Override
                     public void onSuccess(MetadataBuffer metadatas) {
+                        Log.e("ReadingData","Success "+metadatas.toString());
                         for(Metadata metadata:metadatas)
                         {
                             DriveFile driveFile = metadata.getDriveId().asDriveFile();
@@ -125,7 +131,12 @@ public class GoogleDriveBackup {
                                 @Override
                                 public void onSuccess(DriveContents driveContents) {
                                     InputStream inputStream = driveContents.getInputStream();
-                                    int i;
+                                    try {
+                                        buildDatabaseFileFromInputStream(inputStream);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                    /*int i;
                                     try {
                                         while((i = inputStream.read())!=-1) {
                                             char c = (char)i;
@@ -134,7 +145,7 @@ public class GoogleDriveBackup {
                                     }catch (Exception e)
                                     {
 
-                                    }
+                                    }*/
 
                                 }
                             });
@@ -143,39 +154,90 @@ public class GoogleDriveBackup {
                     }
                 });
 
-            }
-        });
-
-        /*Tasks.whenAll(appFolderTask)
-                .continueWithTask(task -> {
-                    DriveFolder parent = appFolderTask.getResult();
-                    Log.e("DriveFolder",parent.getDriveId().asDriveFolder().toString());
-                    Task<MetadataBuffer> files = driveResourceClient.listChildren(parent);
-                    files.addOnSuccessListener(new OnSuccessListener<MetadataBuffer>() {
-                        @Override
-                        public void onSuccess(MetadataBuffer metadatas) {
-                            for(Metadata metadata:metadatas)
-                            {
-                                Log.e("Files are ",metadata.getOriginalFilename()+"."+metadata.getFileExtension());
-                            }
-                        }
-                    });
-                    return driveResourceClient.openFile(parent.getDriveId().asDriveFile(),DriveFile.MODE_READ_ONLY);
-                })
-                .addOnSuccessListener(new OnSuccessListener<DriveContents>() {
-                    @Override
-                    public void onSuccess(DriveContents driveContents) {
-                        Log.e("DriveContent",driveContents.getInputStream().toString());
-
-
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
+                files.addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Values.showToast(context,"Error Saving File");
-                        Log.e("Error",e.getMessage());
+                        Log.e("BackupReadingFailed",e.getMessage());
                     }
-                });*/
+                });
+
+            }
+        });
     }
+
+    public void buildDatabaseFileFromInputStream(InputStream inputStream) throws IOException {
+        String backupDBName= Values.DATABASE_NAME + "_tmp.db";
+        String localDBWithPath = context.getDatabasePath(backupDBName).getPath();
+
+        String localDBname = Values.DATABASE_NAME;
+        File localDatabase = context.getDatabasePath(localDBname);
+
+
+
+        // Opened assets database structure
+        OutputStream myOutput = null;
+        try {
+            File localDBFile = new File(localDBWithPath);
+            myOutput = new FileOutputStream(localDBFile);
+            // transfer bytes from the inputfile to the outputfile
+            byte[] buffer = new byte[4096000];
+            int length;
+            while ((length = inputStream.read(buffer)) > 0) {
+                myOutput.write(buffer, 0, length);
+            }
+
+            // Close the streams
+            myOutput.flush();
+            myOutput.close();
+            inputStream.close();
+
+            File file = context.getDatabasePath(backupDBName);
+            if (!file.exists()) {
+                if (!file.getParentFile().exists()) {
+                    file.getParentFile().mkdir();
+                }
+            }
+
+            SQLiteDatabase dbFromCloud = SQLiteDatabase.openOrCreateDatabase(file, null);
+            SQLiteDatabase dbFromLocal = SQLiteDatabase.openOrCreateDatabase(localDBFile, null);
+            copyData(dbFromCloud,dbFromLocal);
+
+        } catch (Exception e) {
+//            e.printStackTrace();
+            Log.e("Error",e.getMessage());
+        }
+
+    }
+
+    private void copyData(SQLiteDatabase cloudDB,SQLiteDatabase localDB) {
+        SQLiteAdapter sqLiteAdapter = SQLiteAdapter.getInstance(context);
+        sqLiteAdapter.recreateCGPATable();
+        Cursor cursor = cloudDB.query(true, SQLiteAdapter.SQLiteHelper.CGPA_TABLE, null, null, null, null, null, null, null);
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            String[] colums = cursor.getColumnNames();
+            String id = cursor.getString(0);
+            String semester = cursor.getString(1);
+            String code = cursor.getString(2);
+            String title = cursor.getString(3);
+            String credit = cursor.getString(4);
+            String grade = cursor.getString(5);
+            int isAdded = cursor.getInt(6);
+            sqLiteAdapter.insertCourseCGPA(semester,code,title,credit,grade,isAdded);
+
+            /*
+            Note note = db.cursorToNote(cursor);
+            db.insertNote(note);*/
+            cursor.moveToNext();
+        }
+        cursor.close();
+        cloudDB.close();
+        localDB.close();
+//        context.deleteDatabase(cloudDB);
+    }
+
+
+
+
 }
+

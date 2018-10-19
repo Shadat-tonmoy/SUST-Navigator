@@ -110,6 +110,7 @@ public class MainActivity extends AppCompatActivity
         firebaseAuth = FirebaseAuth.getInstance();
 
         DataBaseHelper dataBaseHelper = new DataBaseHelper(context);
+        sqLiteAdapter.initDB();
 
 
         final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

@@ -30,6 +30,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     {
         super(context,DB_NAME,null,1);
         this.databasePath = context.getDatabasePath(DB_NAME).getPath();
+
         Log.e("DatabasePathFromConst",databasePath);
 
 
