@@ -84,6 +84,7 @@ public class SemesterListFragment extends android.app.Fragment {
     private GoogleSignInClient googleSignInClient;
     private GoogleApiClient mGoogleApiClient;
     public static MenuItem signOutMenu;
+    private boolean loadingFromLocal = false;
 
     @Override
     public void onAttach(Context context) {
@@ -199,8 +200,16 @@ public class SemesterListFragment extends android.app.Fragment {
     public void loadFromLocalDB()
     {
         Values.IS_LOCAL_ADMIN = true;
+        loadingFromLocal = true;
         SQLiteAdapter sqLiteAdapter = SQLiteAdapter.getInstance(context);
         List<String> semesterCodes = sqLiteAdapter.getSemesters();
+        loadFromLocal.setText("Load Server");
+        loadFromLocal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loadFromServer();
+            }
+        });
         semesters = new ArrayList<>();
         subTotalCredit=0;
         for(String semester: semesterCodes)
@@ -249,6 +258,7 @@ public class SemesterListFragment extends android.app.Fragment {
             nothingFoundImage.setVisibility(View.GONE);
             nothingFoundText.setVisibility(View.GONE);
             actAsAdmin.setVisibility(View.GONE);
+            semesterList.setVisibility(View.VISIBLE);
             SemesterAdapter adapter = new SemesterAdapter(getActivity().getApplicationContext(),R.layout.semester_single_row,R.id.semester_icon,semesters);
             adapter.setActivity(activity);
             adapter.setLoadLocal(loadFromLocal);
@@ -283,7 +293,20 @@ public class SemesterListFragment extends android.app.Fragment {
 
     public void loadFromServer()
     {
+        ProgressDialog progressDialog = new ProgressDialog(activity);
+        progressDialog.setTitle("Please Wait");
+        progressDialog.setMessage("Data is Loading From Server");
+        progressDialog.show();
         firebaseDatabase = FirebaseDatabase.getInstance();
+        loadFromLocal.setText("Load Local");
+        loadFromLocal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loadFromLocalDB();
+            }
+        });
+        Values.IS_LOCAL_ADMIN = false;
+        semesters = new ArrayList<>();
         databaseReference = firebaseDatabase.getReference().child("syllabus").child(session).child(dept.getDeptCode().trim().toLowerCase());
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -344,11 +367,13 @@ public class SemesterListFragment extends android.app.Fragment {
                 {
                     SemesterAdapter adapter = new SemesterAdapter(getActivity().getApplicationContext(),R.layout.semester_single_row,R.id.semester_icon,semesters);
                     semesterList.setAdapter(adapter);
+                    semesterList.setVisibility(View.VISIBLE);
                 }
                 else
                 {
                     nothingFoundImage.setVisibility(View.VISIBLE);
                     nothingFoundText.setVisibility(View.VISIBLE);
+                    semesterList.setVisibility(View.GONE);
                     if(!isSyllabusEditable)
                     {
                         actAsAdmin.setVisibility(View.VISIBLE);
@@ -395,7 +420,9 @@ public class SemesterListFragment extends android.app.Fragment {
                         }
                     });
                 }
+                progressDialog.dismiss();
                 //debugView.setText(txt);
+
 
             }
 
