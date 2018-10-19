@@ -89,6 +89,8 @@ public class Values {
         semesterCodeMap.put("4th Year 2nd Semester","4_2");
         semesterCodeMap.put("5th Year 1st Semester","5_1");
         semesterCodeMap.put("5th Year 2nd Semester","5_2");
+        semesterCodeMap.put("Optionals","o_p");
+        semesterCodeMap.put("Second Major","s_m");
 
         return semesterCodeMap;
     }
@@ -214,7 +216,7 @@ public class Values {
     public static String getSemesterCode(String semester)
     {
 
-        return semester.replace("/","_");
+        return semester.replace("/","_").toLowerCase();
     }
 
     public static void openLink(Context context,String url)

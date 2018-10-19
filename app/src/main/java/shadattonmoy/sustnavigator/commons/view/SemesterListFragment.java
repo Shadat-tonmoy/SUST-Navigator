@@ -252,6 +252,8 @@ public class SemesterListFragment extends android.app.Fragment {
                 semesters.add(new Semester(totalCourseString,totalCreditString,"5th Year 1st Semester","5/1"));
             else if(semester.equals("5_2"))
                 semesters.add(new Semester(totalCourseString,totalCreditString,"5th Year 2nd Semester","5/2"));
+            else if(semester.equals("o_p"))
+                semesters.add(new Semester(totalCourseString,totalCreditString,"Optionals","O/P"));
         }
         if(semesters.size()>0)
         {
@@ -359,6 +361,8 @@ public class SemesterListFragment extends android.app.Fragment {
                         semesters.add(new Semester(totalCourseString,totalCreditString,"5th Year 1st Semester","5/1"));
                     else if(key.equals("5_2"))
                         semesters.add(new Semester(totalCourseString,totalCreditString,"5th Year 2nd Semester","5/2"));
+                    else if(key.equals("o_p"))
+                        semesters.add(new Semester(totalCourseString,totalCreditString,"Optionals","O/P"));
                     txt+="\n";
                     Log.e("TotalCredit",subTotalCredit+"");
                 }
@@ -449,6 +453,9 @@ public class SemesterListFragment extends android.app.Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.cgpa_backup_menu, menu);
+        MenuItem item = menu.findItem(R.id.search_dept);
+        if(item!=null)
+            item.setVisible(false);
         signOutMenu = menu.findItem(R.id.sign_out);
         if(!isSignedIn())
             signOutMenu.setVisible(false);

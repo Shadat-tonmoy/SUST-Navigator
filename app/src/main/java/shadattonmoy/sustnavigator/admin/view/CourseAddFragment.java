@@ -101,7 +101,7 @@ public class CourseAddFragment extends android.app.Fragment {
                         SQLiteAdapter sqLiteAdapter = SQLiteAdapter.getInstance(context);
                         Course course = new Course(courseCode, courseTitle, courseCredit);
                         sqLiteAdapter.addCourse(course,semester);
-                        Snackbar snackbar = Snackbar.make(view,"Course Has Been Added",Snackbar.LENGTH_INDEFINITE).setAction("Back", new View.OnClickListener() {
+                        Snackbar snackbar = Snackbar.make(view,"Course Has Been Added",Snackbar.LENGTH_LONG).setAction("Back", new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 android.app.FragmentManager manager = getFragmentManager();
@@ -127,7 +127,7 @@ public class CourseAddFragment extends android.app.Fragment {
                             @Override
                             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                                 //Toast.makeText(getActivity().getApplicationContext(),"Added...",Toast.LENGTH_SHORT).show();
-                                Snackbar snackbar = Snackbar.make(view,"Course Has Been Added",Snackbar.LENGTH_INDEFINITE).setAction("Back", new View.OnClickListener() {
+                                Snackbar snackbar = Snackbar.make(view,"Course Has Been Added",Snackbar.LENGTH_LONG).setAction("Back", new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
                                         android.app.FragmentManager manager = getFragmentManager();

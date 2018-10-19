@@ -95,6 +95,8 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
             this.semester = "5_1";
         else if (semester.equals("5/2"))
             this.semester = "5_2";
+        else if (semester.equals("O/P"))
+            this.semester = "o_p";
     }
 
     @Override
@@ -341,6 +343,8 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
                 arr = new String[]{"1_1", "1_2", "2_1", "2_2", "3_1", "3_2","4_1","4_2"};
             else if (semester.equals("5_2"))
                 arr = new String[]{"1_1", "1_2", "2_1", "2_2", "3_1", "3_2","4_1","4_2","5_1"};
+            else if (semester.equals("o_p"))
+                arr = new String[]{"o_p"};
             Cursor cursor = sqLiteAdapter.getGPARecord(arr);
             while (cursor.moveToNext()) {
                 String credit = cursor.getString(4);

@@ -196,7 +196,7 @@
                                     android:layout_marginBottom="5dp"
                                     android:background="@color/textBlack"
                                     android:padding="4dp"
-                                    android:text="Total Credit"
+                                    android:text="Offered Credit"
                                     android:textAlignment="center"
                                     android:textColor="#ffffff"/>
 

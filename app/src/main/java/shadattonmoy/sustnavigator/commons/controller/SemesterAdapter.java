@@ -129,6 +129,8 @@ public class SemesterAdapter extends ArrayAdapter<Semester> {
             semesterCodeView.setBackgroundResource(R.drawable.round_light_green);
         else if(semesterCode.equals("5/2"))
             semesterCodeView.setBackgroundResource(R.drawable.round_red);
+        else if(semesterCode.equals("O/P"))
+            semesterCodeView.setBackgroundResource(R.drawable.round_black);
 
         return row;
     }
