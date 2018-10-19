@@ -52,8 +52,7 @@ public class GoogleDriveBackup {
 
     public void saveDBToDrive()
     {
-
-
+        deleteExistingFiles();
         String dbname = Values.DATABASE_NAME;
         File database = context.getDatabasePath(dbname);
         try (BufferedReader br = new BufferedReader(new FileReader(database))) {
@@ -109,6 +108,45 @@ public class GoogleDriveBackup {
                 });
     }
 
+    public void deleteExistingFiles()
+    {
+        String packageName = context.getPackageName();
+        driveResourceClient = Drive.getDriveResourceClient(context, signInAccount);
+        final Task<DriveFolder> appFolderTask = driveResourceClient.getAppFolder();
+        Tasks.whenAll(appFolderTask).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                DriveFolder parent = appFolderTask.getResult();
+                Log.e("DriveFolder",parent.getDriveId().asDriveFolder().toString());
+                Task<MetadataBuffer> files = driveResourceClient.listChildren(parent);
+                files.addOnSuccessListener(new OnSuccessListener<MetadataBuffer>() {
+                    @Override
+                    public void onSuccess(MetadataBuffer metadatas) {
+                        Log.e("ReadingData","Success "+metadatas.toString());
+                        for(Metadata metadata:metadatas)
+                        {
+                            DriveFile driveFile = metadata.getDriveId().asDriveFile();
+                            driveResourceClient.delete(driveFile).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Log.e("Deleting","AllFiles");
+                                }
+                            });
+                            Log.e("Files are ",metadata.getOriginalFilename()+"."+metadata.getFileExtension());
+                        }
+                    }
+                });
+
+                files.addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e("DeletingFalied",e.getMessage());
+                    }
+                });
+
+            }
+        });
+    }
     public void readDBFromDrive()
     {
         String packageName = context.getPackageName();
@@ -136,17 +174,6 @@ public class GoogleDriveBackup {
                                     } catch (IOException e) {
                                         e.printStackTrace();
                                     }
-                                    /*int i;
-                                    try {
-                                        while((i = inputStream.read())!=-1) {
-                                            char c = (char)i;
-                                            Log.e("Char",c+"");
-                                        }
-                                    }catch (Exception e)
-                                    {
-
-                                    }*/
-
                                 }
                             });
                             Log.e("Files are ",metadata.getOriginalFilename()+"."+metadata.getFileExtension());
@@ -169,11 +196,6 @@ public class GoogleDriveBackup {
         String backupDBName= Values.DATABASE_NAME + "_tmp.db";
         String localDBWithPath = context.getDatabasePath(backupDBName).getPath();
 
-        String localDBname = Values.DATABASE_NAME;
-        File localDatabase = context.getDatabasePath(localDBname);
-
-
-
         // Opened assets database structure
         OutputStream myOutput = null;
         try {
@@ -190,7 +212,6 @@ public class GoogleDriveBackup {
             myOutput.flush();
             myOutput.close();
             inputStream.close();
-
             File file = context.getDatabasePath(backupDBName);
             if (!file.exists()) {
                 if (!file.getParentFile().exists()) {
@@ -199,8 +220,8 @@ public class GoogleDriveBackup {
             }
 
             SQLiteDatabase dbFromCloud = SQLiteDatabase.openOrCreateDatabase(file, null);
-            SQLiteDatabase dbFromLocal = SQLiteDatabase.openOrCreateDatabase(localDBFile, null);
-            copyData(dbFromCloud,dbFromLocal);
+            copyData(dbFromCloud);
+            Log.e("TMPDB",context.getDatabasePath(Values.DATABASE_NAME + "_tmp.db")+"");
 
         } catch (Exception e) {
 //            e.printStackTrace();
@@ -209,9 +230,10 @@ public class GoogleDriveBackup {
 
     }
 
-    private void copyData(SQLiteDatabase cloudDB,SQLiteDatabase localDB) {
+    private void copyData(SQLiteDatabase cloudDB) {
         SQLiteAdapter sqLiteAdapter = SQLiteAdapter.getInstance(context);
         sqLiteAdapter.recreateCGPATable();
+        String cloudDBName= Values.DATABASE_NAME + "_tmp.db";
         Cursor cursor = cloudDB.query(true, SQLiteAdapter.SQLiteHelper.CGPA_TABLE, null, null, null, null, null, null, null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
@@ -224,16 +246,13 @@ public class GoogleDriveBackup {
             String grade = cursor.getString(5);
             int isAdded = cursor.getInt(6);
             sqLiteAdapter.insertCourseCGPA(semester,code,title,credit,grade,isAdded);
-
-            /*
-            Note note = db.cursorToNote(cursor);
-            db.insertNote(note);*/
             cursor.moveToNext();
         }
         cursor.close();
         cloudDB.close();
-        localDB.close();
-//        context.deleteDatabase(cloudDB);
+//        context.deleteDatabase(cloudDBName);
+        boolean deleteDB = context.deleteDatabase(Values.DATABASE_NAME + "_tmp");
+        Log.e("DBDelete",deleteDB+" ");
     }
 
 

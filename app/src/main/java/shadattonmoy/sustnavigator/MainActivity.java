@@ -8,10 +8,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -26,17 +24,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -47,7 +40,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ThrowOnExtraProperties;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.File;
@@ -66,8 +58,6 @@ import shadattonmoy.sustnavigator.help.HelpActivity;
 import shadattonmoy.sustnavigator.holiday.view.HolidaysFragment;
 import shadattonmoy.sustnavigator.mlkit.CameraActivity;
 import shadattonmoy.sustnavigator.proctor.view.ProctorialBodyFragment;
-import shadattonmoy.sustnavigator.school.model.School;
-import shadattonmoy.sustnavigator.utils.DataBaseHelper;
 import shadattonmoy.sustnavigator.utils.DummyValues;
 import shadattonmoy.sustnavigator.utils.LastModified;
 import shadattonmoy.sustnavigator.utils.Values;
@@ -109,7 +99,6 @@ public class MainActivity extends AppCompatActivity
         sqLiteAdapter = SQLiteAdapter.getInstance(MainActivity.this);
         firebaseAuth = FirebaseAuth.getInstance();
 
-        DataBaseHelper dataBaseHelper = new DataBaseHelper(context);
         sqLiteAdapter.initDB();
 
 
