@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -183,9 +184,34 @@ public class MainActivity extends AppCompatActivity
             Values.showToast(context,account.getEmail()+" is signed in");
             SemesterListFragment.signOutMenu.setVisible(true);
             GoogleDriveBackup googleDriveBackup = new GoogleDriveBackup(context,account,MainActivity.this);
+
+            String msg = "";
             if(toBackup)
-                googleDriveBackup.startBackupTask();
-            else googleDriveBackup.startRestoreTask();
+                msg = "Backup Saved Date to Cloud";
+            else msg = "Restored Saved Date from Cloud";
+            AlertDialog.Builder builder;
+            builder = new AlertDialog.Builder(context);
+            builder.setTitle("Proceed?")
+                    .setMessage("You are successfully logged in. Continue with "+msg+"?")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            GoogleDriveBackup googleDriveBackup = new GoogleDriveBackup(context, GoogleSignIn.getLastSignedInAccount(context), MainActivity.this);
+                            if(toBackup)
+                            {
+                                googleDriveBackup.startBackupTask();
+                            }
+                            else {
+                                Log.e("Restoring","WillStart");
+                                googleDriveBackup.startRestoreTask();
+                            }
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .show();
             Log.e("SignIn", account.getEmail()+" is signed in");
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
