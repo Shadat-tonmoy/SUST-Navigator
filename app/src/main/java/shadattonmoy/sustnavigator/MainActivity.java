@@ -48,6 +48,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import shadattonmoy.sustnavigator.about.AboutActivity;
+import shadattonmoy.sustnavigator.admin.controller.WebCrawler;
 import shadattonmoy.sustnavigator.admin.model.Admin;
 import shadattonmoy.sustnavigator.admin.view.AdminFragment;
 import shadattonmoy.sustnavigator.admin.view.AdminManage;
@@ -157,9 +158,16 @@ public class MainActivity extends AppCompatActivity
 
         getLastModified();
         getAdminRequest();
+        crawlWebData();
 //        addCourse();
     }
     /*end of onCreate Method*/
+
+    public void crawlWebData()
+    {
+        WebCrawler webCrawler = new WebCrawler();
+        webCrawler.crawlData();
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
