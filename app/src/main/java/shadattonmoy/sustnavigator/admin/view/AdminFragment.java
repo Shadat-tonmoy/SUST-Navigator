@@ -195,6 +195,7 @@ public class AdminFragment extends android.app.Fragment {
 
 
                                 } else {
+                                    Log.e("Error",task.getException().getMessage());
                                     loginErrorMsg.setVisibility(View.VISIBLE);
                                     loginErrorText.setText("An error occurred. Please try agai.");
                                     loginButton.setClickable(true);

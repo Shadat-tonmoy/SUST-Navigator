@@ -158,16 +158,10 @@ public class MainActivity extends AppCompatActivity
 
         getLastModified();
         getAdminRequest();
-        crawlWebData();
 //        addCourse();
     }
     /*end of onCreate Method*/
 
-    public void crawlWebData()
-    {
-        WebCrawler webCrawler = new WebCrawler();
-        webCrawler.crawlData();
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)

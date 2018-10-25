@@ -1,5 +1,8 @@
 package shadattonmoy.sustnavigator.admin.controller;
 
+import android.content.Context;
+import android.os.AsyncTask;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
 import org.jsoup.Jsoup;
@@ -13,53 +16,111 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
-public class WebCrawler {
+import shadattonmoy.sustnavigator.teacher.model.Teacher;
+
+public class WebCrawler{
     URL url;
     InputStream is = null;
     DataInputStream dis;
     String line;
+    private Context context;
+    private FragmentActivity activity;
+    private String deptCode;
 
-    public void crawlData() {
+    public WebCrawler() {
+    }
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                final StringBuilder builder = new StringBuilder();
+    public WebCrawler(Context context, FragmentActivity activity, String deptCode) {
+        this.context = context;
+        this.activity = activity;
+        this.deptCode = deptCode;
+    }
 
-                try {
-                    Document doc = Jsoup.connect("https://www.sust.edu/d/cse/faculty").get();
-                    String title = doc.title();
-                    Elements links = doc.select("a[data-title][data-designation][data-description]");
-                    Elements titles = doc.select("a[data-title]");
-                    Elements designations = doc.select("a[data-designation]");
-                    Elements descriptions = doc.select("a[data-description]");
-                    Log.e("Total",titles.size()+"");
+    public List<Teacher> crawlFacultyData() {
 
-                    for(int i=0;i<titles.size();i++)
-                    {
+        final StringBuilder builder = new StringBuilder();
+        List<Teacher> teachers = new ArrayList<>();
 
-                        String facultyTitle = titles.get(i).attr("data-title");
-                        String facultyDesignation = designations.get(i).attr("data-designation");
-                        String facultyDescription = descriptions.get(i).attr("data-description");
-                        Log.e("Faculty","Title "+facultyTitle+" Designation "+facultyDesignation+" Description "+facultyDescription);
-                    }
+        try {
+            Document doc = Jsoup.connect("https://www.sust.edu/d/"+deptCode+"/faculty").get();
+            String title = doc.title();
+            Elements links = doc.select("a[data-title][data-designation][data-description]");
+            Elements titles = doc.select("a[data-title]");
+            Elements designations = doc.select("a[data-designation]");
+            Elements descriptions = doc.select("a[data-description]");
+            Log.e("Total",titles.size()+"");
 
+            for(int i=0;i<titles.size();i++)
+            {
 
-                    builder.append(title).append("\n");
-
-                    for (Element link : links) {
-                        builder.append("\n").append("Link : ").append(link.attr("href"))
-                                .append("\n").append("Text : ").append(link.text());
-//                        Log.e("Link",builder.toString());
-                    }
-                } catch (IOException e) {
-                    builder.append("Error : ").append(e.getMessage()).append("\n");
-                }
-
-
+                String facultyTitle = titles.get(i).attr("data-title");
+                String facultyDesignation = designations.get(i).attr("data-designation");
+                String facultyDescription = descriptions.get(i).attr("data-description");
+                Log.e("Faculty","Title "+facultyTitle+" Designation "+facultyDesignation);
+                Teacher teacher = new Teacher(facultyTitle,facultyDesignation,"","","","");
+                teacher = addContactInfo(teacher,facultyDescription);
+                teachers.add(teacher);
             }
 
-        }).start();
+        } catch (IOException e) {
+            Log.e("Crawler Error",e.getMessage());
+        }
+        return teachers;
+    }
+
+    public Teacher addContactInfo(Teacher teacher,String html)
+    {
+        Document document = Jsoup.parse(html);
+        Elements contactInfoList = document.select("ul[class=contact-info-ul]");
+        String phoneNo = "",email = "",office="";
+        for(Element contactInfo : contactInfoList)
+        {
+            Elements contactInfosElements = contactInfo.getElementsByTag("li");
+            for(Element contactInfoElement : contactInfosElements)
+            {
+                String elementText = contactInfoElement.text();
+                if(elementText.toLowerCase().contains("phone"))
+                    phoneNo = getPhoneNo(elementText);
+                else if(elementText.toLowerCase().contains("email"))
+                    email = getEmail(elementText);
+                else if(elementText.toLowerCase().contains("office address"))
+                    office = getOfficeAddress(elementText);
+            }
+        }
+//        Log.e("Details ","Phone "+phoneNo+" Email "+email+" Office "+office);
+        teacher.setPhone(phoneNo);
+        teacher.setEmail(email);
+        teacher.setRoom(office);
+        return teacher;
+    }
+
+    public String getPhoneNo(String text)
+    {
+        if(text.toLowerCase().contains("phone"))
+        {
+            return text.replace("Phone:","");
+        }
+        else return null;
+    }
+
+    public String getEmail(String text)
+    {
+        if(text.toLowerCase().contains("email"))
+        {
+            return text.replace("Email:","");
+        }
+        else return null;
+    }
+
+    public String getOfficeAddress(String text)
+    {
+        if(text.toLowerCase().contains("office address"))
+        {
+            return text.replace("Office Address:","");
+        }
+        else return null;
     }
 }

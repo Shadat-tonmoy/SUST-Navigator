@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.github.clans.fab.FloatingActionMenu;
 import com.github.javiersantos.bottomdialogs.BottomDialog;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -60,7 +61,8 @@ public class TeacherFragment extends android.app.Fragment {
     private ImageView nothingFoundImage;
     private Context context;
     private boolean isAdmin;
-    private FloatingActionButton addMoreTeacherFab;
+    private FloatingActionMenu addMoreTeacherFab;
+    private com.github.clans.fab.FloatingActionButton addCustomTeacher,grabFromWebsite;
     private TeacherListAdapter adapter;
     private BottomDialog bottomDialog;
     private SearchView searchView;
@@ -86,11 +88,13 @@ public class TeacherFragment extends android.app.Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_teacher, container, false);
-        progressBar = (ProgressBar) view.findViewById(R.id.teacher_loading);
-        fragmentHeader = (TextView) view.findViewById(R.id.teacher_fragment_title);
-        nothingFoundText = (TextView) view.findViewById(R.id.nothing_found_txt);
-        nothingFoundImage = (ImageView) view.findViewById(R.id.nothing_found_image);
-        addMoreTeacherFab = (FloatingActionButton) view.findViewById(R.id.add_more_teacher_fab);
+        progressBar = view.findViewById(R.id.teacher_loading);
+        fragmentHeader = view.findViewById(R.id.teacher_fragment_title);
+        nothingFoundText = view.findViewById(R.id.nothing_found_txt);
+        nothingFoundImage = view.findViewById(R.id.nothing_found_image);
+        addMoreTeacherFab =  view.findViewById(R.id.add_more_teacher_fab);
+        addCustomTeacher =  view.findViewById(R.id.custom_teacher_fab);
+        grabFromWebsite =  view.findViewById(R.id.grab_teacher_fab);
         return view;
     }
 
