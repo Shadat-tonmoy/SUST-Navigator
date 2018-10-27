@@ -29,6 +29,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import shadattonmoy.sustnavigator.R;
 import shadattonmoy.sustnavigator.admin.view.TeacherAddFragment;
@@ -51,12 +54,14 @@ public class TeacherListAdapter extends ArrayAdapter<Teacher>{
     private FragmentManager fragmentManager;
     private FirebaseDatabase firebaseDatabase;
     private View view;
+    private Map<Integer,Boolean> selectedTeachers;
     private boolean isWebData = false;
     private Activity activity;
     public TeacherListAdapter(Context context, int resource, int textViewResourceId, ArrayList<Teacher> objects, Dept dept) {
         super(context, resource, textViewResourceId, objects);
         this.context = context;
         this.dept = dept;
+        this.selectedTeachers = new HashMap<>();
     }
 
 
@@ -77,6 +82,10 @@ public class TeacherListAdapter extends ArrayAdapter<Teacher>{
         TextView teacherDesignation = (TextView) row.findViewById(R.id.teacher_designation);
         TextView teacherRoom = (TextView) row.findViewById(R.id.teacher_room);
         imageView = (ImageView) row.findViewById(R.id.contact_teacher);
+        Log.e("ValueIn",position+" "+selectedTeachers.get(position));
+        if(selectedTeachers.get(position)!=null && selectedTeachers.get(position))
+            row.setBackgroundColor(context.getResources().getColor(R.color.textLightAsh));
+        else row.setBackgroundColor(context.getResources().getColor(R.color.cardview_light_background));
 
         if(isAdmin)
         {
@@ -175,7 +184,7 @@ public class TeacherListAdapter extends ArrayAdapter<Teacher>{
             row.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    selectTeacher(position,view);
+                    toggleTeacherSelection(position,view);
 
                 }
             });
@@ -210,9 +219,22 @@ public class TeacherListAdapter extends ArrayAdapter<Teacher>{
         isWebData = webData;
     }
 
-    private void selectTeacher(int position, View view)
+    private void toggleTeacherSelection(int position, View view)
     {
-        view.setBackgroundColor(context.getResources().getColor(R.color.cardview_light_background));
-
+        if(selectedTeachers.get(position)==null)
+        {
+            selectedTeachers.put(position,true);
+            view.setBackgroundColor(context.getResources().getColor(R.color.textLightAsh));
+        }
+        else if(selectedTeachers.get(position)!=null && selectedTeachers.get(position))
+        {
+            selectedTeachers.put(position,false);
+            view.setBackgroundColor(context.getResources().getColor(R.color.cardview_light_background));
+        }
+        else if(selectedTeachers.get(position)!=null && !selectedTeachers.get(position))
+        {
+            selectedTeachers.put(position,true);
+            view.setBackgroundColor(context.getResources().getColor(R.color.textLightAsh));
+        }
     }
 }
