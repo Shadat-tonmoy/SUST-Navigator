@@ -76,4 +76,15 @@ public class Teacher {
     public void setFb(String fb) {
         this.fb = fb;
     }
+
+    @Override
+    public String toString() {
+        return "Teacher{" +
+                "name='" + name + '\'' +
+                ", designation='" + designation + '\'' +
+                ", room='" + room + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                '}';
+    }
 }

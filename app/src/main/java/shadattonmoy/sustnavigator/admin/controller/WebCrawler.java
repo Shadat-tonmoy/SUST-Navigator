@@ -22,20 +22,12 @@ import java.util.List;
 import shadattonmoy.sustnavigator.teacher.model.Teacher;
 
 public class WebCrawler{
-    URL url;
-    InputStream is = null;
-    DataInputStream dis;
-    String line;
-    private Context context;
-    private FragmentActivity activity;
     private String deptCode;
 
     public WebCrawler() {
     }
 
-    public WebCrawler(Context context, FragmentActivity activity, String deptCode) {
-        this.context = context;
-        this.activity = activity;
+    public WebCrawler(String deptCode) {
         this.deptCode = deptCode;
     }
 

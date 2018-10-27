@@ -1,10 +1,13 @@
 package shadattonmoy.sustnavigator.teacher.view;
 
 import android.app.FragmentManager;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.text.Html;
@@ -38,6 +41,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import shadattonmoy.sustnavigator.admin.controller.WebCrawler;
 import shadattonmoy.sustnavigator.admin.view.TeacherAddFragment;
 import shadattonmoy.sustnavigator.R;
 import shadattonmoy.sustnavigator.SQLiteAdapter;
@@ -67,6 +71,14 @@ public class TeacherFragment extends android.app.Fragment {
     private BottomDialog bottomDialog;
     private SearchView searchView;
     private ListView teacherListView;
+    private FragmentActivity activity;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        activity = (FragmentActivity) context;
+    }
+
     public TeacherFragment() {
 
     }
@@ -134,73 +146,15 @@ public class TeacherFragment extends android.app.Fragment {
                         adapter.setAdmin(isAdmin);
                         adapter.setView(view);
                         adapter.setActivity(getActivity());
-                        addMoreTeacherFab.setVisibility(View.VISIBLE);
-                        addMoreTeacherFab.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                android.app.FragmentManager manager = getFragmentManager();
-                                android.app.FragmentTransaction transaction = manager.beginTransaction();
-                                TeacherAddFragment teacherAddFragment = new TeacherAddFragment(dept.getDeptCode());
-                                transaction.replace(R.id.main_content_root, teacherAddFragment);
-                                transaction.addToBackStack("teacher_add_fragment");
-                                transaction.commit();
-                            }
-                        });
-                        /*teacherListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+                        setAdminFabListener();
 
-                            @Override
-                            public void onScrollStateChanged(AbsListView absListView, int scrollState) {
-                                if(scrollState == SCROLL_STATE_IDLE){
-                                    addMoreTeacherFab.animate().cancel();
-                                    addMoreTeacherFab.setVisibility(View.GONE);
-                                }else{
-                                    addMoreTeacherFab.animate().cancel();
-                                    addMoreTeacherFab.setVisibility(View.VISIBLE);
-                                }
-                            }
-
-                            @Override
-                            public void onScroll(AbsListView absListView, int i, int i1, int i2) {
-
-                            }
-                        });*/
 
                     }
 
                 } else {
                     setHasOptionsMenu(false);
                     if (isAdmin) {
-                        addMoreTeacherFab.setVisibility(View.VISIBLE);
-                        addMoreTeacherFab.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                android.app.FragmentManager manager = getFragmentManager();
-                                android.app.FragmentTransaction transaction = manager.beginTransaction();
-                                TeacherAddFragment teacherAddFragment = new TeacherAddFragment(dept.getDeptCode());
-                                transaction.replace(R.id.main_content_root, teacherAddFragment);
-                                transaction.addToBackStack("teacher_add_fragment");
-                                transaction.commit();
-                            }
-                        });
-                        /*teacherListView.setOnScrollListener(new AbsListView.OnScrollListener() {
-
-                            @Override
-                            public void onScrollStateChanged(AbsListView absListView, int scrollState) {
-                                if(scrollState == SCROLL_STATE_IDLE){
-                                    addMoreTeacherFab.animate().cancel();
-                                    addMoreTeacherFab.setVisibility(View.GONE);
-                                }else{
-                                    addMoreTeacherFab.animate().cancel();
-                                    addMoreTeacherFab.setVisibility(View.VISIBLE);
-                                }
-                            }
-
-                            @Override
-                            public void onScroll(AbsListView absListView, int i, int i1, int i2) {
-
-                            }
-                        });*/
-
+                        setAdminFabListener();
                     }
                     nothingFoundImage.setVisibility(View.VISIBLE);
                     nothingFoundText.setVisibility(View.VISIBLE);
@@ -226,6 +180,29 @@ public class TeacherFragment extends android.app.Fragment {
 
             }
         });
+    }
+
+    private void setAdminFabListener(){
+        addMoreTeacherFab.setVisibility(View.VISIBLE);
+        addCustomTeacher.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                android.app.FragmentManager manager = getFragmentManager();
+                android.app.FragmentTransaction transaction = manager.beginTransaction();
+                TeacherAddFragment teacherAddFragment = new TeacherAddFragment(dept.getDeptCode());
+                transaction.replace(R.id.main_content_root, teacherAddFragment);
+                transaction.addToBackStack("teacher_add_fragment");
+                transaction.commit();
+            }
+        });
+
+        grabFromWebsite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startWebCrawling();
+            }
+        });
+
     }
 
     public View generateSortingOptionBottomSheet() {
@@ -438,8 +415,47 @@ public class TeacherFragment extends android.app.Fragment {
         isAdmin = admin;
     }
 
+    public void startWebCrawling()
+    {
+        WebCrawlingTask webCrawlingTask = new WebCrawlingTask();
+        webCrawlingTask.execute();
+
+    }
+
+    private class WebCrawlingTask extends AsyncTask<Void,Void,List<Teacher>>{
+        ProgressDialog progressDialog;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(activity);
+            progressDialog.setTitle("Please Wait...");
+            progressDialog.setMessage("Crawling Data From Website");
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+
+        }
+
+        @Override
+        protected List<Teacher> doInBackground(Void... voids) {
+            WebCrawler webCrawler = new WebCrawler(dept.getDeptCode().toLowerCase());
+            List<Teacher> facultyList = webCrawler.crawlFacultyData();
+            return facultyList;
+        }
+
+        @Override
+        protected void onPostExecute(List<Teacher> facultyList) {
+            super.onPostExecute(facultyList);
+            for(Teacher teacher:facultyList)
+            {
+                Log.e("Teacher ",teacher.toString());
+            }
+        }
+    }
+
 
 }
+
+
 
 class detailListener implements AdapterView.OnItemClickListener {
 
