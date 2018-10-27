@@ -1,6 +1,8 @@
 package shadattonmoy.sustnavigator.dept.model;
 
-public class Dept {
+import java.io.Serializable;
+
+public class Dept implements Serializable {
     private String deptId,deptTitle,deptCode;
 
     public Dept(String deptId, String deptTitle, String deptCode) {

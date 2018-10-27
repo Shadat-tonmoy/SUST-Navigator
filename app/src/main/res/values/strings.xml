@@ -89,4 +89,5 @@
     <string name="create_backup">Backup Data To Cloud</string>
     <string name="restore_backup">Restore Data From Cloud</string>
     <string name="sign_out">Sign Out</string>
+    <string name="following_faculty">Following Faculty List is Found</string>
 </resources>

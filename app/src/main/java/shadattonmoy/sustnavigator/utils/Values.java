@@ -238,5 +238,15 @@ public class Values {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
+    public static String trimStringTo(String src,int len)
+    {
+        if(src.length()>len)
+        {
+            src = src.substring(0,len-3) + "..";
+        }
+        return src;
+
+    }
+
 
 }

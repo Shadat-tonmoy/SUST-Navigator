@@ -34,6 +34,7 @@ import shadattonmoy.sustnavigator.R;
 import shadattonmoy.sustnavigator.admin.view.TeacherAddFragment;
 import shadattonmoy.sustnavigator.dept.model.Dept;
 import shadattonmoy.sustnavigator.teacher.model.Teacher;
+import shadattonmoy.sustnavigator.utils.Values;
 
 /**
  * Created by Shadat Tonmoy on 6/17/2017.
@@ -50,6 +51,7 @@ public class TeacherListAdapter extends ArrayAdapter<Teacher>{
     private FragmentManager fragmentManager;
     private FirebaseDatabase firebaseDatabase;
     private View view;
+    private boolean isWebData = false;
     private Activity activity;
     public TeacherListAdapter(Context context, int resource, int textViewResourceId, ArrayList<Teacher> objects, Dept dept) {
         super(context, resource, textViewResourceId, objects);
@@ -164,7 +166,20 @@ public class TeacherListAdapter extends ArrayAdapter<Teacher>{
         teacherIcon.setText(iconText);
         teacherName.setText(name);
         teacherDesignation.setText(designation);
-        teacherRoom.setText(room);
+        if(room.length()<3)
+            teacherRoom.setText("Room Details Not Available");
+        else teacherRoom.setText(Values.trimStringTo(room,40));
+
+        if(isWebData)
+        {
+            row.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    selectTeacher(position,view);
+
+                }
+            });
+        }
 
 
 
@@ -185,5 +200,19 @@ public class TeacherListAdapter extends ArrayAdapter<Teacher>{
 
     public void setActivity(Activity activity) {
         this.activity = activity;
+    }
+
+    public boolean isWebData() {
+        return isWebData;
+    }
+
+    public void setWebData(boolean webData) {
+        isWebData = webData;
+    }
+
+    private void selectTeacher(int position, View view)
+    {
+        view.setBackgroundColor(context.getResources().getColor(R.color.cardview_light_background));
+
     }
 }

@@ -93,7 +93,7 @@ public class WebCrawler{
     {
         if(text.toLowerCase().contains("phone"))
         {
-            return text.replace("Phone:","");
+            return text.replace("Phone:","").trim();
         }
         else return null;
     }
@@ -102,7 +102,7 @@ public class WebCrawler{
     {
         if(text.toLowerCase().contains("email"))
         {
-            return text.replace("Email:","");
+            return text.replace("Email:","").trim();
         }
         else return null;
     }
@@ -111,7 +111,7 @@ public class WebCrawler{
     {
         if(text.toLowerCase().contains("office address"))
         {
-            return text.replace("Office Address:","");
+            return text.replace("Office Address:","").replace("Department","Dept.").trim();
         }
         else return null;
     }

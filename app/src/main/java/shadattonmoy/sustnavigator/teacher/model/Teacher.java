@@ -1,10 +1,13 @@
 package shadattonmoy.sustnavigator.teacher.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by Shadat Tonmoy on 6/17/2017.
  */
 
-public class Teacher {
+public class Teacher implements Parcelable {
     private String name,designation,room,email,phone,fb,id;
     public Teacher()
     {
@@ -86,5 +89,15 @@ public class Teacher {
                 ", email='" + email + '\'' +
                 ", phone='" + phone + '\'' +
                 '}';
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+
     }
 }

@@ -42,6 +42,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import shadattonmoy.sustnavigator.admin.controller.WebCrawler;
+import shadattonmoy.sustnavigator.admin.view.FacultyListFromWebDialog;
 import shadattonmoy.sustnavigator.admin.view.TeacherAddFragment;
 import shadattonmoy.sustnavigator.R;
 import shadattonmoy.sustnavigator.SQLiteAdapter;
@@ -422,7 +423,7 @@ public class TeacherFragment extends android.app.Fragment {
 
     }
 
-    private class WebCrawlingTask extends AsyncTask<Void,Void,List<Teacher>>{
+    private class WebCrawlingTask extends AsyncTask<Void,Void,ArrayList<Teacher>>{
         ProgressDialog progressDialog;
         @Override
         protected void onPreExecute() {
@@ -436,15 +437,27 @@ public class TeacherFragment extends android.app.Fragment {
         }
 
         @Override
-        protected List<Teacher> doInBackground(Void... voids) {
+        protected ArrayList<Teacher> doInBackground(Void... voids) {
             WebCrawler webCrawler = new WebCrawler(dept.getDeptCode().toLowerCase());
-            List<Teacher> facultyList = webCrawler.crawlFacultyData();
+            ArrayList<Teacher> facultyList = (ArrayList<Teacher>) webCrawler.crawlFacultyData();
             return facultyList;
         }
 
         @Override
-        protected void onPostExecute(List<Teacher> facultyList) {
+        protected void onPostExecute(ArrayList<Teacher> facultyList) {
             super.onPostExecute(facultyList);
+            progressDialog.dismiss();
+            if(facultyList.size()>0)
+            {
+                FacultyListFromWebDialog facultyListFromWebDialog = new FacultyListFromWebDialog();
+                facultyListFromWebDialog.setTeachers(facultyList);
+                facultyListFromWebDialog.setDept(dept);
+                facultyListFromWebDialog.show(activity.getFragmentManager(),"facultyListDialog");
+            }
+            else
+            {
+                Toast.makeText(context,"Sorry No Faculty Information is Found",Toast.LENGTH_SHORT).show();
+            }
             for(Teacher teacher:facultyList)
             {
                 Log.e("Teacher ",teacher.toString());
