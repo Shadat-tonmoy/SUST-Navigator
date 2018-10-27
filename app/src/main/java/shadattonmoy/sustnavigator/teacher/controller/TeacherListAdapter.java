@@ -54,7 +54,9 @@ public class TeacherListAdapter extends ArrayAdapter<Teacher>{
     private FragmentManager fragmentManager;
     private FirebaseDatabase firebaseDatabase;
     private View view;
+    private ArrayList<Teacher> teachers;
     private Map<Integer,Boolean> selectedTeachers;
+    private Map<Integer,View> views;
     private boolean isWebData = false;
     private Activity activity;
     public TeacherListAdapter(Context context, int resource, int textViewResourceId, ArrayList<Teacher> objects, Dept dept) {
@@ -62,6 +64,8 @@ public class TeacherListAdapter extends ArrayAdapter<Teacher>{
         this.context = context;
         this.dept = dept;
         this.selectedTeachers = new HashMap<>();
+        this.teachers = objects;
+        this.views= new HashMap<>();
     }
 
 
@@ -181,6 +185,8 @@ public class TeacherListAdapter extends ArrayAdapter<Teacher>{
 
         if(isWebData)
         {
+            views.put(position,row);
+            Log.e("PuttingAt",position+" "+views.get(position));
             row.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -221,20 +227,34 @@ public class TeacherListAdapter extends ArrayAdapter<Teacher>{
 
     private void toggleTeacherSelection(int position, View view)
     {
+        Log.e("Toggling",selectedTeachers.get(position)+" "+view);
         if(selectedTeachers.get(position)==null)
         {
             selectedTeachers.put(position,true);
-            view.setBackgroundColor(context.getResources().getColor(R.color.textLightAsh));
+            if(view!=null)
+                view.setBackgroundColor(context.getResources().getColor(R.color.textLightAsh));
         }
         else if(selectedTeachers.get(position)!=null && selectedTeachers.get(position))
         {
             selectedTeachers.put(position,false);
-            view.setBackgroundColor(context.getResources().getColor(R.color.cardview_light_background));
+            if(view!=null)
+                view.setBackgroundColor(context.getResources().getColor(R.color.cardview_light_background));
         }
         else if(selectedTeachers.get(position)!=null && !selectedTeachers.get(position))
         {
             selectedTeachers.put(position,true);
-            view.setBackgroundColor(context.getResources().getColor(R.color.textLightAsh));
+            if(view!=null)
+                view.setBackgroundColor(context.getResources().getColor(R.color.textLightAsh));
         }
+    }
+
+    public void toggleAllTeacher()
+    {
+        for(int i=0;i<teachers.size();i++)
+        {
+            toggleTeacherSelection(i,views.get(i));
+        }
+        notifyDataSetChanged();
+
     }
 }

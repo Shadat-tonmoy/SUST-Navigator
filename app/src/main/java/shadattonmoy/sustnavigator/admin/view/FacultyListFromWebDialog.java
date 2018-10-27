@@ -45,6 +45,8 @@ public class FacultyListFromWebDialog extends android.app.DialogFragment {
     private  AlertDialog.Builder builder;
     private Dept dept;
     private FragmentActivity activity;
+    private TextView selectAllBtn,saveSelectedBtn;
+    private boolean isSelectAll = false;
 
     public FacultyListFromWebDialog() {
 
@@ -62,7 +64,8 @@ public class FacultyListFromWebDialog extends android.app.DialogFragment {
         builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         view = inflater.inflate(R.layout.faculty_list_from_web_dialog,null);
-        facultyList= (ListView) view.findViewById(R.id.faculty_list);
+        facultyList= view.findViewById(R.id.faculty_list);
+        selectAllBtn=  view.findViewById(R.id.select_all_btn);
 
         initialize();
         builder.setView(view);
@@ -75,6 +78,24 @@ public class FacultyListFromWebDialog extends android.app.DialogFragment {
         adapter = new TeacherListAdapter(context, R.layout.teacher_single_row, R.id.teacher_icon, teachers, dept);
         adapter.setWebData(true);
         facultyList.setAdapter(adapter);
+        selectAllBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(isSelectAll)
+                {
+                    isSelectAll = false;
+                    adapter.toggleAllTeacher();
+                    selectAllBtn.setText("Select All");
+                }
+                else
+                {
+                    isSelectAll = true;
+                    adapter.toggleAllTeacher();
+                    selectAllBtn.setText("Select None");
+                }
+            }
+        });
+
     }
 
     public void getCoursesFromServer()
