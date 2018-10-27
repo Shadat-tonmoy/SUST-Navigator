@@ -80,6 +80,7 @@ public class TeacherFragment extends android.app.Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity().getApplicationContext();
+        Log.e("isAdmin",isAdmin+"");
 
 
     }
@@ -125,7 +126,7 @@ public class TeacherFragment extends android.app.Fragment {
                     manager = getFragmentManager();
                     adapter = new TeacherListAdapter(getActivity().getApplicationContext(), R.layout.teacher_single_row, R.id.teacher_icon, teachers, dept);
                     adapter.setFragmentManager(getFragmentManager());
-
+                    Log.e("isAdmin",isAdmin+"");
                     teacherListView = (ListView) view.findViewById(R.id.teacherList);
                     teacherListView.setAdapter(adapter);
                     teacherListView.setOnItemClickListener(new detailListener(getActivity().getApplicationContext(), manager));
