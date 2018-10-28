@@ -3,10 +3,10 @@ package shadattonmoy.sustnavigator.teacher.view;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
@@ -39,13 +39,11 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 
 import shadattonmoy.sustnavigator.admin.controller.WebCrawler;
 import shadattonmoy.sustnavigator.admin.view.FacultyListFromWebDialog;
 import shadattonmoy.sustnavigator.admin.view.TeacherAddFragment;
 import shadattonmoy.sustnavigator.R;
-import shadattonmoy.sustnavigator.SQLiteAdapter;
 import shadattonmoy.sustnavigator.dept.model.Dept;
 import shadattonmoy.sustnavigator.teacher.controller.TeacherListAdapter;
 import shadattonmoy.sustnavigator.teacher.model.Teacher;
@@ -142,7 +140,7 @@ public class TeacherFragment extends android.app.Fragment {
                     Log.e("isAdmin",isAdmin+"");
                     teacherListView = (ListView) view.findViewById(R.id.teacherList);
                     teacherListView.setAdapter(adapter);
-                    teacherListView.setOnItemClickListener(new detailListener(getActivity().getApplicationContext(), manager));
+                    teacherListView.setOnItemClickListener(new DetailListener());
                     if (isAdmin) {
                         adapter.setAdmin(isAdmin);
                         adapter.setView(view);
@@ -466,31 +464,36 @@ public class TeacherFragment extends android.app.Fragment {
     }
 
 
+    private class DetailListener implements AdapterView.OnItemClickListener {
+
+        public DetailListener() {
+            super();
+        }
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Teacher touchedTeacher;
+            touchedTeacher = (Teacher) parent.getItemAtPosition(position);
+            String name = touchedTeacher.getName();
+            String phone = touchedTeacher.getPhone();
+            String fb = touchedTeacher.getFb();
+            String email = touchedTeacher.getEmail();
+            String office = touchedTeacher.getRoom();
+            Intent intent = new Intent(context,TeacherDetailsActivity.class);
+            intent.putExtra("name",name);
+            intent.putExtra("phone",phone);
+            intent.putExtra("email",email);
+            intent.putExtra("office",office);
+            activity.startActivity(intent);
+
+//            TeacherContactDialog dialog = new TeacherContactDialog(name, email, phone, fb);
+//            dialog.show(manager, "teacher_contact_dialog");
+            //Toast.makeText(context,"Hello "+name,Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
 }
 
 
 
-class detailListener implements AdapterView.OnItemClickListener {
-
-    private Context context;
-    FragmentManager manager;
-
-    public detailListener(Context context, FragmentManager manager) {
-        super();
-        this.context = context;
-        this.manager = manager;
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Teacher touchedTeacher;
-        touchedTeacher = (Teacher) parent.getItemAtPosition(position);
-        String name = touchedTeacher.getName();
-        String phone = touchedTeacher.getPhone();
-        String fb = touchedTeacher.getFb();
-        String email = touchedTeacher.getEmail();
-        TeacherContactDialog dialog = new TeacherContactDialog(name, email, phone, fb);
-        dialog.show(manager, "teacher_contact_dialog");
-        //Toast.makeText(context,"Hello "+name,Toast.LENGTH_SHORT).show();
-    }
-}

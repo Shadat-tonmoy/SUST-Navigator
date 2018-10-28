@@ -89,5 +89,8 @@
     <string name="create_backup">Backup Data To Cloud</string>
     <string name="restore_backup">Restore Data From Cloud</string>
     <string name="sign_out">Sign Out</string>
+    <string name="dummy_room">Room no: 324, Department of Computer Science and Engineering, Dr. M. A. Wazed Miah IICT Building, Shahjalal University of Science and Technology, Sylhet-3114</string>
+    <string name="dummy_phone">+8801965036172</string>
+    <string name="dummy_email">shadat.tonmoy@gmail.com</string>
     <string name="following_faculty">Following Faculty List is Found</string>
 </resources>

@@ -79,7 +79,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".about.AboutActivity"></activity>
+        <activity android:name=".about.AboutActivity" />
+        <activity android:name=".teacher.view.TeacherDetailsActivity"></activity>
     </application>
 
 </manifest>
