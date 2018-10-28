@@ -477,6 +477,7 @@ public class TeacherFragment extends android.app.Fragment {
             String name = touchedTeacher.getName();
             String phone = touchedTeacher.getPhone();
             String fb = touchedTeacher.getFb();
+            String designation = touchedTeacher.getDesignation();
             String email = touchedTeacher.getEmail();
             String office = touchedTeacher.getRoom();
             Intent intent = new Intent(context,TeacherDetailsActivity.class);
@@ -484,6 +485,7 @@ public class TeacherFragment extends android.app.Fragment {
             intent.putExtra("phone",phone);
             intent.putExtra("email",email);
             intent.putExtra("office",office);
+            intent.putExtra("designation",designation);
             activity.startActivity(intent);
 
 //            TeacherContactDialog dialog = new TeacherContactDialog(name, email, phone, fb);

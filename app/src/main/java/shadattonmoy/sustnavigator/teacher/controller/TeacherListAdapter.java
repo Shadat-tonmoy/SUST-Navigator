@@ -186,7 +186,7 @@ public class TeacherListAdapter extends ArrayAdapter<Teacher>{
         teacherName.setText(name);
         teacherDesignation.setText(designation);
         if(room.length()<3)
-            teacherRoom.setText("Room Details Not Available");
+            teacherRoom.setText("Office Details Not Available");
         else teacherRoom.setText(Values.trimStringTo(room,40));
 
         if(isWebData)
