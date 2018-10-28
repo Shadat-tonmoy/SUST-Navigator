@@ -32,6 +32,7 @@ import shadattonmoy.sustnavigator.R;
 import shadattonmoy.sustnavigator.dept.model.Dept;
 import shadattonmoy.sustnavigator.teacher.controller.TeacherListAdapter;
 import shadattonmoy.sustnavigator.teacher.model.Teacher;
+import shadattonmoy.sustnavigator.utils.Values;
 
 public class FacultyListFromWebDialog extends android.app.DialogFragment {
 
@@ -66,6 +67,7 @@ public class FacultyListFromWebDialog extends android.app.DialogFragment {
         view = inflater.inflate(R.layout.faculty_list_from_web_dialog,null);
         facultyList= view.findViewById(R.id.faculty_list);
         selectAllBtn=  view.findViewById(R.id.select_all_btn);
+        saveSelectedBtn=  view.findViewById(R.id.save_selected_btn);
 
         initialize();
         builder.setView(view);
@@ -76,6 +78,7 @@ public class FacultyListFromWebDialog extends android.app.DialogFragment {
     private void initialize()
     {
         adapter = new TeacherListAdapter(context, R.layout.teacher_single_row, R.id.teacher_icon, teachers, dept);
+        adapter.setActivity(activity);
         adapter.setWebData(true);
         facultyList.setAdapter(adapter);
         selectAllBtn.setOnClickListener(new View.OnClickListener() {
@@ -96,6 +99,39 @@ public class FacultyListFromWebDialog extends android.app.DialogFragment {
             }
         });
 
+        saveSelectedBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int totalTeacher = adapter.getSelectedTeachers();
+                if(totalTeacher>0)
+                {
+                    showConfirmationDialog(totalTeacher);
+                }
+                else Values.showToast(context,"No Faculty is Selected");
+            }
+        });
+
+    }
+
+    private void showConfirmationDialog(int size)
+    {
+        AlertDialog.Builder builder;
+        builder = new AlertDialog.Builder(context);
+        builder.setTitle("Are You Sure?")
+                .setMessage("You are going to add "+size+" Faculty Records to Database.")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        adapter.addAllTeacherToServer();
+                        dismiss();
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+
+                    }
+                })
+                .show();
     }
 
     public void getCoursesFromServer()

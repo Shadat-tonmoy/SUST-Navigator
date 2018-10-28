@@ -1,9 +1,12 @@
 package shadattonmoy.sustnavigator.teacher.controller;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -24,6 +27,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -53,6 +58,7 @@ public class TeacherListAdapter extends ArrayAdapter<Teacher>{
     private boolean isAdmin = false;
     private FragmentManager fragmentManager;
     private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference databaseReference;
     private View view;
     private ArrayList<Teacher> teachers;
     private Map<Integer,Boolean> selectedTeachers;
@@ -257,4 +263,76 @@ public class TeacherListAdapter extends ArrayAdapter<Teacher>{
         notifyDataSetChanged();
 
     }
+
+    public int getSelectedTeachers()
+    {
+        int totalTeacher = 0;
+        for(int i=0;i<teachers.size();i++)
+        {
+            if(selectedTeachers.get(i)!=null && selectedTeachers.get(i))
+            {
+                totalTeacher++;
+            }
+        }
+        return totalTeacher;
+    }
+
+    public void addAllTeacherToServer()
+    {
+        TeacherAddTask teacherAddTask = new TeacherAddTask();
+        teacherAddTask.execute();
+    }
+
+
+
+    private class TeacherAddTask extends AsyncTask<Void,Void,Void>{
+        ProgressDialog dialog;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            dialog = new ProgressDialog(activity);
+            dialog.setTitle("Adding Record");
+            dialog.setMessage("Please Wait....");
+            dialog.show();
+
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            for(int i=0;i<teachers.size();i++)
+            {
+                if(selectedTeachers.get(i)!=null && selectedTeachers.get(i))
+                {
+                    addFaculty(teachers.get(i));
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            dialog.dismiss();
+            Values.updateLastModified();
+            super.onPostExecute(aVoid);
+        }
+    }
+
+    public void addFaculty(Teacher teacher)
+    {
+
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference().child("teacher").child(dept.getDeptCode().toLowerCase());
+        databaseReference.push().setValue(teacher).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                try{
+
+
+                } catch (Exception e){
+
+                }
+            }
+        });
+    }
+
 }

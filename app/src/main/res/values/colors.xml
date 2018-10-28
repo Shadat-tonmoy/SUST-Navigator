@@ -11,7 +11,7 @@
     <color name="textBlack">#212121</color>
     <color name="transparentBlack">#bb000000</color>
     <color name="textAsh">#757575</color>
-    <color name="textLightAsh">#bfaeda</color>
+    <color name="textLightAsh">#c8bfaeda</color>
     <color name="textWhite">#ffffff</color>
     <color name="textRed">#e74c3c</color>
     <color name="fabContainerBg">#bf2c3e50</color>
