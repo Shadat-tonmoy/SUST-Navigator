@@ -158,6 +158,16 @@ public class SchoolListAdapter extends RecyclerView.Adapter<SchoolListAdapter.My
                         loadFragment(staffFragment,"staffFragment");
                     }
                 });
+            }else if(purpose.equals("staff_manage"))
+            {
+                deptCell.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        StaffFragment staffFragment = new StaffFragment(dept);
+                        staffFragment.setEditable(true);
+                        loadFragment(staffFragment,"staffFragment");
+                    }
+                });
             }
 
         }

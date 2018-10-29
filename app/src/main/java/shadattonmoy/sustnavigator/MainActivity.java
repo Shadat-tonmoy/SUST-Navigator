@@ -516,6 +516,18 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    public void openStaffManageFragment(View view) {
+        FragmentManager manager = getFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        DeptFragment deptFragment = new DeptFragment();
+        deptFragment.setPurpose(Values.PURPOSE_STAFF_MANAGE);
+        transaction.replace(R.id.main_content_root, deptFragment);
+        transaction.addToBackStack("staff_manage_fragment");
+        transaction.commit();
+
+
+    }
+
     public void openAdminManageFragment(View view) {
         FragmentManager manager = getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();

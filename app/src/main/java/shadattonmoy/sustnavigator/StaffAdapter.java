@@ -67,16 +67,16 @@ public class StaffAdapter extends ArrayAdapter<Staff> {
         String iconText = String.valueOf(name.charAt(0));
         if(isEditable)
         {
-//            imageView.setImageResource(R.drawable.edit_icon);
-//            final PopupMenu popupMenu = new PopupMenu(getContext(),imageView,Gravity.LEFT);
-//            popupMenu.inflate(R.menu.proctor_manage_menu);
-//            imageView.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    popupMenu.show();
+            imageView.setImageResource(R.drawable.more_vert_black);
+            final PopupMenu popupMenu = new PopupMenu(getContext(),imageView,Gravity.LEFT);
+            popupMenu.inflate(R.menu.proctor_manage_menu);
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    popupMenu.show();
 //                    popupMenu.setOnMenuItemClickListener(new clickHandlerProctor(getContext(),proctor,manager));
-//                }
-//            });
+                }
+            });
 
         }
         else {

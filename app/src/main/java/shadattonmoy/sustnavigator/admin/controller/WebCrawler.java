@@ -111,6 +111,8 @@ public class WebCrawler{
     {
         if(text.toLowerCase().contains("office address"))
         {
+            if(text.toLowerCase().contains("http://www"))
+                return "N/A";
             return text.replace("Office Address:","").replace("Department","Dept.").trim();
         }
         else return null;

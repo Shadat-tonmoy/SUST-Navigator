@@ -41,6 +41,7 @@ public class StaffFragment extends android.app.Fragment {
     private ImageView nothingFoundImage;
     private ProgressBar progressBar;
     private Context context;
+    private boolean isEditable = false;
     public StaffFragment() {
 
     }
@@ -88,6 +89,7 @@ public class StaffFragment extends android.app.Fragment {
         int i=0;
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference().child("staff").child(dept.getDeptCode().toLowerCase());
+        Log.e("CheckingAt",dept.getDeptCode().toLowerCase());
         staffArray = new ArrayList<Staff>();
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -100,7 +102,7 @@ public class StaffFragment extends android.app.Fragment {
                 }
                 if(staffArray.size()>0)
                 {
-                    StaffAdapter adapter = new StaffAdapter(getActivity().getApplicationContext(),R.layout.teacher_single_row,R.id.teacher_icon,staffArray,false);
+                    StaffAdapter adapter = new StaffAdapter(getActivity().getApplicationContext(),R.layout.teacher_single_row,R.id.teacher_icon,staffArray,isEditable);
                     adapter.setActivity(getActivity());
                     staffList.setAdapter(adapter);
                 } else {
@@ -131,5 +133,13 @@ public class StaffFragment extends android.app.Fragment {
             }
         });
 
+    }
+
+    public boolean isEditable() {
+        return isEditable;
+    }
+
+    public void setEditable(boolean editable) {
+        isEditable = editable;
     }
 }

@@ -151,7 +151,7 @@ public class DeptFragment extends android.app.Fragment{
                     });
                     schoolListAdapter.setSession(sessionText.getText().toString());
                 }
-                if(purpose.equals(Values.PURPOSE_SYLLABUS_MANAGE) || purpose.equals(Values.PURPOSE_TEACHER_MANAGE))
+                if(purpose.equals(Values.PURPOSE_SYLLABUS_MANAGE) || purpose.equals(Values.PURPOSE_TEACHER_MANAGE) || purpose.equals(Values.PURPOSE_STAFF_MANAGE))
                 {
                     deptAddFab.setVisibility(View.VISIBLE);
                     deptAddFab.setOnClickListener(new View.OnClickListener() {

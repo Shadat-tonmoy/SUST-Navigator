@@ -56,6 +56,7 @@ public class Values {
     public static final String DEV_FB_LINK = "https://www.facebook.com/shadat.tonmoy";
     public static final String DEV_LINKEDIN_LINK = "https://www.linkedin.com/in/shadat-tonmoy-06266b27/";
     public static final String PURPOSE_SYLLABUS_MANAGE = "syllabus_manage";
+    public static final String PURPOSE_STAFF_MANAGE = "staff_manage";
     public static final String PURPOSE_TEACHER_MANAGE = "teacher_manage";
     public static Admin LOGGED_IN_ADMIN = null;
 
