@@ -1,10 +1,13 @@
 package shadattonmoy.sustnavigator;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,6 +31,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import shadattonmoy.sustnavigator.admin.view.ProctorAddFragment;
+import shadattonmoy.sustnavigator.admin.view.StaffAddFragment;
 import shadattonmoy.sustnavigator.dept.model.Dept;
 
 
@@ -42,6 +47,7 @@ public class StaffFragment extends android.app.Fragment {
     private ProgressBar progressBar;
     private Context context;
     private boolean isEditable = false;
+    private FloatingActionButton addFab;
     public StaffFragment() {
 
     }
@@ -66,11 +72,12 @@ public class StaffFragment extends android.app.Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_staff, container, false);
-        staffList = (ListView) view.findViewById(R.id.staff_list);
-        progressBar = (ProgressBar) view.findViewById(R.id.staff_loading);
-        fragmentHeader = (TextView) view.findViewById(R.id.staff_fragment_title);
-        nothingFoundText = (TextView) view.findViewById(R.id.nothing_found_txt);
-        nothingFoundImage = (ImageView) view.findViewById(R.id.nothing_found_image);
+        staffList =  view.findViewById(R.id.staff_list);
+        progressBar =  view.findViewById(R.id.staff_loading);
+        fragmentHeader =  view.findViewById(R.id.staff_fragment_title);
+        nothingFoundText =  view.findViewById(R.id.nothing_found_txt);
+        nothingFoundImage =  view.findViewById(R.id.nothing_found_image);
+        addFab = view.findViewById(R.id.staff_add_fab);
         return view;
     }
 
@@ -120,6 +127,22 @@ public class StaffFragment extends android.app.Fragment {
                         e.printStackTrace();
                     }
 
+                }
+                if(isEditable)
+                {
+                    addFab.setVisibility(View.VISIBLE);
+                    addFab.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            FragmentManager manager = getFragmentManager();
+                            FragmentTransaction transaction = manager.beginTransaction();
+                            StaffAddFragment staffAddFragment= new StaffAddFragment(false);
+                            staffAddFragment.setDept(dept);
+                            transaction.replace(R.id.main_content_root,staffAddFragment);
+                            transaction.addToBackStack("staff_add_fragment");
+                            transaction.commit();
+                        }
+                    });
                 }
 
 
