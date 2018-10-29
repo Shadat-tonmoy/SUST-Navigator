@@ -9,11 +9,15 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 
 import shadattonmoy.sustnavigator.R;
 
@@ -23,15 +27,10 @@ import shadattonmoy.sustnavigator.R;
 
 public class TeacherContactDialog extends DialogFragment{
 
-    private String name,email,phone,fb;
+    private LinearLayout numberContainer;
+    private ArrayList<String> phoneNums;
     public TeacherContactDialog(){
         super();
-    }
-    public TeacherContactDialog(String name, String email, String phone,String fb) {
-        this.name = name;
-        this.email = email;
-        this.phone = phone;
-        this.fb = fb;
     }
 
     @Override
@@ -39,37 +38,34 @@ public class TeacherContactDialog extends DialogFragment{
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_layout,null);
-
-        TextView dialogTitle = (TextView) dialogView.findViewById(R.id.dailog_title);
-        ImageView emailButton = (ImageView) dialogView.findViewById(R.id.emailButton);
-        ImageView phoneButton = (ImageView) dialogView.findViewById(R.id.phoneButton);
-        ImageView fbButton = (ImageView) dialogView.findViewById(R.id.fbButton);
-
-
-
-
-        dialogTitle.setText("Contact with "+ name);
+        numberContainer = dialogView.findViewById(R.id.number_container);
+        getValues();
+        generateNumberLayout(inflater);
         builder.setView(dialogView);
-        //builder.setMessage("Email : "+email+"\nPhone : "+phone);
-        builder.setNegativeButton("Okay", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-                dismiss();
-
-            }
-        });
-
-
-
-        emailButton.setOnClickListener(new clickListenet(getActivity(),phone,email,fb));
-
-        phoneButton.setOnClickListener(new clickListenet(getActivity(),phone,email,fb));
-
-        fbButton.setOnClickListener(new clickListenet(getActivity(),phone,email,fb));
-
-
         return builder.create();
+    }
+
+    private void getValues()
+    {
+        Bundle args = getArguments();
+        if(args!=null)
+        {
+            phoneNums = args.getStringArrayList("phoneNos");
+        }
+    }
+
+    private void generateNumberLayout(LayoutInflater inflater)
+    {
+        for(String phoneNo : phoneNums)
+        {
+            View numberRow = inflater.inflate(R.layout.number_single_row,null);
+            TextView numberView = numberRow.findViewById(R.id.number_view);
+            numberView.setText(phoneNo.trim().replaceAll("^[,A-Za-z.:-]+",""));
+            numberContainer.addView(numberRow);
+        }
+
+
+
     }
 
 
@@ -95,49 +91,7 @@ class clickListenet implements View.OnClickListener{
     @Override
     public void onClick(View v) {
 
-        int id = v.getId();
-        int emailButtonId = R.id.emailButton;
-        int phoneButtonId = R.id.phoneButton;
-        int fbButtonId = R.id.fbButton;
-        if(id==emailButtonId)
-        {
-            if(email.equals("N/A"))
-            {
-                Toast.makeText(context,"Sorry!! Email Not Availabe",Toast.LENGTH_SHORT).show();
-            }
-            else
-            {
-                sendEmail(email);
-            }
-        }
-        else if(id==phoneButtonId)
-        {
 
-            if(phoneNo.equals("N/A"))
-            {
-                Toast.makeText(context,"Sorry!! Phone No Not Availabe",Toast.LENGTH_SHORT).show();
-
-            }
-            else
-            {
-                makeCall(phoneNo);
-            }
-
-        }
-        else if(id==fbButtonId)
-        {
-
-            if(fb.equals("N/A"))
-            {
-                Toast.makeText(context,"Sorry!! Facebook ID is not Available",Toast.LENGTH_SHORT).show();
-
-            }
-            else
-            {
-                openFb(fb);
-            }
-
-        }
 
     }
     public void makeCall(String phoneNo)

@@ -135,9 +135,9 @@
 
                     <TextView
                         android:id="@+id/phone"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="16dp"
                         android:padding="8dp"
                         android:text="@string/dummy_phone"
                         android:drawableLeft="@drawable/phone_black_24"
@@ -149,9 +149,9 @@
 
                     <TextView
                         android:id="@+id/email"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="16dp"
                         android:padding="8dp"
                         android:text="@string/dummy_email"
                         android:drawableLeft="@drawable/email_black_24"
