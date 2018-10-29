@@ -126,6 +126,7 @@
                             android:background="@drawable/edit_text_bg"
                             android:drawableLeft="@drawable/edit_black"
                             android:drawablePadding="8dp"
+                            android:inputType="textAutoComplete"
                             android:ems="10"
                             android:hint="Holiday Title" />
 

@@ -127,6 +127,7 @@
                             android:drawableLeft="@drawable/person_black_24"
                             android:drawablePadding="8dp"
                             android:ems="10"
+                            android:inputType="textAutoComplete"
                             android:hint="Teacher Name" />
 
                     </android.support.design.widget.TextInputLayout>
@@ -201,6 +202,7 @@
                             android:background="@drawable/edit_text_bg"
                             android:drawableLeft="@drawable/room_black_24"
                             android:drawablePadding="8dp"
+                            android:inputType="textAutoComplete"
                             android:ems="10"
                             android:hint="Office Address" />
 
@@ -239,6 +241,7 @@
                             android:background="@drawable/edit_text_bg"
                             android:drawableLeft="@drawable/email_black_24"
                             android:drawablePadding="8dp"
+                            android:inputType="textEmailAddress"
                             android:ems="10"
                             android:hint="Email Address" />
 
@@ -275,6 +278,7 @@
                             android:background="@drawable/edit_text_bg"
                             android:drawableLeft="@drawable/phone_black_24"
                             android:drawablePadding="8dp"
+                            android:inputType="phone"
                             android:ems="10"
                             android:hint="Contact Number" />
 
