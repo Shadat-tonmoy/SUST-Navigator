@@ -202,7 +202,7 @@
                             android:drawableLeft="@drawable/room_black_24"
                             android:drawablePadding="8dp"
                             android:ems="10"
-                            android:hint="Room No" />
+                            android:hint="Office Address" />
 
                     </android.support.design.widget.TextInputLayout>
 
