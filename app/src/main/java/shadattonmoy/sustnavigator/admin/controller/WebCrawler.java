@@ -52,7 +52,7 @@ public class WebCrawler{
                 String facultyDesignation = designations.get(i).attr("data-designation");
                 String facultyDescription = descriptions.get(i).attr("data-description");
                 Log.e("Faculty","Title "+facultyTitle+" Designation "+facultyDesignation);
-                Teacher teacher = new Teacher(facultyTitle,facultyDesignation,"","","","");
+                Teacher teacher = new Teacher(facultyTitle,facultyDesignation,"","","");
                 teacher = addContactInfo(teacher,facultyDescription);
                 teachers.add(teacher);
             }

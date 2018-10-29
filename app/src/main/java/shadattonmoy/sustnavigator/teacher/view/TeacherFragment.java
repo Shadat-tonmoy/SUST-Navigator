@@ -476,7 +476,6 @@ public class TeacherFragment extends android.app.Fragment {
             touchedTeacher = (Teacher) parent.getItemAtPosition(position);
             String name = touchedTeacher.getName();
             String phone = touchedTeacher.getPhone();
-            String fb = touchedTeacher.getFb();
             String designation = touchedTeacher.getDesignation();
             String email = touchedTeacher.getEmail();
             String office = touchedTeacher.getRoom();

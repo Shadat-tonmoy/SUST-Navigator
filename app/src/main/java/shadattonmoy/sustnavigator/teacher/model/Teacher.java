@@ -8,7 +8,7 @@ import android.os.Parcelable;
  */
 
 public class Teacher implements Parcelable {
-    private String name,designation,room,email,phone,fb,id;
+    private String name,designation,room,email,phone,id;
     public Teacher()
     {
         super();
@@ -16,13 +16,12 @@ public class Teacher implements Parcelable {
 
 
 
-    public Teacher(String name, String designation, String room, String phone, String email, String fb) {
+    public Teacher(String name, String designation, String room, String phone, String email) {
         this.name = name;
         this.designation = designation;
         this.room = room;
         this.email = email;
         this.phone = phone;
-        this.fb = fb;
     }
     public String getName() {
         return name;
@@ -52,9 +51,6 @@ public class Teacher implements Parcelable {
         this.id = id;
     }
 
-    public String getFb() {
-        return fb;
-    }
 
     public void setName(String name) {
         this.name = name;
@@ -74,10 +70,6 @@ public class Teacher implements Parcelable {
 
     public void setPhone(String phone) {
         this.phone = phone;
-    }
-
-    public void setFb(String fb) {
-        this.fb = fb;
     }
 
     @Override

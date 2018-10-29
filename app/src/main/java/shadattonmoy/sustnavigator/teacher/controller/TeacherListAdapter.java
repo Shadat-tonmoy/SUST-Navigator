@@ -111,7 +111,6 @@ public class TeacherListAdapter extends ArrayAdapter<Teacher>{
             room = "Room Not Available";
         final String phone = currentTeacher.getPhone();
         final String email = currentTeacher.getEmail();
-        final String fb = currentTeacher.getFb();
         final String teacherId = currentTeacher.getId();
         String iconText = String.valueOf(name.charAt(0));
         popupMenu.inflate(R.menu.list_menu);
@@ -135,7 +134,6 @@ public class TeacherListAdapter extends ArrayAdapter<Teacher>{
                             args.putString("email", email);
                             args.putString("designation", designation);
                             args.putString("id", teacherId);
-                            args.putString("fb", fb);
                             args.putBoolean("isEditing",true);
                             teacherAddFragment.setArguments(args);
                             transaction.replace(R.id.main_content_root, teacherAddFragment);

@@ -32,7 +32,6 @@ public class TeacherAddFragment extends android.app.Fragment {
     private static EditText roomField;
     private static EditText phoneField;
     private static EditText emailField;
-    private static EditText fbField;
     private Button teacherAddSubmitButton;
     private ProgressBar teacherAddLoading;
     private FirebaseDatabase firebaseDatabase;
@@ -70,7 +69,6 @@ public class TeacherAddFragment extends android.app.Fragment {
         emailField = (EditText) view.findViewById(R.id.teacher_add_email_field);
         phoneField = (EditText) view.findViewById(R.id.teacher_add_contact_no_field);
         roomField = (EditText) view.findViewById(R.id.teacher_add_room_no_field);
-        fbField = (EditText) view.findViewById(R.id.teacher_add_fb_field);
         teacherAddSubmitButton = (Button) view.findViewById(R.id.teacher_add_submit_btn);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity().getApplicationContext(), R.array.designation, R.layout.spinner_layout);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -85,7 +83,6 @@ public class TeacherAddFragment extends android.app.Fragment {
                 emailField.setText(args.getString("email"));
                 phoneField.setText(args.getString("phone"));
                 roomField.setText(args.getString("room"));
-                fbField.setText(args.getString("fb"));
                 String designation = args.getString("designation");
                 facultyIdToUpdate = args.getString("id");
                 String[] designationArray = getActivity().getResources().getStringArray(R.array.designation);
@@ -130,9 +127,8 @@ public class TeacherAddFragment extends android.app.Fragment {
                     String email = emailField.getText().toString();
                     String phone = phoneField.getText().toString();
                     String room = roomField.getText().toString();
-                    String fb = fbField.getText().toString();
                     String warning_msg = "";
-                    if (phone.trim().equals("") || room.trim().equals("") || fb.trim().equals("")) {
+                    if (phone.trim().equals("") || room.trim().equals("")) {
                         warning_msg = "Please notice you have not added ";
                         if (phone.trim().equals("")) {
                             warning_msg += "Phone ";
@@ -143,14 +139,6 @@ public class TeacherAddFragment extends android.app.Fragment {
                         if (room.trim().equals("")) {
                             warning_msg += "Room No ";
                             room = "N/A";
-                            if (fb.trim().equals(""))
-                                warning_msg += ",";
-                        }
-                        if (fb.trim().equals("")) {
-                            warning_msg += "Facebook ID ";
-                            fb = "N/A";
-                            if (designation.toString().trim().equals("N/A"))
-                                warning_msg += ",";
                         }
                         if (designation.toString().trim().equals("N/A")) {
                             warning_msg += "Designation ";
@@ -158,7 +146,7 @@ public class TeacherAddFragment extends android.app.Fragment {
                         warning_msg += ". Do You want to continue?";
                     } else warning_msg = "OK";
 
-                    Teacher teacher = new Teacher(name, designation.toString(), room, phone, email, fb);
+                    Teacher teacher = new Teacher(name, designation.toString(), room, phone, email);
                     FacultyAddConfirmationDialog dialog = new FacultyAddConfirmationDialog(getActivity().getApplicationContext(), warning_msg, dept, teacher, view, fragmentManager,isEditing);
                     if(isEditing)
                         dialog.setFacultyIdToUpdate(facultyIdToUpdate);
@@ -175,7 +163,6 @@ public class TeacherAddFragment extends android.app.Fragment {
         emailField.setText("");
         phoneField.setText("");
         roomField.setText("");
-        fbField.setText("");
         designationField.setSelection(0);
     }
 }
