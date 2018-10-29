@@ -2,7 +2,10 @@ package shadattonmoy.sustnavigator;
 
 import android.app.Activity;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -11,6 +14,8 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -22,7 +27,17 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.List;
+
+import shadattonmoy.sustnavigator.admin.view.ProctorAddFragment;
+import shadattonmoy.sustnavigator.admin.view.StaffAddFragment;
+import shadattonmoy.sustnavigator.dept.model.Dept;
+import shadattonmoy.sustnavigator.proctor.model.Proctor;
+import shadattonmoy.sustnavigator.proctor.view.ProctorialBodyFragment;
 
 /**
  * Created by Shadat Tonmoy on 10/1/2017.
@@ -34,10 +49,23 @@ public class StaffAdapter extends ArrayAdapter<Staff> {
     private boolean isEditable;
     private Activity activity;
     private FragmentManager manager;
+    private Dept dept;
+    private View view;
     public StaffAdapter(@NonNull Context context, @LayoutRes int resource, @IdRes int textViewResourceId, @NonNull List<Staff> objects,boolean isEditable) {
         super(context, resource, textViewResourceId, objects);
         this.isEditable = isEditable;
         this.context = context;
+    }
+
+    public void setDept(Dept dept) {
+        this.dept = dept;
+    }
+
+    public void setView(View view) {
+        this.view = view;
+    }
+
+    public void setManager(FragmentManager manager) {
         this.manager = manager;
     }
 
@@ -74,7 +102,7 @@ public class StaffAdapter extends ArrayAdapter<Staff> {
                 @Override
                 public void onClick(View v) {
                     popupMenu.show();
-//                    popupMenu.setOnMenuItemClickListener(new clickHandlerProctor(getContext(),proctor,manager));
+                    popupMenu.setOnMenuItemClickListener(new clickHandlerStaff(getContext(),staff,manager,activity,view,dept));
                 }
             });
 
@@ -127,5 +155,91 @@ public class StaffAdapter extends ArrayAdapter<Staff> {
             //context.startActivity(intent);
             activity.startActivity(intent);
         }
+    }
+}
+
+class clickHandlerStaff implements PopupMenu.OnMenuItemClickListener{
+
+    private Context context;
+    private Staff staff;
+    private FragmentManager manager;
+    private Activity activity;
+    private View view;
+    private Dept dept;
+
+    public clickHandlerStaff(Context context,Staff staff,FragmentManager manager,Activity activity,View view,Dept dept)
+    {
+        this.context = context;
+        this.staff = staff;
+        this.manager = manager;
+        this.activity = activity;
+        this.view = view;
+        this.dept = dept;
+    }
+
+    public void setActivity(Activity activity) {
+        this.activity = activity;
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+
+        int id = item.getItemId();
+        if (id == R.id.edit_proctor_menu)
+        {
+            StaffAddFragment staffAddFragment= new StaffAddFragment(true);
+            staffAddFragment.setStaff(staff);
+            staffAddFragment.setDept(dept);
+            FragmentTransaction transaction = manager.beginTransaction();
+            transaction.replace(R.id.main_content_root,staffAddFragment);
+            transaction.addToBackStack("staf_edit_fragment");
+            transaction.commit();
+            return true;
+        }
+        else if ( id == R.id.remove_proctor_menu)
+        {
+            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+            builder.setTitle("Please Notice");
+            builder.setMessage("Are you sure to permanently remove this Staff Information From Record? Once you delete you will not be able to restore again.");
+            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+
+                    FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+                    DatabaseReference databaseReference = firebaseDatabase.getReference().child("staff").child(dept.getDeptCode().toLowerCase()).child(staff.getId());
+                    dialog.dismiss();
+                    final ProgressDialog progressDialog;
+                    progressDialog = new ProgressDialog(activity);
+                    progressDialog.setTitle("Deleting Record");
+                    progressDialog.setMessage("Please Wait....");
+                    progressDialog.show();
+                    databaseReference.removeValue(new DatabaseReference.CompletionListener() {
+                        @Override
+                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                            progressDialog.dismiss();;
+                            StaffFragment.adapter.remove(staff);
+                            Snackbar snackbar = Snackbar.make(view, "Staff Record Deleted...", Snackbar.LENGTH_SHORT);
+                            snackbar.setAction("Back", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    manager.popBackStack();
+                                }
+                            }).setActionTextColor(context.getResources().getColor(R.color.blue));
+                            snackbar.show();
+
+
+                        }
+                    });
+                }
+            });
+            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                }
+            });
+            builder.show();
+            return true;
+        }
+        return false;
     }
 }

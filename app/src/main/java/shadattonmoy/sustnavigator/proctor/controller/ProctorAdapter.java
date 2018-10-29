@@ -206,7 +206,7 @@ class clickHandlerProctor implements PopupMenu.OnMenuItemClickListener{
                         public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                             progressDialog.dismiss();;
                             ProctorialBodyFragment.adapter.remove(proctor);
-                            Snackbar snackbar = Snackbar.make(view, "Proctorial Body Member added...", Snackbar.LENGTH_SHORT);
+                            Snackbar snackbar = Snackbar.make(view, "Proctorial Body Member Deleted...", Snackbar.LENGTH_SHORT);
                             snackbar.setAction("Back", new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {

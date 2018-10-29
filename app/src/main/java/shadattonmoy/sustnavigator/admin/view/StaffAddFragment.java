@@ -97,6 +97,7 @@ public class StaffAddFragment extends android.app.Fragment implements View.OnCli
             nameField.setText(staff.getName());
             roomNoField.setText(staff.getRoomNo());
             contactNoField.setText(staff.getPhoneNo());
+            designationField.setText(staff.getDesignation());
         }
         submitButton.setOnClickListener(this);
     }

@@ -41,6 +41,7 @@ public class StaffFragment extends android.app.Fragment {
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
     private ArrayList<Staff> staffArray;
+    public static StaffAdapter adapter;
     private ListView staffList;
     private TextView fragmentHeader, nothingFoundText;
     private ImageView nothingFoundImage;
@@ -48,6 +49,7 @@ public class StaffFragment extends android.app.Fragment {
     private Context context;
     private boolean isEditable = false;
     private FloatingActionButton addFab;
+    private View view;
     public StaffFragment() {
 
     }
@@ -71,7 +73,7 @@ public class StaffFragment extends android.app.Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_staff, container, false);
+        view = inflater.inflate(R.layout.fragment_staff, container, false);
         staffList =  view.findViewById(R.id.staff_list);
         progressBar =  view.findViewById(R.id.staff_loading);
         fragmentHeader =  view.findViewById(R.id.staff_fragment_title);
@@ -109,8 +111,11 @@ public class StaffFragment extends android.app.Fragment {
                 }
                 if(staffArray.size()>0)
                 {
-                    StaffAdapter adapter = new StaffAdapter(getActivity().getApplicationContext(),R.layout.teacher_single_row,R.id.teacher_icon,staffArray,isEditable);
+                    adapter = new StaffAdapter(getActivity().getApplicationContext(),R.layout.teacher_single_row,R.id.teacher_icon,staffArray,isEditable);
                     adapter.setActivity(getActivity());
+                    adapter.setDept(dept);
+                    adapter.setView(view);
+                    adapter.setManager(getFragmentManager());
                     staffList.setAdapter(adapter);
                 } else {
                     setHasOptionsMenu(false);
