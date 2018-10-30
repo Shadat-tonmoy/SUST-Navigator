@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentActivity;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,9 +29,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import shadattonmoy.sustnavigator.HolidayAddFragment;
+import shadattonmoy.sustnavigator.commons.view.AdminListBottomSheet;
 import shadattonmoy.sustnavigator.holiday.controller.HolidayAdapter;
 import shadattonmoy.sustnavigator.R;
 import shadattonmoy.sustnavigator.holiday.model.Holiday;
+import shadattonmoy.sustnavigator.utils.Values;
 
 /**
  * Created by Shadat Tonmoy on 8/31/2017.
@@ -52,6 +56,7 @@ public class HolidaysFragment extends android.app.Fragment {
     private FloatingActionButton addHolidayFab;
     private boolean isAdmin;
     private View view;
+    private FragmentActivity activity;
 
 
     public HolidaysFragment() {
@@ -63,11 +68,16 @@ public class HolidaysFragment extends android.app.Fragment {
 
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.context = context;
+        this.activity = (FragmentActivity) context;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        context = getActivity().getApplicationContext();
 
     }
 
@@ -123,8 +133,20 @@ public class HolidaysFragment extends android.app.Fragment {
                 if(numOfHolidays==0)
                 {
                     if(isAdmin)
-                        noHolidayFoundView.setText("Sorry!! No Holiday found for "+year+". Tap '+' to add a new Holiday");
-                    else noHolidayFoundView.setText("Sorry!! No Holiday found for "+year+". Please contact admin");
+                        noHolidayFoundView.setText(Html.fromHtml("Sorry!! No Holiday found for "+year+". <b>Tap '+' to add a new Holiday</b>"));
+                    else {
+                        noHolidayFoundView.setText(Html.fromHtml("Sorry!! No Holiday found for "+year+". Please <b>Contact Admin</b>"));
+                        noHolidayFoundView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                AdminListBottomSheet adminListBottomSheet = new AdminListBottomSheet();
+                                Bundle args = new Bundle();
+                                args.putInt("purpose",Values.CONTACT_FOR_HOLIDAY);
+                                adminListBottomSheet.setArguments(args);
+                                adminListBottomSheet.show(activity.getSupportFragmentManager(),"adminList");
+                            }
+                        });
+                    }
                     try{
                         Glide.with(context).load(context.getResources()
                                 .getIdentifier("nothing_found", "drawable", context.getPackageName())).thumbnail(0.5f)

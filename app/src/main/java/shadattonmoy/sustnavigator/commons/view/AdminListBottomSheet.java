@@ -19,6 +19,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import shadattonmoy.sustnavigator.R;
@@ -46,6 +47,7 @@ public class AdminListBottomSheet extends BottomSheetDialogFragment {
     private String session;
     private FragmentActivity activity;
     private int purposeOfContact = -1;
+    private int holidayYear = Calendar.getInstance().get(Calendar.YEAR);
 
     @Override
     public void onAttach(Context context) {
@@ -99,8 +101,15 @@ public class AdminListBottomSheet extends BottomSheetDialogFragment {
                     Admin admin = child.getValue(Admin.class);
                     if(admin!=null)
                     {
-                        if((admin.isSuperAdmin() || (admin.getDept().toLowerCase().equals(dept.getDeptCode().toLowerCase()) && admin.isVarified())))
-                            adminFromServer.add(admin);
+                        if(purposeOfContact==Values.CONTACT_FOR_HOLIDAY || purposeOfContact==Values.CONTACT_FOR_PROCTOR)
+                        {
+                            if(admin.isVarified())
+                                adminFromServer.add(admin);
+                        }
+                        else{
+                            if((admin.isSuperAdmin() || (admin.getDept().toLowerCase().equals(dept.getDeptCode().toLowerCase()) && admin.isVarified())))
+                                adminFromServer.add(admin);
+                        }
                     }
 
                 }
@@ -138,7 +147,7 @@ public class AdminListBottomSheet extends BottomSheetDialogFragment {
                 else if(purposeOfContact==Values.CONTACT_FOR_STAFF)
                     message = Values.getEmailForStaff(name,dept.getDeptCode());
                 else if(purposeOfContact==Values.CONTACT_FOR_HOLIDAY)
-                    message = Values.getEmailForHoliday(name);
+                    message = Values.getEmailForHoliday(name,holidayYear);
                 else if(purposeOfContact==Values.CONTACT_FOR_PROCTOR)
                     message = Values.getEmailForProctor(name);
                 Values.sendEmail(email.trim(),message.trim(),context);

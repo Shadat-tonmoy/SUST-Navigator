@@ -83,7 +83,7 @@ public class ProctorAdapter extends ArrayAdapter<Proctor> {
         String iconText = String.valueOf(name.charAt(0));
         if(isEditable)
         {
-            imageView.setBackgroundResource(R.drawable.more_vert_black);
+            imageView.setImageResource(R.drawable.more_vert_black);
             final PopupMenu popupMenu = new PopupMenu(getContext(),imageView,Gravity.LEFT);
             popupMenu.inflate(R.menu.proctor_manage_menu);
             imageView.setOnClickListener(new View.OnClickListener() {
@@ -96,7 +96,8 @@ public class ProctorAdapter extends ArrayAdapter<Proctor> {
 
         }
         else {
-            imageView.setBackgroundResource(R.drawable.phone_black_24);
+
+            imageView.setImageResource(R.drawable.phone_black_24);
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

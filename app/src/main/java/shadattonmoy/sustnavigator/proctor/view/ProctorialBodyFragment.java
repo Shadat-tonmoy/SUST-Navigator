@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentActivity;
+import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,10 +28,12 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import shadattonmoy.sustnavigator.commons.view.AdminListBottomSheet;
 import shadattonmoy.sustnavigator.proctor.controller.ProctorAdapter;
 import shadattonmoy.sustnavigator.admin.view.ProctorAddFragment;
 import shadattonmoy.sustnavigator.R;
 import shadattonmoy.sustnavigator.proctor.model.Proctor;
+import shadattonmoy.sustnavigator.utils.Values;
 
 
 public class ProctorialBodyFragment extends android.app.Fragment {
@@ -46,6 +51,7 @@ public class ProctorialBodyFragment extends android.app.Fragment {
     private TextView nothingFoundText;
     private Context context;
     private AppBarLayout appBarLayout;
+    private FragmentActivity activity;
 
     public ProctorialBodyFragment(boolean isEditable) {
         super();
@@ -54,9 +60,15 @@ public class ProctorialBodyFragment extends android.app.Fragment {
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.context = context;
+        this.activity = (FragmentActivity) context;
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        context = getActivity().getApplicationContext();
 
     }
 
@@ -102,6 +114,7 @@ public class ProctorialBodyFragment extends android.app.Fragment {
                 }
                 if(proctors.size()>0)
                 {
+                    Log.e("Editabel",isEditable+" ");
                     adapter = new ProctorAdapter(context,R.layout.teacher_single_row,R.id.teacher_icon,proctors,isEditable,getFragmentManager());
                     adapter.setActivity(getActivity());
                     adapter.setView(view);
@@ -113,8 +126,20 @@ public class ProctorialBodyFragment extends android.app.Fragment {
                     nothingFoundImage.setVisibility(View.VISIBLE);
                     nothingFoundText.setVisibility(View.VISIBLE);
                     if(isEditable)
-                        nothingFoundText.setText("OOOPS!!! No Records found for Proctorial Body. Tap '+' to Add");
-                    else nothingFoundText.setText("OOOPS!!! No Records found for Proctorial Body Please Contact Admin");
+                        nothingFoundText.setText(Html.fromHtml("Sorry! No Records found for Proctorial Body. <b>Tap '+' to Add</b>"));
+                    else {
+                        nothingFoundText.setText(Html.fromHtml("Sorry! No Records found for Proctorial Body. <b>Please Contact Admin</b>"));
+                        nothingFoundText.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                AdminListBottomSheet adminListBottomSheet = new AdminListBottomSheet();
+                                Bundle args = new Bundle();
+                                args.putInt("purpose",Values.CONTACT_FOR_PROCTOR);
+                                adminListBottomSheet.setArguments(args);
+                                adminListBottomSheet.show(activity.getSupportFragmentManager(),"adminList");
+                            }
+                        });
+                    }
                     try{
                         Glide.with(context).load(context.getResources()
                                 .getIdentifier("nothing_found", "drawable", context.getPackageName())).thumbnail(0.5f)

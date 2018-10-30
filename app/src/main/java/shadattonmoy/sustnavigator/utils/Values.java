@@ -272,9 +272,9 @@ public class Values {
         return message;
     }
 
-    public static String getEmailForHoliday(String adminName)
+    public static String getEmailForHoliday(String adminName,int holidayYear)
     {
-        String message = "Hello "+adminName+", Please update the Holiday Record of SUST Navigator App. Its an emergency. We people are facing trouble with the current data. Thanks";
+        String message = "Hello "+adminName+", Please update the Holiday Record for Academic Year "+holidayYear+" of SUST Navigator App. Its an emergency. We people are facing trouble with the current data. Thanks";
         return message;
     }
 
