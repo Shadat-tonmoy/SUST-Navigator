@@ -95,6 +95,7 @@ public class Admin {
                 ", password='" + password + '\'' +
                 ", id='" + id + '\'' +
                 ", isVarified=" + isVarified +
+                ", isSuperAdmin=" + isSuperAdmin +
                 '}';
     }
 }

@@ -1,5 +1,6 @@
 package shadattonmoy.sustnavigator.commons.view;
 
+import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
@@ -86,11 +87,12 @@ public class SemesterListFragment extends android.app.Fragment {
     public static MenuItem signOutMenu;
     private boolean loadingFromLocal = false;
 
+
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        this.context = context;
-        this.activity = (FragmentActivity) context;
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        this.activity = (FragmentActivity) activity;
+        this.context = activity.getApplicationContext();
     }
 
     public SemesterListFragment() {
@@ -373,7 +375,19 @@ public class SemesterListFragment extends android.app.Fragment {
                     if (isSyllabusEditable)
                         nothingFoundText.setText("No Records found for " + dept.getDeptTitle() + "  of " + session + " Session. Tap the '+' Button to add");
                     else
-                        nothingFoundText.setText("No Records found for " + dept.getDeptTitle() + "  of " + session + " Session. Please Contact Admin");
+                    {
+                        nothingFoundText.setText("No Records found for " + dept.getDeptTitle() + "  of " + session + " Session. Please <b>Contact Admin</b>");
+                        nothingFoundText.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                AdminListBottomSheet adminListBottomSheet = new AdminListBottomSheet();
+                                Bundle args = new Bundle();
+                                args.putSerializable("dept",dept);
+                                adminListBottomSheet.setArguments(args);
+                                adminListBottomSheet.show(activity.getSupportFragmentManager(),"adminList");
+                            }
+                        });
+                    }
                     try {
                         Glide.with(context).load(context.getResources()
                                 .getIdentifier("nothing_found", "drawable", context.getPackageName())).thumbnail(0.5f)
