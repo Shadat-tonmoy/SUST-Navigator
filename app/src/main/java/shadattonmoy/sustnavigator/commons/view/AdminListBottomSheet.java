@@ -2,6 +2,8 @@ package shadattonmoy.sustnavigator.commons.view;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v4.app.FragmentActivity;
@@ -21,9 +23,12 @@ import java.util.List;
 
 import shadattonmoy.sustnavigator.R;
 import shadattonmoy.sustnavigator.admin.model.Admin;
+import shadattonmoy.sustnavigator.admin.view.CourseListDialog;
 import shadattonmoy.sustnavigator.commons.controller.AdminListAdapter;
 import shadattonmoy.sustnavigator.dept.model.Dept;
+import shadattonmoy.sustnavigator.dept.view.DeptFragment;
 import shadattonmoy.sustnavigator.school.controller.SchoolListAdapter;
+import shadattonmoy.sustnavigator.utils.Values;
 
 public class AdminListBottomSheet extends BottomSheetDialogFragment {
 
@@ -38,6 +43,7 @@ public class AdminListBottomSheet extends BottomSheetDialogFragment {
     private ArrayList<Admin> adminFromServer;
     private ProgressBar adminLoadingProgressBar;
     private Dept dept;
+    private String session;
     private FragmentActivity activity;
 
     @Override
@@ -66,6 +72,7 @@ public class AdminListBottomSheet extends BottomSheetDialogFragment {
         if(args!=null)
         {
             dept = (Dept) args.getSerializable("dept");
+            session = args.getString("session");
         }
     }
 
@@ -102,7 +109,7 @@ public class AdminListBottomSheet extends BottomSheetDialogFragment {
                     adminList.setVisibility(View.VISIBLE);
                     AdminListAdapter adminListAdapter = new AdminListAdapter(context,R.layout.admin_small_single_row,R.id.admin_name,adminFromServer);
                     adminList.setAdapter(adminListAdapter);
-//                    setNodesTouchListener();
+                    setNodesTouchListener();
                 }
             }
 
@@ -111,6 +118,47 @@ public class AdminListBottomSheet extends BottomSheetDialogFragment {
 
             }
         });
+    }
+    public void setNodesTouchListener()
+    {
+        adminList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Admin admin = (Admin) adapterView.getItemAtPosition(i);
+                String  name = admin.getName();
+//                String  adminDept = admin.getDept();
+                String  email = admin.getEmail();
+                String message = Values.getEmailForSyllabus(name,dept.getDeptCode(),session);
+                sendEmail(email,message);
+//                Log.e("Admin",name+" "+email+" "+dept);
+                dialog.dismiss();
+            }
+        });
+
+    }
+
+    private void sendEmail(String email,String message)
+    {
+        if(email==null || email.length()<4 )
+        {
+            Values.showToast(context,"Email Address not Available");
+            return;
+        }
+        String[] address = {email};
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setData(Uri.parse("mailto:"));
+        intent.setType("plain/text");
+        intent.putExtra(android.content.Intent.EXTRA_EMAIL, email);
+        intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "SUST Navigator Data Update");
+        intent.putExtra(android.content.Intent.EXTRA_TEXT, message);
+        intent.putExtra(Intent.EXTRA_EMAIL, address);
+        if (intent.resolveActivity(context.getPackageManager()) != null) {
+            startActivity(intent);
+        }
+        else
+        {
+            Values.showToast(context,"Email App Not Found!!!");
+        }
     }
 
 

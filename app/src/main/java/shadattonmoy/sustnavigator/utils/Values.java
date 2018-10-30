@@ -249,5 +249,11 @@ public class Values {
 
     }
 
+    public static String getEmailForSyllabus(String adminName,String dept,String session)
+    {
+        String message = "Hello "+adminName+", Please update the Syllabus Record for "+dept+" Dept of "+session+" of SUST Navigator App. Its an emergency. We people are facing trouble with the current data. Thanks";
+        return message;
+    }
+
 
 }

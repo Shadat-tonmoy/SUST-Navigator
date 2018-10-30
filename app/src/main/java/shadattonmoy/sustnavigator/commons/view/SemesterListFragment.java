@@ -373,16 +373,17 @@ public class SemesterListFragment extends android.app.Fragment {
                         });
                     }
                     if (isSyllabusEditable)
-                        nothingFoundText.setText("No Records found for " + dept.getDeptTitle() + "  of " + session + " Session. Tap the '+' Button to add");
+                        nothingFoundText.setText(Html.fromHtml("No Records found for " + dept.getDeptTitle() + "  of " + session + " Session. <b>Tap the '+' Button to add</b>"));
                     else
                     {
-                        nothingFoundText.setText("No Records found for " + dept.getDeptTitle() + "  of " + session + " Session. Please <b>Contact Admin</b>");
+                        nothingFoundText.setText(Html.fromHtml("No Records found for " + dept.getDeptTitle() + "  of " + session + " Session. Please <b>Contact Admin</b>"));
                         nothingFoundText.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 AdminListBottomSheet adminListBottomSheet = new AdminListBottomSheet();
                                 Bundle args = new Bundle();
                                 args.putSerializable("dept",dept);
+                                args.putString("session",session);
                                 adminListBottomSheet.setArguments(args);
                                 adminListBottomSheet.show(activity.getSupportFragmentManager(),"adminList");
                             }
