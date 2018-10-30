@@ -50,6 +50,11 @@ public class Values {
     public static final int VIEW_TYPE_EDITTEXT = 2;
     public static final int REQUEST_CODE_SIGN_IN_FOR_BACKUP = 1;
     public static final int REQUEST_CODE_SIGN_IN_FOR_RESTORE = 2;
+    public static final int CONTACT_FOR_SYLLABUS = 1;
+    public static final int CONTACT_FOR_FACULTY = 2;
+    public static final int CONTACT_FOR_HOLIDAY = 3;
+    public static final int CONTACT_FOR_PROCTOR = 4;
+    public static final int CONTACT_FOR_STAFF = 5;
     public static final String GITHUB_LINK = "https://github.com/Shadat-tonmoy/SUST-Navigator";
     public static final String DATABASE_NAME = "sust_nav_database";
     public static final String DEV_GITHUB_LINK = "https://github.com/Shadat-tonmoy/";
@@ -253,6 +258,54 @@ public class Values {
     {
         String message = "Hello "+adminName+", Please update the Syllabus Record for "+dept+" Dept of "+session+" of SUST Navigator App. Its an emergency. We people are facing trouble with the current data. Thanks";
         return message;
+    }
+
+    public static String getEmailForFaculty(String adminName,String dept)
+    {
+        String message = "Hello "+adminName+", Please update the Faculty Record for "+dept+" Dept of SUST Navigator App. Its an emergency. We people are facing trouble with the current data. Thanks";
+        return message;
+    }
+
+    public static String getEmailForStaff(String adminName,String dept)
+    {
+        String message = "Hello "+adminName+", Please update the Staff Record for "+dept+" Dept of SUST Navigator App. Its an emergency. We people are facing trouble with the current data. Thanks";
+        return message;
+    }
+
+    public static String getEmailForHoliday(String adminName)
+    {
+        String message = "Hello "+adminName+", Please update the Holiday Record of SUST Navigator App. Its an emergency. We people are facing trouble with the current data. Thanks";
+        return message;
+    }
+
+    public static String getEmailForProctor(String adminName)
+    {
+        String message = "Hello "+adminName+", Please update the Proctorial Body Record of SUST Navigator App. Its an emergency. We people are facing trouble with the current data. Thanks";
+        return message;
+    }
+
+    public static void sendEmail(String email,String message,Context context)
+    {
+        if(email==null || email.length()<4 )
+        {
+            Values.showToast(context,"Email Address not Available");
+            return;
+        }
+        String[] address = {email};
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setData(Uri.parse("mailto:"));
+        intent.setType("plain/text");
+        intent.putExtra(android.content.Intent.EXTRA_EMAIL, email);
+        intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "SUST Navigator Data Update");
+        intent.putExtra(android.content.Intent.EXTRA_TEXT, message);
+        intent.putExtra(Intent.EXTRA_EMAIL, address);
+        if (intent.resolveActivity(context.getPackageManager()) != null) {
+            context.startActivity(intent);
+        }
+        else
+        {
+            Values.showToast(context,"Email App Not Found!!!");
+        }
     }
 
 

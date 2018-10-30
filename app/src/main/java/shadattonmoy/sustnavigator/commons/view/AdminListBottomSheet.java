@@ -45,6 +45,7 @@ public class AdminListBottomSheet extends BottomSheetDialogFragment {
     private Dept dept;
     private String session;
     private FragmentActivity activity;
+    private int purposeOfContact = -1;
 
     @Override
     public void onAttach(Context context) {
@@ -73,6 +74,7 @@ public class AdminListBottomSheet extends BottomSheetDialogFragment {
         {
             dept = (Dept) args.getSerializable("dept");
             session = args.getString("session");
+            purposeOfContact = args.getInt("purpose");
         }
     }
 
@@ -128,8 +130,18 @@ public class AdminListBottomSheet extends BottomSheetDialogFragment {
                 String  name = admin.getName();
 //                String  adminDept = admin.getDept();
                 String  email = admin.getEmail();
-                String message = Values.getEmailForSyllabus(name,dept.getDeptCode(),session);
-                sendEmail(email,message);
+                String message = "";
+                if(purposeOfContact==Values.CONTACT_FOR_SYLLABUS)
+                    message = Values.getEmailForSyllabus(name,dept.getDeptCode(),session);
+                else if(purposeOfContact==Values.CONTACT_FOR_FACULTY)
+                    message = Values.getEmailForFaculty(name,dept.getDeptCode());
+                else if(purposeOfContact==Values.CONTACT_FOR_STAFF)
+                    message = Values.getEmailForStaff(name,dept.getDeptCode());
+                else if(purposeOfContact==Values.CONTACT_FOR_HOLIDAY)
+                    message = Values.getEmailForHoliday(name);
+                else if(purposeOfContact==Values.CONTACT_FOR_PROCTOR)
+                    message = Values.getEmailForProctor(name);
+                Values.sendEmail(email.trim(),message.trim(),context);
 //                Log.e("Admin",name+" "+email+" "+dept);
                 dialog.dismiss();
             }
@@ -137,29 +149,7 @@ public class AdminListBottomSheet extends BottomSheetDialogFragment {
 
     }
 
-    private void sendEmail(String email,String message)
-    {
-        if(email==null || email.length()<4 )
-        {
-            Values.showToast(context,"Email Address not Available");
-            return;
-        }
-        String[] address = {email};
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.setData(Uri.parse("mailto:"));
-        intent.setType("plain/text");
-        intent.putExtra(android.content.Intent.EXTRA_EMAIL, email);
-        intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "SUST Navigator Data Update");
-        intent.putExtra(android.content.Intent.EXTRA_TEXT, message);
-        intent.putExtra(Intent.EXTRA_EMAIL, address);
-        if (intent.resolveActivity(context.getPackageManager()) != null) {
-            startActivity(intent);
-        }
-        else
-        {
-            Values.showToast(context,"Email App Not Found!!!");
-        }
-    }
+
 
 
 }

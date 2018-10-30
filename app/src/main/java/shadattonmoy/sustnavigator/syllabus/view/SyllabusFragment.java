@@ -47,6 +47,7 @@ import shadattonmoy.sustnavigator.SQLiteAdapter;
 import shadattonmoy.sustnavigator.admin.view.ScanSyllabusFragment;
 import shadattonmoy.sustnavigator.commons.controller.SemesterAdapter;
 import shadattonmoy.sustnavigator.commons.model.Semester;
+import shadattonmoy.sustnavigator.commons.view.AdminListBottomSheet;
 import shadattonmoy.sustnavigator.dept.view.DeptFragment;
 import shadattonmoy.sustnavigator.syllabus.controller.SyllabusAdapter;
 import shadattonmoy.sustnavigator.admin.view.CourseAddFragment;
@@ -77,7 +78,7 @@ public class SyllabusFragment extends android.app.Fragment {
     private TextView nothingFoundText;
     private ImageView nothingFoundImage;
     private Context context;
-    private Activity activity;
+    private FragmentActivity activity;
     private BottomDialog bottomDialog;
     private SearchView searchView;
     private FragmentActivity fragmentActivity;
@@ -95,10 +96,15 @@ public class SyllabusFragment extends android.app.Fragment {
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.context = context;
+        this.activity = (FragmentActivity) context;
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        context = getActivity().getApplicationContext();
-        activity= getActivity();
     }
 
     @Override
@@ -177,7 +183,24 @@ public class SyllabusFragment extends android.app.Fragment {
                     setHasOptionsMenu(false);
                     nothingFoundImage.setVisibility(View.VISIBLE);
                     nothingFoundText.setVisibility(View.VISIBLE);
-                    nothingFoundText.setText("No Records found for "+dept.getDeptTitle()+"  of "+session+" Session. Tap + to add");
+                    if(isEditable)
+                        nothingFoundText.setText(Html.fromHtml("No Records found for "+dept.getDeptTitle()+"  of "+session+" Session. <b>Tap + to add</b>"));
+                    else
+                    {
+                        nothingFoundText.setText(Html.fromHtml("No Records found for "+dept.getDeptTitle()+"  of "+session+" Session.Please <b>Contact Admin</b>"));
+                        nothingFoundText.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                AdminListBottomSheet adminListBottomSheet = new AdminListBottomSheet();
+                                Bundle args = new Bundle();
+                                args.putSerializable("dept",dept);
+                                args.putSerializable("session",session);
+                                args.putInt("purpose",Values.CONTACT_FOR_SYLLABUS);
+                                adminListBottomSheet.setArguments(args);
+                                adminListBottomSheet.show(activity.getSupportFragmentManager(),"adminList");
+                            }
+                        });
+                    }
                     try{
                         Glide.with(context).load(context.getResources()
                                 .getIdentifier("nothing_found", "drawable", context.getPackageName())).thumbnail(0.5f)
@@ -225,28 +248,6 @@ public class SyllabusFragment extends android.app.Fragment {
             syllabusList.setAdapter(adapter);
             floatingActionMenu.setVisibility(View.VISIBLE);
             setFloatActionMenuHandler();
-            syllabusList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    /*Course clickedCourse = (Course) adapterView.getItemAtPosition(i);
-                    FragmentManager manager = getFragmentManager();
-                    FragmentTransaction transaction = manager.beginTransaction();
-                    SyllabusDetailFragment syllabusDetailFragment = new SyllabusDetailFragment();
-                    Bundle args = new Bundle();
-                    args.putSerializable("course",clickedCourse);
-                    args.putString("session",session);
-                    args.putString("semester",semester);
-                    args.putString("dept",dept.getDeptCode().toLowerCase());
-                    if(isEditable)
-                    {
-                        args.putBoolean("isAdmin",true);
-                    }
-                    syllabusDetailFragment.setArguments(args);
-                    transaction.replace(R.id.main_content_root,syllabusDetailFragment);
-                    transaction.addToBackStack("syllabusDetailFragment");
-                    transaction.commit();*/
-                }
-            });
         }
         else
         {
@@ -255,7 +256,7 @@ public class SyllabusFragment extends android.app.Fragment {
             nothingFoundText.setVisibility(View.VISIBLE);
             floatingActionMenu.setVisibility(View.VISIBLE);
             setFloatActionMenuHandler();
-            nothingFoundText.setText("No Records found on local Database. Tap + to add");
+            nothingFoundText.setText(Html.fromHtml("No Records found on local Database. <b>Tap + to add</b>"));
             try{
                 Glide.with(context).load(context.getResources()
                         .getIdentifier("nothing_found", "drawable", context.getPackageName())).thumbnail(0.5f)

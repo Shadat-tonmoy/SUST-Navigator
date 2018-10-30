@@ -384,6 +384,7 @@ public class SemesterListFragment extends android.app.Fragment {
                                 Bundle args = new Bundle();
                                 args.putSerializable("dept",dept);
                                 args.putString("session",session);
+                                args.putInt("purpose",Values.CONTACT_FOR_SYLLABUS);
                                 adminListBottomSheet.setArguments(args);
                                 adminListBottomSheet.show(activity.getSupportFragmentManager(),"adminList");
                             }

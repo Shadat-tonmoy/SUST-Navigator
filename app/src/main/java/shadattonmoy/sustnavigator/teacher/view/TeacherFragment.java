@@ -44,9 +44,11 @@ import shadattonmoy.sustnavigator.admin.controller.WebCrawler;
 import shadattonmoy.sustnavigator.admin.view.FacultyListFromWebDialog;
 import shadattonmoy.sustnavigator.admin.view.TeacherAddFragment;
 import shadattonmoy.sustnavigator.R;
+import shadattonmoy.sustnavigator.commons.view.AdminListBottomSheet;
 import shadattonmoy.sustnavigator.dept.model.Dept;
 import shadattonmoy.sustnavigator.teacher.controller.TeacherListAdapter;
 import shadattonmoy.sustnavigator.teacher.model.Teacher;
+import shadattonmoy.sustnavigator.utils.Values;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
@@ -158,8 +160,21 @@ public class TeacherFragment extends android.app.Fragment {
                     nothingFoundImage.setVisibility(View.VISIBLE);
                     nothingFoundText.setVisibility(View.VISIBLE);
                     if(isAdmin)
-                        nothingFoundText.setText("Sorry!! No Records found for " + dept.getDeptTitle() + "Tap the '+' Button to add");
-                    else nothingFoundText.setText("Sorry!! No Records found for " + dept.getDeptTitle() + "Please Contact Admin");
+                        nothingFoundText.setText(Html.fromHtml("Sorry!! No Records found for " + dept.getDeptTitle() + " <b>Tap the '+' Button to add</b>"));
+                    else {
+                        nothingFoundText.setText(Html.fromHtml("Sorry!! No Records found for " + dept.getDeptTitle() + " Please <b>Contact Admin</b>"));
+                        nothingFoundText.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                AdminListBottomSheet adminListBottomSheet = new AdminListBottomSheet();
+                                Bundle args = new Bundle();
+                                args.putSerializable("dept",dept);
+                                args.putInt("purpose",Values.CONTACT_FOR_FACULTY);
+                                adminListBottomSheet.setArguments(args);
+                                adminListBottomSheet.show(activity.getSupportFragmentManager(),"adminList");
+                            }
+                        });
+                    }
                     try {
                         Glide.with(context).load(context.getResources()
                                 .getIdentifier("nothing_found", "drawable", context.getPackageName())).thumbnail(0.5f)
