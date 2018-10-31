@@ -13,6 +13,9 @@ import android.support.v4.app.FragmentActivity;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -92,6 +95,7 @@ public class StaffFragment extends android.app.Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        setHasOptionsMenu(true);
         fragmentHeader.setText("Staff of "+dept.getDeptTitle());
         getStaffFromServer();
 
@@ -117,7 +121,7 @@ public class StaffFragment extends android.app.Fragment {
                 }
                 if(staffArray.size()>0)
                 {
-                    adapter = new StaffAdapter(getActivity().getApplicationContext(),R.layout.teacher_single_row,R.id.teacher_icon,staffArray,isEditable);
+                    adapter = new StaffAdapter(context,R.layout.teacher_single_row,R.id.teacher_icon,staffArray,isEditable);
                     adapter.setActivity(getActivity());
                     adapter.setDept(dept);
                     adapter.setView(view);
@@ -135,12 +139,7 @@ public class StaffFragment extends android.app.Fragment {
                         nothingFoundText.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                AdminListBottomSheet adminListBottomSheet = new AdminListBottomSheet();
-                                Bundle args = new Bundle();
-                                args.putInt("purpose",Values.CONTACT_FOR_STAFF);
-                                args.putSerializable("dept",dept);
-                                adminListBottomSheet.setArguments(args);
-                                adminListBottomSheet.show(activity.getSupportFragmentManager(),"adminList");
+                               requestAdmin();
                             }
                         });
                     }
@@ -183,6 +182,33 @@ public class StaffFragment extends android.app.Fragment {
             }
         });
 
+    }
+
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.admin_request_menu, menu);
+        MenuItem item = menu.findItem(R.id.request_admin_menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.request_admin:
+                requestAdmin();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void requestAdmin()
+    {
+        AdminListBottomSheet adminListBottomSheet = new AdminListBottomSheet();
+        Bundle args = new Bundle();
+        args.putInt("purpose",Values.CONTACT_FOR_STAFF);
+        args.putSerializable("dept",dept);
+        adminListBottomSheet.setArguments(args);
+        adminListBottomSheet.show(activity.getSupportFragmentManager(),"adminList");
     }
 
     public boolean isEditable() {

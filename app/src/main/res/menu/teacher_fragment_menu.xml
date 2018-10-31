@@ -12,6 +12,12 @@
     <item
         android:id="@+id/sort_teacher"
         android:icon="@drawable/sort_white_24"
-        app:showAsAction="always"
-        android:title="Search"/>
+        app:showAsAction="never"
+        android:title="Sort"/>
+
+    <item
+        android:id="@+id/request_admin"
+        android:icon="@drawable/sort_white_24"
+        app:showAsAction="never"
+        android:title="Request Updated Data"/>
 </menu>

@@ -1,6 +1,7 @@
 package shadattonmoy.sustnavigator.admin.view;
 
 import android.app.FragmentManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Patterns;
@@ -42,6 +43,14 @@ public class TeacherAddFragment extends android.app.Fragment {
     private FragmentManager fragmentManager;
     private boolean isEditing = false;
     private String facultyIdToUpdate;
+    private Context context;
+
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.context = context;
+    }
 
     public TeacherAddFragment() {
 
@@ -70,7 +79,7 @@ public class TeacherAddFragment extends android.app.Fragment {
         phoneField = (EditText) view.findViewById(R.id.teacher_add_contact_no_field);
         roomField = (EditText) view.findViewById(R.id.teacher_add_room_no_field);
         teacherAddSubmitButton = (Button) view.findViewById(R.id.teacher_add_submit_btn);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity().getApplicationContext(), R.array.designation, R.layout.spinner_layout);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(context, R.array.designation, R.layout.spinner_layout);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         designationField.setAdapter(adapter);
 
@@ -104,7 +113,7 @@ public class TeacherAddFragment extends android.app.Fragment {
         fragmentManager = getFragmentManager();
         firebaseDatabase = FirebaseDatabase.getInstance();
         awesomeValidation = new AwesomeValidation(ValidationStyle.BASIC);
-        awesomeValidation.addValidation(getActivity(), R.id.teacher_add_name_field, "^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$", R.string.name_error);
+        awesomeValidation.addValidation(getActivity(), R.id.teacher_add_name_field, "^[A-Za-z\\s]{1,}[\\.]{0,}[A-Za-z\\s\\W]{0,}$", R.string.name_error);
         awesomeValidation.addValidation(getActivity(), R.id.teacher_add_email_field, Patterns.EMAIL_ADDRESS, R.string.email_error);
         designationField.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -147,7 +156,7 @@ public class TeacherAddFragment extends android.app.Fragment {
                     } else warning_msg = "OK";
 
                     Teacher teacher = new Teacher(name, designation.toString(), room, phone, email);
-                    FacultyAddConfirmationDialog dialog = new FacultyAddConfirmationDialog(getActivity().getApplicationContext(), warning_msg, dept, teacher, view, fragmentManager,isEditing);
+                    FacultyAddConfirmationDialog dialog = new FacultyAddConfirmationDialog(context, warning_msg, dept, teacher, view, fragmentManager,isEditing);
                     if(isEditing)
                         dialog.setFacultyIdToUpdate(facultyIdToUpdate);
                     dialog.show(getFragmentManager(), "faculty_add_confirmation");

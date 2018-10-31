@@ -309,9 +309,10 @@ public class TeacherListAdapter extends ArrayAdapter<Teacher>{
 
         @Override
         protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            Values.showToast(context,"Faculty Record is Added.Please visit this screen again to see the updated result.");
             dialog.dismiss();
             Values.updateLastModified();
-            super.onPostExecute(aVoid);
         }
     }
 

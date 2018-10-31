@@ -11,6 +11,9 @@ import android.support.v4.app.FragmentActivity;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -83,6 +86,7 @@ public class ProctorialBodyFragment extends android.app.Fragment {
         nothingFoundImage = (ImageView) view.findViewById(R.id.nothing_found_image);
         nothingFoundText = (TextView) view.findViewById(R.id.nothing_found_txt);
         appBarLayout = (AppBarLayout) getActivity().findViewById(R.id.appbar_layout);
+        setHasOptionsMenu(true);
         return view;
     }
 
@@ -132,11 +136,7 @@ public class ProctorialBodyFragment extends android.app.Fragment {
                         nothingFoundText.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                AdminListBottomSheet adminListBottomSheet = new AdminListBottomSheet();
-                                Bundle args = new Bundle();
-                                args.putInt("purpose",Values.CONTACT_FOR_PROCTOR);
-                                adminListBottomSheet.setArguments(args);
-                                adminListBottomSheet.show(activity.getSupportFragmentManager(),"adminList");
+                                requestAdmin();
                             }
                         });
                     }
@@ -175,5 +175,33 @@ public class ProctorialBodyFragment extends android.app.Fragment {
             }
         });
 
+    }
+
+    private void requestAdmin()
+    {
+        AdminListBottomSheet adminListBottomSheet = new AdminListBottomSheet();
+        Bundle args = new Bundle();
+        args.putInt("purpose",Values.CONTACT_FOR_PROCTOR);
+        adminListBottomSheet.setArguments(args);
+        adminListBottomSheet.show(activity.getSupportFragmentManager(),"adminList");
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.admin_request_menu, menu);
+        MenuItem item = menu.findItem(R.id.request_admin_menu);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.request_admin_menu:
+                requestAdmin();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

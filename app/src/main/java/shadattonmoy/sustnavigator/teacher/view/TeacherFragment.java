@@ -78,6 +78,7 @@ public class TeacherFragment extends android.app.Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         activity = (FragmentActivity) context;
+        this.context = context;
     }
 
     public TeacherFragment() {
@@ -89,10 +90,10 @@ public class TeacherFragment extends android.app.Fragment {
 
     }
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        context = getActivity().getApplicationContext();
         Log.e("isAdmin",isAdmin+"");
 
 
@@ -137,7 +138,7 @@ public class TeacherFragment extends android.app.Fragment {
                 if (teachers.size() > 0) {
                     setHasOptionsMenu(true);
                     manager = getFragmentManager();
-                    adapter = new TeacherListAdapter(getActivity().getApplicationContext(), R.layout.teacher_single_row, R.id.teacher_icon, teachers, dept);
+                    adapter = new TeacherListAdapter(context, R.layout.teacher_single_row, R.id.teacher_icon, teachers, dept);
                     adapter.setFragmentManager(getFragmentManager());
                     Log.e("isAdmin",isAdmin+"");
                     teacherListView = (ListView) view.findViewById(R.id.teacherList);
@@ -166,12 +167,7 @@ public class TeacherFragment extends android.app.Fragment {
                         nothingFoundText.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                AdminListBottomSheet adminListBottomSheet = new AdminListBottomSheet();
-                                Bundle args = new Bundle();
-                                args.putSerializable("dept",dept);
-                                args.putInt("purpose",Values.CONTACT_FOR_FACULTY);
-                                adminListBottomSheet.setArguments(args);
-                                adminListBottomSheet.show(activity.getSupportFragmentManager(),"adminList");
+                                requestAdmin();
                             }
                         });
                     }
@@ -233,7 +229,7 @@ public class TeacherFragment extends android.app.Fragment {
                 nameAsc.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(getActivity().getApplicationContext(), "Sorted By Name Asc ", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Sorted By Name Asc ", Toast.LENGTH_SHORT).show();
                         sortTeacherList("name", false);
                         Log.e("SortingOption", "Sorted By Name Asc");
 
@@ -244,7 +240,7 @@ public class TeacherFragment extends android.app.Fragment {
                     @Override
                     public void onClick(View v) {
                         sortTeacherList("name", true);
-                        Toast.makeText(getActivity().getApplicationContext(), "Sorted By Name Desc ", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Sorted By Name Desc ", Toast.LENGTH_SHORT).show();
 
                     }
                 });
@@ -253,14 +249,14 @@ public class TeacherFragment extends android.app.Fragment {
                     @Override
                     public void onClick(View v) {
                         sortTeacherList("designation", false);
-                        Toast.makeText(getActivity().getApplicationContext(), "Sorted By Designation Asc ", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Sorted By Designation Asc ", Toast.LENGTH_SHORT).show();
                     }
                 });
 
                 designationDesc.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(getActivity().getApplicationContext(), "Sorted By Designation Desc ", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Sorted By Designation Desc ", Toast.LENGTH_SHORT).show();
                         sortTeacherList("designation", true);
 
                     }
@@ -397,13 +393,23 @@ public class TeacherFragment extends android.app.Fragment {
 
     }
 
+    private void requestAdmin()
+    {
+        AdminListBottomSheet adminListBottomSheet = new AdminListBottomSheet();
+        Bundle args = new Bundle();
+        args.putSerializable("dept",dept);
+        args.putInt("purpose",Values.CONTACT_FOR_FACULTY);
+        adminListBottomSheet.setArguments(args);
+        adminListBottomSheet.show(activity.getSupportFragmentManager(),"adminList");
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.search_teacher:
-                Toast.makeText(getActivity(),
-                        "Search Teacher",
-                        Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.request_admin:
+                requestAdmin();
                 return true;
             case R.id.sort_teacher:
                 showSortingBottomSheet();

@@ -11,7 +11,7 @@
         android:textSize="16sp"
         android:textStyle="bold"
         android:textColor="#ffffff"
-        android:background="@drawable/rectangle"
+        android:background="@color/colorPrimaryDark"
         android:padding="10dp"
         android:text="Please Make Notice..." />
 
@@ -31,12 +31,8 @@
         android:layout_centerInParent="true"
         android:layout_below="@+id/confirmation_dialog_image"
         android:layout_marginTop="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
         android:textSize="16sp"
         android:padding="10dp"
-        android:background="#16a085"
-        android:textColor="#ffffff"
         android:textAlignment="center"
         android:text="Some confirmation message goes here" />
 

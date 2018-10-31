@@ -191,7 +191,7 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
                     Course course = child.getValue(Course.class);
                     cgpaForCourse.add(course);
                 }
-                adapter = new CGPAAdapter(getActivity().getApplicationContext(), R.layout.fragment_cgpa, R.id.cgpa_calculate_button, cgpaForCourse, getFragmentManager());
+                adapter = new CGPAAdapter(context, R.layout.fragment_cgpa, R.id.cgpa_calculate_button, cgpaForCourse, getFragmentManager());
                 courseList.setAdapter(adapter);
                 progressBar.setVisibility(View.GONE);
                 CGPAAdapter.record.clear();
@@ -210,7 +210,7 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
         cgpaForCourse = (ArrayList<Course>) sqLiteAdapter.getCourses(semester);
         if (cgpaForCourse.size() > 0) {
             setHasOptionsMenu(true);
-            adapter = new CGPAAdapter(getActivity().getApplicationContext(), R.layout.fragment_cgpa, R.id.cgpa_calculate_button, cgpaForCourse, getFragmentManager());
+            adapter = new CGPAAdapter(context, R.layout.fragment_cgpa, R.id.cgpa_calculate_button, cgpaForCourse, getFragmentManager());
             courseList.setAdapter(adapter);
             progressBar.setVisibility(View.GONE);
             CGPAAdapter.record.clear();
@@ -249,14 +249,14 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
                     count++;
                 }
                 if (count == 0)
-                    Toast.makeText(getActivity().getApplicationContext(), "Sorry!! No Records Found", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Sorry!! No Records Found", Toast.LENGTH_SHORT).show();
                 else {
-                    adapter = new CGPAAdapter(getActivity().getApplicationContext(), R.layout.fragment_cgpa, R.id.cgpa_calculate_button, cgpaForCourse, getFragmentManager());
+                    adapter = new CGPAAdapter(context, R.layout.fragment_cgpa, R.id.cgpa_calculate_button, cgpaForCourse, getFragmentManager());
                     courseList.setAdapter(adapter);
 
                 }
             } else {
-                Toast.makeText(getActivity().getApplicationContext(), "Sorry!! No Records Found", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Sorry!! No Records Found", Toast.LENGTH_SHORT).show();
             }
 
 
@@ -400,7 +400,7 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
 
 
             if (passedCredit == (float) 0.0) {
-                Toast.makeText(getActivity().getApplicationContext(), "You have not passed any course yet", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "You have not passed any course yet", Toast.LENGTH_SHORT).show();
             } else {
                 FragmentManager manager = getFragmentManager();
                 FragmentTransaction transaction = manager.beginTransaction();
@@ -415,7 +415,7 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
             int count = courseList.getCount();
             CGPAAdapter.isReset = true;
             CGPAAdapter.record.clear();
-            courseList.setAdapter(new CGPAAdapter(getActivity().getApplicationContext(), R.layout.fragment_cgpa, R.id.cgpa_calculate_button, cgpaForCourse, getFragmentManager()));
+            courseList.setAdapter(new CGPAAdapter(context, R.layout.fragment_cgpa, R.id.cgpa_calculate_button, cgpaForCourse, getFragmentManager()));
         } else if (v.getId() == R.id.addFromCurrentFab) {
             CourseAddForCGPADialog dialog = new CourseAddForCGPADialog(dept.getDeptCode().toLowerCase(), semester, session);
             dialog.show(manager, "course_add_for_cgpa_dialog");

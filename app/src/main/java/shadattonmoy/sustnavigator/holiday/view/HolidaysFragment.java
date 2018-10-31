@@ -10,6 +10,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentActivity;
 import android.text.Html;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -112,6 +115,7 @@ public class HolidaysFragment extends android.app.Fragment {
         holidays = new ArrayList<Holiday>();
         noHolidayFoundView.setVisibility(View.GONE);
         appBarLayout.setExpanded(false);
+        setHasOptionsMenu(true);
 
 
 
@@ -139,11 +143,7 @@ public class HolidaysFragment extends android.app.Fragment {
                         noHolidayFoundView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                AdminListBottomSheet adminListBottomSheet = new AdminListBottomSheet();
-                                Bundle args = new Bundle();
-                                args.putInt("purpose",Values.CONTACT_FOR_HOLIDAY);
-                                adminListBottomSheet.setArguments(args);
-                                adminListBottomSheet.show(activity.getSupportFragmentManager(),"adminList");
+                                requestAdmin();
                             }
                         });
                     }
@@ -191,7 +191,32 @@ public class HolidaysFragment extends android.app.Fragment {
 
             }
         });
+    }
+
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.admin_request_menu, menu);
+        MenuItem item = menu.findItem(R.id.request_admin_menu);
+    }
 
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.request_admin_menu:
+                requestAdmin();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+    
+    private void requestAdmin()
+    {
+        AdminListBottomSheet adminListBottomSheet = new AdminListBottomSheet();
+        Bundle args = new Bundle();
+        args.putInt("purpose",Values.CONTACT_FOR_HOLIDAY);
+        adminListBottomSheet.setArguments(args);
+        adminListBottomSheet.show(activity.getSupportFragmentManager(),"adminList");
     }
 }

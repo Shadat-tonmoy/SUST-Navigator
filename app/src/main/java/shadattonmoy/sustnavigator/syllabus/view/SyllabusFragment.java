@@ -126,6 +126,7 @@ public class SyllabusFragment extends android.app.Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        setHasOptionsMenu(true);
         if(Values.IS_LOCAL_ADMIN)
             getSyllabusFromLocalDB();
         else getSyllabusFromServer();
@@ -153,7 +154,7 @@ public class SyllabusFragment extends android.app.Fragment {
                 if(courses.size()>0)
                 {
                     setHasOptionsMenu(true);
-                    adapter = new SyllabusAdapter(getActivity().getApplicationContext(),R.layout.fragment_syllabus2,R.id.course_code,courses,isEditable,getFragmentManager(),dept.getDeptCode().toLowerCase(),semester,session,activity);
+                    adapter = new SyllabusAdapter(context,R.layout.fragment_syllabus2,R.id.course_code,courses,isEditable,getFragmentManager(),dept.getDeptCode().toLowerCase(),semester,session,activity);
                     syllabusList.setAdapter(adapter);
                     syllabusList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
@@ -191,13 +192,7 @@ public class SyllabusFragment extends android.app.Fragment {
                         nothingFoundText.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                AdminListBottomSheet adminListBottomSheet = new AdminListBottomSheet();
-                                Bundle args = new Bundle();
-                                args.putSerializable("dept",dept);
-                                args.putSerializable("session",session);
-                                args.putInt("purpose",Values.CONTACT_FOR_SYLLABUS);
-                                adminListBottomSheet.setArguments(args);
-                                adminListBottomSheet.show(activity.getSupportFragmentManager(),"adminList");
+                               requestAdmin();
                             }
                         });
                     }
@@ -244,7 +239,7 @@ public class SyllabusFragment extends android.app.Fragment {
         if(courses.size()>0)
         {
             setHasOptionsMenu(true);
-            adapter = new SyllabusAdapter(getActivity().getApplicationContext(),R.layout.fragment_syllabus2,R.id.course_code, (ArrayList<Course>) courses,isEditable,getFragmentManager(),dept.getDeptCode().toLowerCase(),semester,session,activity);
+            adapter = new SyllabusAdapter(context,R.layout.fragment_syllabus2,R.id.course_code, (ArrayList<Course>) courses,isEditable,getFragmentManager(),dept.getDeptCode().toLowerCase(),semester,session,activity);
             syllabusList.setAdapter(adapter);
             floatingActionMenu.setVisibility(View.VISIBLE);
             setFloatActionMenuHandler();
@@ -345,7 +340,7 @@ public class SyllabusFragment extends android.app.Fragment {
                 courseCodeAsc.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(getActivity().getApplicationContext(), "Sorted By Course Code Ascending ", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Sorted By Course Code Ascending ", Toast.LENGTH_SHORT).show();
                         sortSyllabus("code", false);
 
                     }
@@ -354,7 +349,7 @@ public class SyllabusFragment extends android.app.Fragment {
                 courseCodeDesc.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(getActivity().getApplicationContext(), "Sorted By Course Code Descending ", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Sorted By Course Code Descending ", Toast.LENGTH_SHORT).show();
                         sortSyllabus("code", true);
 
                     }
@@ -363,7 +358,7 @@ public class SyllabusFragment extends android.app.Fragment {
                 courseTitleAsc.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(getActivity().getApplicationContext(), "Sorted By Course Title Ascending ", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Sorted By Course Title Ascending ", Toast.LENGTH_SHORT).show();
                         sortSyllabus("title", false);
 
                     }
@@ -372,7 +367,7 @@ public class SyllabusFragment extends android.app.Fragment {
                 courseTitleDesc.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(getActivity().getApplicationContext(), "Sorted By Course Title Descending ", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Sorted By Course Title Descending ", Toast.LENGTH_SHORT).show();
                         sortSyllabus("title", true);
 
                     }
@@ -381,7 +376,7 @@ public class SyllabusFragment extends android.app.Fragment {
                 courseCreditAsc.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(getActivity().getApplicationContext(), "Sorted By Course Credit Ascending ", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Sorted By Course Credit Ascending ", Toast.LENGTH_SHORT).show();
                         sortSyllabus("credit", false);
 
                     }
@@ -390,7 +385,7 @@ public class SyllabusFragment extends android.app.Fragment {
                 courseCreditDesc.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(getActivity().getApplicationContext(), "Sorted By Course Credit Descending ", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Sorted By Course Credit Descending ", Toast.LENGTH_SHORT).show();
                         sortSyllabus("credit", true);
 
                     }
@@ -512,23 +507,34 @@ public class SyllabusFragment extends android.app.Fragment {
                 {
                     filteredCourse.add(course);
                 }
-                adapter = new SyllabusAdapter(getActivity().getApplicationContext(),R.layout.fragment_syllabus2,R.id.course_code,filteredCourse,isEditable,getFragmentManager(),dept.getDeptCode().toLowerCase(),semester,session,activity);
+                adapter = new SyllabusAdapter(context,R.layout.fragment_syllabus2,R.id.course_code,filteredCourse,isEditable,getFragmentManager(),dept.getDeptCode().toLowerCase(),semester,session,activity);
                 syllabusList.setAdapter(adapter);
             }
         }
 
     }
 
+    private void requestAdmin()
+    {
+        AdminListBottomSheet adminListBottomSheet = new AdminListBottomSheet();
+        Bundle args = new Bundle();
+        args.putSerializable("dept",dept);
+        args.putSerializable("session",session);
+        args.putInt("purpose",Values.CONTACT_FOR_SYLLABUS);
+        adminListBottomSheet.setArguments(args);
+        adminListBottomSheet.show(activity.getSupportFragmentManager(),"adminList");
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.search_teacher:
-                Toast.makeText(getActivity(),
-                        "Search Course",
-                        Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.sort_teacher:
                 showSortingBottomSheet();
+                return true;
+            case R.id.request_admin:
+                requestAdmin();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
