@@ -100,10 +100,10 @@ public class TeacherListAdapter extends ArrayAdapter<Teacher>{
         if(isAdmin)
         {
             imageView.setVisibility(View.VISIBLE);
-            imageView.setBackgroundResource(R.drawable.more_vert_black);
+            imageView.setImageResource(R.drawable.more_vert_black);
         }
         else imageView.setVisibility(View.GONE);
-        final PopupMenu popupMenu = new PopupMenu(getContext(),imageView,Gravity.LEFT);
+        final PopupMenu popupMenu = new PopupMenu(context,imageView,Gravity.LEFT);
         final String name = currentTeacher.getName();
         final String designation = currentTeacher.getDesignation();
         String room = currentTeacher.getRoom();
@@ -144,21 +144,37 @@ public class TeacherListAdapter extends ArrayAdapter<Teacher>{
                         }
                         else if ( id == R.id.remove_faculty_menu)
                         {
-                            firebaseDatabase = FirebaseDatabase.getInstance();
-                            final ProgressDialog dialog;
-                            dialog = new ProgressDialog(activity);
-                            dialog.setTitle("Deleting Record");
-                            dialog.setMessage("Please Wait....");
-                            dialog.show();
-                            firebaseDatabase.getReference().child("teacher").child(dept.getDeptCode().toLowerCase()).child(teacherId).removeValue(new DatabaseReference.CompletionListener() {
-                                @Override
-                                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                                    dialog.dismiss();
-                                    Snackbar snackbar = Snackbar.make(view,"Faculty is Removed",Snackbar.LENGTH_LONG);
-                                    snackbar.show();
-                                    remove(currentTeacher);
-                                }
-                            });
+                            AlertDialog.Builder builder;
+                                builder = new AlertDialog.Builder(context);
+                            builder.setTitle("Delete Record?")
+                                    .setMessage("Are you sure you want to delete this Faculty Record? Once it is deleted you will not be able to recover it")
+                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            firebaseDatabase = FirebaseDatabase.getInstance();
+                                            final ProgressDialog progressDialog;
+                                            progressDialog = new ProgressDialog(activity);
+                                            progressDialog.setTitle("Deleting Record");
+                                            progressDialog.setMessage("Please Wait....");
+                                            progressDialog.show();
+                                            firebaseDatabase.getReference().child("teacher").child(dept.getDeptCode().toLowerCase()).child(teacherId).removeValue(new DatabaseReference.CompletionListener() {
+                                                @Override
+                                                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                                    progressDialog.dismiss();
+                                                    Snackbar snackbar = Snackbar.make(view,"Faculty is Removed",Snackbar.LENGTH_LONG);
+                                                    snackbar.show();
+                                                    remove(currentTeacher);
+                                                }
+                                            });
+                                        }
+                                    })
+                                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    })
+                                    .show();
+
+
                             return true;
                         }
                         return false;

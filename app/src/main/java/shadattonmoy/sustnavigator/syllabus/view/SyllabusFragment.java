@@ -167,7 +167,7 @@ public class SyllabusFragment extends android.app.Fragment {
                             args.putSerializable("course",clickedCourse);
                             args.putString("session",session);
                             args.putString("semester",semester);
-                            args.putString("dept",dept.getDeptCode().toLowerCase());
+                            args.putSerializable("dept",dept);
                             if(isEditable)
                             {
                                 args.putBoolean("isAdmin",true);

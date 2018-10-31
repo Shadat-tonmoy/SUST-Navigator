@@ -193,7 +193,7 @@ public class StaffFragment extends android.app.Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.request_admin:
+            case R.id.request_admin_menu:
                 requestAdmin();
                 return true;
             default:

@@ -55,6 +55,7 @@ public class Values {
     public static final int CONTACT_FOR_HOLIDAY = 3;
     public static final int CONTACT_FOR_PROCTOR = 4;
     public static final int CONTACT_FOR_STAFF = 5;
+    public static final int CONTACT_FOR_SYLLABUS_DETAILS= 5;
     public static final String GITHUB_LINK = "https://github.com/Shadat-tonmoy/SUST-Navigator";
     public static final String DATABASE_NAME = "sust_nav_database";
     public static final String DEV_GITHUB_LINK = "https://github.com/Shadat-tonmoy/";
@@ -257,6 +258,12 @@ public class Values {
     public static String getEmailForSyllabus(String adminName,String dept,String session)
     {
         String message = "Hello "+adminName+", Please update the Syllabus Record for "+dept+" Dept of "+session+" of SUST Navigator App. Its an emergency. We people are facing trouble with the current data. Thanks";
+        return message;
+    }
+
+    public static String getEmailForSyllabusDetail(String adminName,String dept,String session,Course course)
+    {
+        String message = "Hello "+adminName+", Please update the Syllabus Detail for "+dept+" Dept of "+session+" For the Course "+course.getCourse_code()+" - "+course.getCourse_title()+" of SUST Navigator App. Its an emergency. We people are facing trouble with the current data. Thanks";
         return message;
     }
 

@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import shadattonmoy.sustnavigator.Course;
 import shadattonmoy.sustnavigator.R;
 import shadattonmoy.sustnavigator.admin.model.Admin;
 import shadattonmoy.sustnavigator.admin.view.CourseListDialog;
@@ -44,7 +45,8 @@ public class AdminListBottomSheet extends BottomSheetDialogFragment {
     private ArrayList<Admin> adminFromServer;
     private ProgressBar adminLoadingProgressBar;
     private Dept dept;
-    private String session;
+    private Course course;
+    private String session,semester;
     private FragmentActivity activity;
     private int purposeOfContact = -1;
     private int holidayYear = Calendar.getInstance().get(Calendar.YEAR);
@@ -76,7 +78,9 @@ public class AdminListBottomSheet extends BottomSheetDialogFragment {
         {
             dept = (Dept) args.getSerializable("dept");
             session = args.getString("session");
+            semester = args.getString("semester");
             purposeOfContact = args.getInt("purpose");
+            course = (Course) args.getSerializable("course");
         }
     }
 
@@ -142,6 +146,8 @@ public class AdminListBottomSheet extends BottomSheetDialogFragment {
                 String message = "";
                 if(purposeOfContact==Values.CONTACT_FOR_SYLLABUS)
                     message = Values.getEmailForSyllabus(name,dept.getDeptCode(),session);
+                if(purposeOfContact==Values.CONTACT_FOR_SYLLABUS_DETAILS)
+                    message = Values.getEmailForSyllabusDetail(name,dept.getDeptCode(),session,course);
                 else if(purposeOfContact==Values.CONTACT_FOR_FACULTY)
                     message = Values.getEmailForFaculty(name,dept.getDeptCode());
                 else if(purposeOfContact==Values.CONTACT_FOR_STAFF)

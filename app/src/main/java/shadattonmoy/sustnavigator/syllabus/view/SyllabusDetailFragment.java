@@ -7,6 +7,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +24,9 @@ import com.github.clans.fab.FloatingActionMenu;
 import shadattonmoy.sustnavigator.Course;
 import shadattonmoy.sustnavigator.R;
 import shadattonmoy.sustnavigator.admin.view.ScanSyllabusDetailFragment;
+import shadattonmoy.sustnavigator.commons.view.AdminListBottomSheet;
+import shadattonmoy.sustnavigator.dept.model.Dept;
+import shadattonmoy.sustnavigator.utils.Values;
 
 public class SyllabusDetailFragment extends Fragment {
     private View view;
@@ -33,8 +38,16 @@ public class SyllabusDetailFragment extends Fragment {
     private Context context;
     private FloatingActionMenu floatingActionMenu;
     private FloatingActionButton addCustomSyllabusFab, scanFromSyllabusFab;
-    private String session, dept, semester;
+    private String session, semester;
+    private Dept dept;
+    private FragmentActivity activity;
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.context = context;
+        this.activity = (FragmentActivity) context;
+    }
 
     public SyllabusDetailFragment() {
 
@@ -48,10 +61,9 @@ public class SyllabusDetailFragment extends Fragment {
             course = (Course) getArguments().getSerializable("course");
             session = getArguments().getString("session");
             semester = getArguments().getString("semester");
-            dept = getArguments().getString("dept");
+            dept = (Dept) getArguments().getSerializable("dept");
             isAdmin = getArguments().getBoolean("isAdmin", false);
         }
-        context = getActivity().getApplicationContext();
 
     }
 
@@ -92,11 +104,19 @@ public class SyllabusDetailFragment extends Fragment {
         }
 
         if (isAdmin) {
-            nothingFoundText.setText("OOOPS!!! No Course Details Available. Tap '+' to Add");
+            nothingFoundText.setText(Html.fromHtml("Sorry! No Course Details Available. <b>Tap '+' to Add</b>"));
             floatingActionMenu.setVisibility(View.VISIBLE);
             populateFloatingActionMenu();
         } else
-            nothingFoundText.setText("OOOPS!!! No Course Details Available. Please Contact Admin");
+        {
+            nothingFoundText.setText(Html.fromHtml("Sorry! No Course Details Available. <b>Please Contact Admin</b>"));
+            nothingFoundText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    requestAdmin();
+                }
+            });
+        }
         try {
             Glide.with(context).load(context.getResources()
                     .getIdentifier("nothing_found", "drawable", context.getPackageName())).thumbnail(0.5f)
@@ -106,6 +126,19 @@ public class SyllabusDetailFragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void requestAdmin()
+    {
+        AdminListBottomSheet adminListBottomSheet = new AdminListBottomSheet();
+        Bundle args = new Bundle();
+        args.putSerializable("dept",dept);
+        args.putSerializable("course",course);
+        args.putSerializable("session",session);
+        args.putSerializable("semester",semester);
+        args.putInt("purpose",Values.CONTACT_FOR_SYLLABUS_DETAILS);
+        adminListBottomSheet.setArguments(args);
+        adminListBottomSheet.show(activity.getSupportFragmentManager(),"adminList");
     }
 
     public void populateFloatingActionMenu() {
@@ -127,7 +160,7 @@ public class SyllabusDetailFragment extends Fragment {
                 args.putSerializable("course", course);
                 args.putString("session", session);
                 args.putString("semester", semester);
-                args.putString("dept", dept);
+                args.putString("dept", dept.getDeptCode());
                 scanSyllabusDetailFragment.setArguments(args);
                 transaction.replace(R.id.main_content_root, scanSyllabusDetailFragment);
                 transaction.addToBackStack("scanSyllabusDetailFragment");
