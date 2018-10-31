@@ -9,6 +9,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,7 +35,9 @@ import java.util.ArrayList;
 
 import shadattonmoy.sustnavigator.admin.view.ProctorAddFragment;
 import shadattonmoy.sustnavigator.admin.view.StaffAddFragment;
+import shadattonmoy.sustnavigator.commons.view.AdminListBottomSheet;
 import shadattonmoy.sustnavigator.dept.model.Dept;
+import shadattonmoy.sustnavigator.utils.Values;
 
 
 public class StaffFragment extends android.app.Fragment {
@@ -50,6 +54,7 @@ public class StaffFragment extends android.app.Fragment {
     private boolean isEditable = false;
     private FloatingActionButton addFab;
     private View view;
+    private FragmentActivity activity;
     public StaffFragment() {
 
     }
@@ -61,6 +66,7 @@ public class StaffFragment extends android.app.Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         this.context = context;
+        this.activity= (FragmentActivity) context;
     }
 
     @Override
@@ -122,9 +128,22 @@ public class StaffFragment extends android.app.Fragment {
                     nothingFoundImage.setVisibility(View.VISIBLE);
                     nothingFoundText.setVisibility(View.VISIBLE);
                     if(isEditable)
-                        nothingFoundText.setText("Sorry!! No Records found for " + dept.getDeptTitle() + " Tap the '+' Button to add");
+                        nothingFoundText.setText(Html.fromHtml("Sorry!! No Records found for " + dept.getDeptTitle() + " <b> Tap the '+' Button to add</b>"));
                     else
-                        nothingFoundText.setText("Sorry!! No Records found for " + dept.getDeptTitle() + " Please Contact Admin");
+                    {
+                        nothingFoundText.setText(Html.fromHtml("Sorry!! No Records found for " + dept.getDeptTitle() + " <b>Please Contact Admin</b>"));
+                        nothingFoundText.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                AdminListBottomSheet adminListBottomSheet = new AdminListBottomSheet();
+                                Bundle args = new Bundle();
+                                args.putInt("purpose",Values.CONTACT_FOR_STAFF);
+                                args.putSerializable("dept",dept);
+                                adminListBottomSheet.setArguments(args);
+                                adminListBottomSheet.show(activity.getSupportFragmentManager(),"adminList");
+                            }
+                        });
+                    }
                     try {
                         Glide.with(context).load(context.getResources()
                                 .getIdentifier("nothing_found", "drawable", context.getPackageName())).thumbnail(0.5f)
