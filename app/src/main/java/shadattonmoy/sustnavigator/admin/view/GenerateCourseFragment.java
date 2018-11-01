@@ -378,18 +378,21 @@ public class GenerateCourseFragment extends android.app.Fragment {
                 Log.e("Credit",text);
 
             }
-            else {
+            /*else {
                 detectedCreditContainer.addView(detectedTextView);
-            }
+            }*/
 
         }
     }
 
     private int getDetectedTextType(String text)
     {
+        if(text.contains("+"))
+            return -1;
         String patternOfCode = "^[A-Za-z]{3}[ ]*[0-9A-Z*]+$";
-        String patternOfTitle = "^[A-Za-z ]+$";
-        String patternOfCredit = "^[0-9 .]+$";
+//        String patternOfTitle = "^[A-Za-z ]+$";
+        String patternOfTitle = "^.{4,}$";
+        String patternOfCredit = "^[^+][0-9 .]*$";
 
         Pattern pattern = Pattern.compile(patternOfCode);
         Matcher matcher = pattern.matcher(text);
