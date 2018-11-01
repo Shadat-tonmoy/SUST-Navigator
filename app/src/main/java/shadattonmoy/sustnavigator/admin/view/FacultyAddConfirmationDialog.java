@@ -64,11 +64,9 @@ public class FacultyAddConfirmationDialog extends DialogFragment {
                 textView.setText("Are You Sure to Update Record of Faculty Member?");
             else
                 textView.setText("Are You Sure to Add This Faculty Member?");
-            textView.setBackgroundColor(getResources().getColor(R.color.warningGreen));
         }
         else {
             textView.setText(warningMsg);
-            textView.setBackgroundColor(getResources().getColor(R.color.warningRed));
         }
         builder.setView(view);
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {

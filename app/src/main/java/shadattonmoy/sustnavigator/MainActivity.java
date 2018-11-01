@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity
         File database = context.getDatabasePath(dbname);
         if(database!=null)
         {
-            Log.e("DatabasePath",database.getAbsolutePath()+" "+database.getName());
+//            Log.e("DatabasePath",database.getAbsolutePath()+" "+database.getName());
         }
 
         sqLiteAdapter = SQLiteAdapter.getInstance(MainActivity.this);
@@ -203,7 +203,7 @@ public class MainActivity extends AppCompatActivity
                                 googleDriveBackup.startBackupTask();
                             }
                             else {
-                                Log.e("Restoring","WillStart");
+//                                Log.e("Restoring","WillStart");
                                 googleDriveBackup.startRestoreTask();
                             }
                         }
@@ -214,11 +214,11 @@ public class MainActivity extends AppCompatActivity
                         }
                     })
                     .show();
-            Log.e("SignIn", account.getEmail()+" is signed in");
+//            Log.e("SignIn", account.getEmail()+" is signed in");
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
-            Log.e("Error", "signInResult:failed code=" + e.getMessage());
+//            Log.e("Error", "signInResult:failed code=" + e.getMessage());
 //            updateUI(null);
         }
     }
@@ -244,7 +244,7 @@ public class MainActivity extends AppCompatActivity
                         }
                     }
                     if (adminRequests.size() > 0) {
-                        Log.e("GetAdminReq", "Total Req " + adminRequests.size());
+//                        Log.e("GetAdminReq", "Total Req " + adminRequests.size());
                         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
                         DatabaseReference databaseReference = firebaseDatabase.getReference();
                         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -258,7 +258,7 @@ public class MainActivity extends AppCompatActivity
                                         Admin loggedInAdmin = child.getValue(Admin.class);
                                         Values.LOGGED_IN_ADMIN = loggedInAdmin;
                                         if (Values.LOGGED_IN_ADMIN != null) {
-                                            Log.e("GetAdminReq", "LoggedInAsAAdmin");
+//                                            Log.e("GetAdminReq", "LoggedInAsAAdmin");
                                             if (Values.LOGGED_IN_ADMIN.isSuperAdmin()) {
                                                 Log.e("GetAdminReq", "LoggedInAsASuperAdmin");
                                                 showAdminRequestDialog(adminRequests.size());
@@ -683,7 +683,7 @@ public class MainActivity extends AppCompatActivity
             databaseReference.push().setValue(course).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
-                    Log.e("syllabusAdded", "For Dept CHE");
+//                    Log.e("syllabusAdded", "For Dept CHE");
                 }
             });
 
@@ -694,7 +694,7 @@ public class MainActivity extends AppCompatActivity
             databaseReference.push().setValue(course).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
-                    Log.e("syllabusAdded", "For Dept CHE");
+//                    Log.e("syllabusAdded", "For Dept CHE");
                 }
             });
 
@@ -705,7 +705,7 @@ public class MainActivity extends AppCompatActivity
             databaseReference.push().setValue(course).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
-                    Log.e("syllabusAdded", "For Dept CHE");
+//                    Log.e("syllabusAdded", "For Dept CHE");
                 }
             });
 

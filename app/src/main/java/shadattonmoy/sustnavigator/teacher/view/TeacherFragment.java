@@ -475,7 +475,7 @@ public class TeacherFragment extends android.app.Fragment {
             }
             else
             {
-                Toast.makeText(context,"Sorry No Faculty Information is Found",Toast.LENGTH_SHORT).show();
+                Toast.makeText(context,"Sorry There was an Error. May be the website is not working or nNo Faculty Information is Found",Toast.LENGTH_SHORT).show();
             }
             for(Teacher teacher:facultyList)
             {

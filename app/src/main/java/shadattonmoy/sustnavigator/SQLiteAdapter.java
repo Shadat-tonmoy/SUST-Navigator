@@ -158,8 +158,8 @@ public class SQLiteAdapter {
                 selection+=" OR "+sqLiteHelper.SEMESTER+"=?";
             }
         }
-        for(String selectionarg:selectionArgs)
-            Log.e("Selections",selectionarg);
+//        for(String selectionarg:selectionArgs)
+//            Log.e("Selections",selectionarg);
         Cursor cursor = db.query(SQLiteHelper.CGPA_TABLE,columns,selection,selectionArgs,null,null,null);
 
         return cursor;
@@ -189,7 +189,7 @@ public class SQLiteAdapter {
         String whereClause = sqLiteHelper.COURSE_ID+"=?";
         String[] whereArgs = {course.getCourse_id()};
         int result = db.update(sqLiteHelper.COURSE,contentValues,whereClause,whereArgs);
-        Log.e("UpdatedResult",course.toString());
+//        Log.e("UpdatedResult",course.toString());
         return result;
     }
 
@@ -211,7 +211,7 @@ public class SQLiteAdapter {
         String semesterCode = Values.getSemesterCode(semester);
         String[] whereArgs = {semesterCode};
         int result = db.delete(sqLiteHelper.SEMESTER_TABLE,whereClause,whereArgs);
-        Log.e("ResultOfDelete",result+" "+semesterCode+" "+semester);
+//        Log.e("ResultOfDelete",result+" "+semesterCode+" "+semester);
         return result;
     }
 
@@ -245,7 +245,7 @@ public class SQLiteAdapter {
             e.printStackTrace();
             return result;
         }
-        Log.e("CourseDelete",courseId+" result "+result);
+//        Log.e("CourseDelete",courseId+" result "+result);
         return result;
     }
     public class SQLiteHelper extends SQLiteOpenHelper{
@@ -288,7 +288,7 @@ public class SQLiteAdapter {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            Toast.makeText(context,"OnCreate",Toast.LENGTH_SHORT).show();
+//            Toast.makeText(context,"OnCreate",Toast.LENGTH_SHORT).show();
             try {
                 db.execSQL(CREATE_CGPA_TABLE);
                 db.execSQL(CREATE_COURSE_TABLE);
@@ -297,21 +297,21 @@ public class SQLiteAdapter {
             } catch (SQLException e) {
                 e.printStackTrace();
                 //Log.e("Exception ",e.toString());
-                Toast.makeText(context,"Exception on create : "+e.toString(),Toast.LENGTH_SHORT).show();
+//                Toast.makeText(context,"Exception on create : "+e.toString(),Toast.LENGTH_SHORT).show();
             }
 
         }
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             try {
-                Toast.makeText(context,"OnUpgrade",Toast.LENGTH_SHORT).show();
+//                Toast.makeText(context,"OnUpgrade",Toast.LENGTH_SHORT).show();
                 db.execSQL(DROP_CGPA_TABLE);
                 db.execSQL(DROP_COURSE_TABLE);
                 db.execSQL(DROP_SEMESTER_TABLE);
                 onCreate(db);
             } catch (SQLException e) {
                 e.printStackTrace();
-                Toast.makeText(context,"Exception on upgrade : "+e.toString(),Toast.LENGTH_SHORT).show();
+//                Toast.makeText(context,"Exception on upgrade : "+e.toString(),Toast.LENGTH_SHORT).show();
             }
 
 

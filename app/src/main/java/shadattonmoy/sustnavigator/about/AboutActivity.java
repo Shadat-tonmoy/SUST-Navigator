@@ -94,6 +94,13 @@ public class AboutActivity extends AppCompatActivity {
             }
         });
 
+        rateOnPlayStore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Values.startRateUsActivity(context);
+            }
+        });
+
 
     }
 }
