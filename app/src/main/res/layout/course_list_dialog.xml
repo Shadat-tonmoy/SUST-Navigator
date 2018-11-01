@@ -9,7 +9,7 @@
         android:id="@+id/textView14"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/rectangle"
+        android:background="@color/colorPrimaryDark"
         android:padding="16dp"
         android:text="Please make a notice"
         android:textColor="#ffffff"

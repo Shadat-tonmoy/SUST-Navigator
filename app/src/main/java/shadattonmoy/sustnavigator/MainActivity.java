@@ -378,6 +378,10 @@ public class MainActivity extends AppCompatActivity
             openHelpFragment(null);
         } else if (id == R.id.nav_about) {
             openAboutFragment(null);
+        }else if (id == R.id.nav_rate) {
+            Values.startRateUsActivity(context);
+        }else if (id == R.id.nav_share) {
+            Values.startShareAppActivity(context);
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
