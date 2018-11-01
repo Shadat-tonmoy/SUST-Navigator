@@ -25,6 +25,7 @@
         <activity
             android:name=".MainActivity"
             android:alwaysRetainTaskState="true"
+            android:screenOrientation="portrait"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
@@ -55,7 +56,8 @@
                 <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
         </activity>
-        <activity android:name=".mlkit.CameraActivity" />
+        <activity android:name=".mlkit.CameraActivity"
+            android:screenOrientation="portrait"/>
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -71,16 +73,28 @@
             android:name="com.google.android.gms.vision.DEPENDENCIES"
             android:value="ocr" />
 
-        <activity android:name=".help.HelpActivity" />
-        <activity android:name=".SplashScreen">
+        <activity android:name=".help.HelpActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".SplashScreen"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".about.AboutActivity" />
-        <activity android:name=".teacher.view.TeacherDetailsActivity"></activity>
+        <activity android:name=".about.AboutActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".teacher.view.TeacherDetailsActivity"
+            android:screenOrientation="portrait"></activity>
+
+       <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="a1a7c581e2bbc80db384910c6cddc287dd21809d" />
+         <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="a1a7c581e2bbc80db384910c6cddc287dd21809d" />
     </application>
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>

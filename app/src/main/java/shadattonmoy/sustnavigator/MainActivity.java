@@ -29,6 +29,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.api.ApiException;
@@ -47,6 +48,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.fabric.sdk.android.Fabric;
 import shadattonmoy.sustnavigator.about.AboutActivity;
 import shadattonmoy.sustnavigator.admin.controller.WebCrawler;
 import shadattonmoy.sustnavigator.admin.model.Admin;
@@ -84,6 +86,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
+//        int i = 5/0;
         setContentView(R.layout.activity_main);
         lastModifiedText = (TextView) findViewById(R.id.last_modified);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
