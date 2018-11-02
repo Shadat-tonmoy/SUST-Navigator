@@ -168,16 +168,21 @@ public class AdminFragment extends android.app.Fragment {
         email = loginEmail.getText().toString();
         password = loginPassword.getText().toString();
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference databaseReference = firebaseDatabase.getReference();
-        Query queryRef = databaseReference.child("admin").orderByChild("email").equalTo(email);
-        queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        DatabaseReference databaseReference = firebaseDatabase.getReference().child("admin");
+        databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                admin = null;
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                boolean adminMatched = false;
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                     admin = child.getValue(Admin.class);
+                    if(admin.getEmail().equals(email) && admin.getPassword().equals(password))
+                    {
+                        adminMatched = true;
+                        break;
+                    }
+                    Log.e("Admin",admin.toString());
                 }
-                if(admin!=null)
+                if(adminMatched)
                 {
                     if(admin.isVarified())
                     {
@@ -195,7 +200,7 @@ public class AdminFragment extends android.app.Fragment {
 
 
                                 } else {
-                                    Log.e("Error",task.getException().getMessage());
+//                                    Log.e("Error",task.getException().getMessage());
                                     loginErrorMsg.setVisibility(View.VISIBLE);
                                     loginErrorText.setText(task.getException().getMessage());
                                     loginButton.setClickable(true);
@@ -216,6 +221,7 @@ public class AdminFragment extends android.app.Fragment {
                         loginButton.setText("LOGIN");
                         loginButton.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                     }
+
                 }
                 else
                 {
@@ -226,6 +232,7 @@ public class AdminFragment extends android.app.Fragment {
                     loginButton.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
 
                 }
+
             }
 
             @Override
@@ -233,7 +240,6 @@ public class AdminFragment extends android.app.Fragment {
 
             }
         });
-
     }
 
     void sendPasswordResetRequest(String email) {

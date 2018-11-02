@@ -163,9 +163,19 @@ public class SchoolListAdapter extends RecyclerView.Adapter<SchoolListAdapter.My
                 deptCell.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        StaffFragment staffFragment = new StaffFragment(dept);
-                        staffFragment.setEditable(true);
-                        loadFragment(staffFragment,"staffFragment");
+
+                        if(dept.getDeptCode().toLowerCase().equals(Values.LOGGED_IN_ADMIN.getDept().toLowerCase()) || Values.LOGGED_IN_ADMIN.isSuperAdmin())
+                        {
+
+                            StaffFragment staffFragment = new StaffFragment(dept);
+                            staffFragment.setEditable(true);
+                            loadFragment(staffFragment,"staffFragment");
+
+                        }
+                        else
+                        {
+                            Toast.makeText(context,"Sorry! You only have access to "+ Values.LOGGED_IN_ADMIN.getDept()+" Department ",Toast.LENGTH_LONG).show();
+                        }
                     }
                 });
             }

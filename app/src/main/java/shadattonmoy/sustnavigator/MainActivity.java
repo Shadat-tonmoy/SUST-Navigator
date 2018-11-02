@@ -145,6 +145,14 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 user = firebaseAuth.getCurrentUser();
+                /*if(user!=null)
+                {
+//                    Log.e("currentUser",user.getEmail()+" is ");
+                }
+                else Log.e("currentUser","Null");*/
+
+//                Log.e("currentUser",firebaseAuth.getCurrentUser().getDisplayName());
+
             }
         };
 
@@ -248,7 +256,7 @@ public class MainActivity extends AppCompatActivity
                         }
                     }
                     if (adminRequests.size() > 0) {
-                        Log.e("GetAdminReq", "Total Req " + adminRequests.size());
+//                        Log.e("GetAdminReq", "Total Req " + adminRequests.size());
                         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
                         DatabaseReference databaseReference = firebaseDatabase.getReference();
                         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -264,7 +272,7 @@ public class MainActivity extends AppCompatActivity
                                         if (Values.LOGGED_IN_ADMIN != null) {
 //                                            Log.e("GetAdminReq", "LoggedInAsAAdmin");
                                             if (Values.LOGGED_IN_ADMIN.isSuperAdmin()) {
-                                                Log.e("GetAdminReq", "LoggedInAsASuperAdmin");
+//                                                Log.e("GetAdminReq", "LoggedInAsASuperAdmin");
                                                 showAdminRequestDialog(adminRequests.size());
                                             } else {
                                                 int count = 0;
@@ -279,7 +287,7 @@ public class MainActivity extends AppCompatActivity
                                             }
 
                                         } else {
-                                            Log.e("GetAdminReq", "CurrentAdminNull");
+//                                            Log.e("GetAdminReq", "CurrentAdminNull");
                                         }
                                     }
                                 }
@@ -291,7 +299,7 @@ public class MainActivity extends AppCompatActivity
                             });
                         }
                     } else {
-                        Log.e("GetAdminReq", "NoNewRequest");
+//                        Log.e("GetAdminReq", "NoNewRequest");
                     }
 
                 }
@@ -308,7 +316,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void showAdminRequestDialog(int numOfRequest) {
-        Log.e("GetAdminReq", "ShowingDialog");
+//        Log.e("GetAdminReq", "ShowingDialog");
         AlertDialog.Builder builder;
         builder = new AlertDialog.Builder(context);
         builder.setTitle("New Admin Request!")

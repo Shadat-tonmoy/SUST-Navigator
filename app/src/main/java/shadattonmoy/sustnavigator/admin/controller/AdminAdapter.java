@@ -1,5 +1,7 @@
 package shadattonmoy.sustnavigator.admin.controller;
 
+import android.app.FragmentManager;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.annotation.IdRes;
@@ -51,6 +53,7 @@ public class AdminAdapter extends ArrayAdapter<Admin>{
         super(context, resource, textViewResourceId, objects);
         this.context = context;
         this.relativeLayout = relativeLayout;
+        firebaseAuth = FirebaseAuth.getInstance();
     }
 
     public void setActivity(FragmentActivity activity) {
@@ -94,7 +97,7 @@ public class AdminAdapter extends ArrayAdapter<Admin>{
         {
             if(!admin.isVarified())
             {
-                Log.e("Admin",admin.toString()+" not Verified");
+//                Log.e("Admin",admin.toString()+" not Verified");
                 if(approveIcon!=null)
                 {
                     approveIcon.setImageResource(R.drawable.baseline_done_black_24);
@@ -102,7 +105,7 @@ public class AdminAdapter extends ArrayAdapter<Admin>{
                     approveIcon.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            promptAdminApprove(admin,approveIcon);
+                            promptAdminApprove(admin,approveIcon,notApprovedMsg);
                         }
                     });
                 }
@@ -122,17 +125,21 @@ public class AdminAdapter extends ArrayAdapter<Admin>{
                     approveIcon.setVisibility(View.GONE);
                 if(notApprovedMsg!=null)
                     notApprovedMsg.setVisibility(View.GONE);
-                if(makeSuperAdmin!=null)
-                    makeSuperAdmin.setVisibility(View.VISIBLE);
-                if(!admin.getEmail().equals(Values.LOGGED_IN_ADMIN.getEmail()))
+                if((!admin.getEmail().equals(Values.LOGGED_IN_ADMIN.getEmail())) && !(admin.isSuperAdmin()))
                 {
-                    makeSuperAdmin.setVisibility(View.VISIBLE);
+                    if(makeSuperAdmin!=null)
+                        makeSuperAdmin.setVisibility(View.VISIBLE);
                     makeSuperAdmin.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            promptAdminApprove(admin,approveIcon);
+                            promptSuperAdmin(admin);
                         }
                     });
+                }
+                else
+                {
+                    if(makeSuperAdmin!=null)
+                        makeSuperAdmin.setVisibility(View.GONE);
                 }
 
             }
@@ -169,7 +176,7 @@ public class AdminAdapter extends ArrayAdapter<Admin>{
                             @Override
                             public void onClick(View v) {
 //                                Toast.makeText(context,"Approve Admin"+id,Toast.LENGTH_SHORT).show();
-                                promptAdminApprove(admin,approveIcon);
+                                promptAdminApprove(admin,approveIcon,notApprovedMsg);
 
                             }
                         });
@@ -202,8 +209,12 @@ public class AdminAdapter extends ArrayAdapter<Admin>{
                     removeIcon.setVisibility(View.GONE);
                 if(approveIcon!=null)
                     approveIcon.setVisibility(View.GONE);
-                if(notApprovedMsg!=null)
-                    notApprovedMsg.setVisibility(View.GONE);
+                if(notApprovedMsg!=null){
+                    if(!admin.isVarified())
+                        notApprovedMsg.setVisibility(View.VISIBLE);
+                    else notApprovedMsg.setVisibility(View.GONE);
+                }
+
             }
 
         }
@@ -231,7 +242,7 @@ public class AdminAdapter extends ArrayAdapter<Admin>{
         return row;
     }
 
-    private void promptAdminApprove(Admin admin,ImageView approveIcon)
+    private void promptAdminApprove(Admin admin,ImageView approveIcon,TextView notApprovedMsg)
     {
         AlertDialog.Builder builder;
         builder = new AlertDialog.Builder(activity);
@@ -239,7 +250,26 @@ public class AdminAdapter extends ArrayAdapter<Admin>{
                 .setMessage("Are you sure you want to approve "+admin.getName()+" as Admin ?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        approveAdmin(admin.getId(),admin.getEmail(),admin.getPassword(),approveIcon,notApprovedMsg);
+                        approveAdmin(admin,admin.getId(),admin.getEmail(),admin.getPassword(),approveIcon,notApprovedMsg);
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+    }
+
+    private void promptSuperAdmin(Admin admin)
+    {
+        AlertDialog.Builder builder;
+        builder = new AlertDialog.Builder(activity);
+        builder.setTitle("Sure?")
+                .setMessage("Are you sure you want to make "+admin.getName()+" a super Admin ?")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        makeSuperAdmin(admin,admin.getId());
                     }
                 })
                 .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -258,7 +288,11 @@ public class AdminAdapter extends ArrayAdapter<Admin>{
                 .setMessage("Are you sure you want to remove "+admin.getName()+" From Admin ?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        remove(admin);
+                        if(admin!=null)
+                        {
+                            remove(admin);
+                            removeAdmin(admin);
+                        }
                     }
                 })
                 .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -268,7 +302,7 @@ public class AdminAdapter extends ArrayAdapter<Admin>{
                 })
                 .show();
     }
-    void approveAdmin(String id, final String email, final String password,ImageView approveIcon, TextView notAdminMsg)
+    void approveAdmin(Admin admin,String id, final String email, final String password,ImageView approveIcon, TextView notAdminMsg)
     {
         progressBar.setVisibility(View.VISIBLE);
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -276,37 +310,49 @@ public class AdminAdapter extends ArrayAdapter<Admin>{
         databaseReference.setValue(new Boolean(true)).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                createAdmin(email,password,approveIcon,notAdminMsg);
+                createAdmin(admin,email,password,approveIcon,notAdminMsg);
             }
         });
 
     }
 
-    void makeSuperAdmin(String id)
+    void makeSuperAdmin(Admin admin,String id)
     {
-        progressBar.setVisibility(View.VISIBLE);
+        ProgressDialog progressDialog = new ProgressDialog(activity);
+        progressDialog.setTitle("Please Wait...");
+        progressDialog.setMessage("Upgrading Admin...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference().child("admin").child(id).child("superAdmin");
         databaseReference.setValue(new Boolean(true)).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 Toast.makeText(context,"Super Admin Made",Toast.LENGTH_SHORT).show();
-                progressBar.setVisibility(View.GONE);
-
+                admin.setSuperAdmin(true);
+                notifyDataSetChanged();
+                progressDialog.dismiss();
             }
         });
 
     }
 
-    void createAdmin(String email,String password,ImageView approveIcon,TextView notApprovedMsg)
+    void createAdmin(Admin admin,String email,String password,ImageView approveIcon,TextView notApprovedMsg)
     {
+        ProgressDialog progressDialog = new ProgressDialog(activity);
+        progressDialog.setTitle("Please Wait...");
+        progressDialog.setMessage("Creating Admin...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 progressBar.setVisibility(View.GONE);
-                Snackbar snackbar = Snackbar.make(relativeLayout,"Admin is approved",Snackbar.LENGTH_SHORT);
-                snackbar.show();
+                firebaseAuth.signOut();
+                admin.setVarified(true);
+                notifyDataSetChanged();
+                signInWithCurrentAdmin(progressDialog,"Admin is approved");
                 if(approveIcon!=null)
                     approveIcon.setVisibility(View.GONE);
                 if(notApprovedMsg!=null)
@@ -317,20 +363,60 @@ public class AdminAdapter extends ArrayAdapter<Admin>{
     }
     void removeAdmin(final Admin admin)
     {
+        ProgressDialog progressDialog = new ProgressDialog(activity);
+        progressDialog.setTitle("Please Wait...");
+        progressDialog.setMessage("Removing Admin...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference databaseReference = firebaseDatabase.getReference().child("admin").child(admin.getId());
         databaseReference.setValue(null, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
-                remove(admin);
-                Snackbar snackbar = Snackbar.make(relativeLayout,"Admin is removed",Snackbar.LENGTH_SHORT);
-                snackbar.show();
-                Values.updateLastModified();
+                firebaseAuth.signOut();
+                firebaseAuth.signInWithEmailAndPassword(admin.getEmail(),admin.getPassword()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(firebaseAuth.getCurrentUser()!=null)
+                        {
+                            firebaseAuth.getCurrentUser().delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    signInWithCurrentAdmin(progressDialog,"Admin is removed");
+                                    remove(admin);
+                                }
+                            });
+                        }
+                        else progressDialog.dismiss();
+                    }
+                });
 
             }
         });
+    }
 
+    private void signInWithCurrentAdmin(ProgressDialog progressDialog,String message)
+    {
+        String currentAdminEmail = Values.LOGGED_IN_ADMIN.getEmail();
+        String currentAdminpassword = Values.LOGGED_IN_ADMIN.getPassword();
+        firebaseAuth.signInWithEmailAndPassword(currentAdminEmail,currentAdminpassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                progressDialog.dismiss();
+                Snackbar snackbar = Snackbar.make(relativeLayout,message,Snackbar.LENGTH_SHORT);
+                snackbar.show();
+                if(firebaseAuth.getCurrentUser()==null)
+                {
+                    firebaseAuth.signOut();
+                    FragmentManager manager = activity.getFragmentManager();
+                    for (int i = 0; i < manager.getBackStackEntryCount(); ++i) {
+                        manager.popBackStack();
+                    }
+                }
+                else Values.updateLastModified();
 
-
+            }
+        });
     }
 }
