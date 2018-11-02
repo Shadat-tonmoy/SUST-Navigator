@@ -248,7 +248,7 @@ public class MainActivity extends AppCompatActivity
                         }
                     }
                     if (adminRequests.size() > 0) {
-//                        Log.e("GetAdminReq", "Total Req " + adminRequests.size());
+                        Log.e("GetAdminReq", "Total Req " + adminRequests.size());
                         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
                         DatabaseReference databaseReference = firebaseDatabase.getReference();
                         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();

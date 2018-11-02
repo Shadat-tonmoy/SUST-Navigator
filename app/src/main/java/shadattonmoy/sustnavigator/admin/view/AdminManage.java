@@ -1,8 +1,10 @@
 package shadattonmoy.sustnavigator.admin.view;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +36,15 @@ public class AdminManage extends android.app.Fragment {
     private RelativeLayout relativeLayout;
     private View view;
     private AppBarLayout appBarLayout;
+    private FragmentActivity activity;
+    private Context context;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.activity = (FragmentActivity) context;
+        this.context = context;
+    }
 
     public AdminManage() {
         // Required empty public constructor
@@ -49,7 +60,7 @@ public class AdminManage extends android.app.Fragment {
                              Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragment_admin_manage, container, false);
-        appBarLayout = (AppBarLayout) getActivity().findViewById(R.id.appbar_layout);
+        appBarLayout = (AppBarLayout) activity.findViewById(R.id.appbar_layout);
         return view;
     }
 
@@ -74,8 +85,9 @@ public class AdminManage extends android.app.Fragment {
                     admin.setId(child.getKey());
                     adminArray.add(admin);
                 }
-                AdminAdapter adminAdapter = new AdminAdapter(getActivity().getApplicationContext(),R.layout.admin_single_row,R.id.admin_icon,adminArray,relativeLayout);
+                AdminAdapter adminAdapter = new AdminAdapter(context,R.layout.admin_single_row,R.id.admin_icon,adminArray,relativeLayout);
                 adminAdapter.setProgressBar(adminLoading);
+                adminAdapter.setActivity(activity);
                 adminList.setAdapter(adminAdapter);
                 adminLoading.setVisibility(View.GONE);
             }

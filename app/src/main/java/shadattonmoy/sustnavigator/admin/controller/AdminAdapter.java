@@ -1,11 +1,15 @@
 package shadattonmoy.sustnavigator.admin.controller;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,13 +44,17 @@ public class AdminAdapter extends ArrayAdapter<Admin>{
     private RelativeLayout relativeLayout;
     private Context context;
     private ProgressBar progressBar;
-    private ImageView approveIcon,removeIcon;
     private FirebaseAuth firebaseAuth;
+    private FragmentActivity activity;
     private TextView notApprovedMsg;
     public AdminAdapter(@NonNull Context context, @LayoutRes int resource, @IdRes int textViewResourceId, @NonNull List<Admin> objects,RelativeLayout relativeLayout) {
         super(context, resource, textViewResourceId, objects);
         this.context = context;
         this.relativeLayout = relativeLayout;
+    }
+
+    public void setActivity(FragmentActivity activity) {
+        this.activity = activity;
     }
 
     public void setProgressBar(ProgressBar progressBar) {
@@ -55,7 +63,7 @@ public class AdminAdapter extends ArrayAdapter<Admin>{
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable final View convertView, @NonNull ViewGroup parent) {
+    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
         View row = convertView;
         if(row==null)
@@ -71,8 +79,8 @@ public class AdminAdapter extends ArrayAdapter<Admin>{
         TextView makeSuperAdmin = (TextView) row.findViewById(R.id.make_super_admin);
         TextView notApprovedMsg = (TextView) row.findViewById(R.id.not_varified_msg);
 
-        approveIcon = (ImageView) row.findViewById(R.id.approve_admin);
-        removeIcon = (ImageView) row.findViewById(R.id.remove_admin);
+        ImageView approveIcon = (ImageView) row.findViewById(R.id.approve_admin);
+        ImageView removeIcon = (ImageView) row.findViewById(R.id.remove_admin);
 
 
         String name = admin.getName();
@@ -86,43 +94,58 @@ public class AdminAdapter extends ArrayAdapter<Admin>{
         {
             if(!admin.isVarified())
             {
-                approveIcon.setImageResource(R.drawable.baseline_done_black_24);
-                approveIcon.setVisibility(View.VISIBLE);
-                notApprovedMsg.setText("Not Approved Yet");
-                approveIcon.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(context,"Approve Admin"+id,Toast.LENGTH_SHORT).show();
-                        approveAdmin(id,email,password);
-                    }
-                });
+                Log.e("Admin",admin.toString()+" not Verified");
+                if(approveIcon!=null)
+                {
+                    approveIcon.setImageResource(R.drawable.baseline_done_black_24);
+                    approveIcon.setVisibility(View.VISIBLE);
+                    approveIcon.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            promptAdminApprove(admin,approveIcon);
+                        }
+                    });
+                }
+                if(notApprovedMsg!=null)
+                {
+                    notApprovedMsg.setVisibility(View.VISIBLE);
+                    notApprovedMsg.setText("Not Approved Yet");
+                }
+                if(makeSuperAdmin!=null){
+                    makeSuperAdmin.setVisibility(View.GONE);
+                }
+
             }
             else
             {
-                approveIcon.setVisibility(View.GONE);
-                notApprovedMsg.setVisibility(View.GONE);
+                if(approveIcon!=null)
+                    approveIcon.setVisibility(View.GONE);
+                if(notApprovedMsg!=null)
+                    notApprovedMsg.setVisibility(View.GONE);
+                if(makeSuperAdmin!=null)
+                    makeSuperAdmin.setVisibility(View.VISIBLE);
                 if(!admin.getEmail().equals(Values.LOGGED_IN_ADMIN.getEmail()))
                 {
                     makeSuperAdmin.setVisibility(View.VISIBLE);
                     makeSuperAdmin.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            makeSuperAdmin(id);
-
+                            promptAdminApprove(admin,approveIcon);
                         }
                     });
                 }
 
             }
-            removeIcon.setImageResource(R.drawable.clear_black_24);
-            removeIcon.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    removeAdmin(admin);
-
-                }
-            });
-
+            if(removeIcon!=null)
+            {
+                removeIcon.setImageResource(R.drawable.clear_black_24);
+                removeIcon.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        promptAdminRemove(admin);
+                    }
+                });
+            }
         }
         else
         {
@@ -130,37 +153,57 @@ public class AdminAdapter extends ArrayAdapter<Admin>{
             {
                 if(!admin.isVarified())
                 {
-                    approveIcon.setImageResource(R.drawable.baseline_done_black_24);
-                    approveIcon.setVisibility(View.VISIBLE);
-                    notApprovedMsg.setText("Not Approved Yet");
-                    approveIcon.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Toast.makeText(context,"Approve Admin"+id,Toast.LENGTH_SHORT).show();
-                            approveAdmin(id,email,password);
-                        }
-                    });
+                    if(approveIcon!=null)
+                    {
+                        approveIcon.setImageResource(R.drawable.baseline_done_black_24);
+                        approveIcon.setVisibility(View.VISIBLE);
+                    }
+                    if(notApprovedMsg!=null)
+                    {
+                        notApprovedMsg.setVisibility(View.VISIBLE);
+                        notApprovedMsg.setText("Not Approved Yet");
+                    }
+                    if(approveIcon!=null)
+                    {
+                        approveIcon.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+//                                Toast.makeText(context,"Approve Admin"+id,Toast.LENGTH_SHORT).show();
+                                promptAdminApprove(admin,approveIcon);
+
+                            }
+                        });
+                    }
+
                 }
                 else
                 {
-                    approveIcon.setVisibility(View.GONE);
-                    notApprovedMsg.setVisibility(View.GONE);
+                    if(approveIcon!=null)
+                        approveIcon.setVisibility(View.GONE);
+                    if(notApprovedMsg!=null)
+                        notApprovedMsg.setVisibility(View.GONE);
                 }
-                removeIcon.setImageResource(R.drawable.clear_black_24);
-                removeIcon.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        removeAdmin(admin);
+                if(removeIcon!=null)
+                {
+                    removeIcon.setImageResource(R.drawable.clear_black_24);
+                    removeIcon.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            promptAdminRemove(admin);
+                        }
+                    });
+                }
 
-                    }
-                });
 
             }
             else
             {
-                removeIcon.setVisibility(View.GONE);
-                approveIcon.setVisibility(View.GONE);
-                notApprovedMsg.setVisibility(View.GONE);
+                if(removeIcon!=null)
+                    removeIcon.setVisibility(View.GONE);
+                if(approveIcon!=null)
+                    approveIcon.setVisibility(View.GONE);
+                if(notApprovedMsg!=null)
+                    notApprovedMsg.setVisibility(View.GONE);
             }
 
         }
@@ -187,7 +230,45 @@ public class AdminAdapter extends ArrayAdapter<Admin>{
         adminRegNo.setText(regNo);
         return row;
     }
-    void approveAdmin(String id, final String email, final String password)
+
+    private void promptAdminApprove(Admin admin,ImageView approveIcon)
+    {
+        AlertDialog.Builder builder;
+        builder = new AlertDialog.Builder(activity);
+        builder.setTitle("Sure to Approve?")
+                .setMessage("Are you sure you want to approve "+admin.getName()+" as Admin ?")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        approveAdmin(admin.getId(),admin.getEmail(),admin.getPassword(),approveIcon,notApprovedMsg);
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+    }
+
+    private void promptAdminRemove(Admin admin)
+    {
+        AlertDialog.Builder builder;
+        builder = new AlertDialog.Builder(activity);
+        builder.setTitle("Sure to Delete?")
+                .setMessage("Are you sure you want to remove "+admin.getName()+" From Admin ?")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        remove(admin);
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+    }
+    void approveAdmin(String id, final String email, final String password,ImageView approveIcon, TextView notAdminMsg)
     {
         progressBar.setVisibility(View.VISIBLE);
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -195,11 +276,13 @@ public class AdminAdapter extends ArrayAdapter<Admin>{
         databaseReference.setValue(new Boolean(true)).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                createAdmin(email,password);
+                createAdmin(email,password,approveIcon,notAdminMsg);
             }
         });
 
-    }void makeSuperAdmin(String id)
+    }
+
+    void makeSuperAdmin(String id)
     {
         progressBar.setVisibility(View.VISIBLE);
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -209,12 +292,13 @@ public class AdminAdapter extends ArrayAdapter<Admin>{
             public void onComplete(@NonNull Task<Void> task) {
                 Toast.makeText(context,"Super Admin Made",Toast.LENGTH_SHORT).show();
                 progressBar.setVisibility(View.GONE);
+
             }
         });
 
     }
 
-    void createAdmin(String email,String password)
+    void createAdmin(String email,String password,ImageView approveIcon,TextView notApprovedMsg)
     {
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -223,8 +307,10 @@ public class AdminAdapter extends ArrayAdapter<Admin>{
                 progressBar.setVisibility(View.GONE);
                 Snackbar snackbar = Snackbar.make(relativeLayout,"Admin is approved",Snackbar.LENGTH_SHORT);
                 snackbar.show();
-                approveIcon.setVisibility(View.GONE);
-                notApprovedMsg.setVisibility(View.GONE);
+                if(approveIcon!=null)
+                    approveIcon.setVisibility(View.GONE);
+                if(notApprovedMsg!=null)
+                    notApprovedMsg.setVisibility(View.GONE);
 
             }
         });
