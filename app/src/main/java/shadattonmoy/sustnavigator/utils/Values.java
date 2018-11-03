@@ -56,7 +56,7 @@ public class Values {
     public static final int CONTACT_FOR_HOLIDAY = 3;
     public static final int CONTACT_FOR_PROCTOR = 4;
     public static final int CONTACT_FOR_STAFF = 5;
-    public static final int CONTACT_FOR_SYLLABUS_DETAILS= 5;
+    public static final int CONTACT_FOR_SYLLABUS_DETAILS= 6;
     public static final String GITHUB_LINK = "https://github.com/Shadat-tonmoy/SUST-Navigator";
     public static final String DATABASE_NAME = "sust_nav_database";
     public static final String DEV_GITHUB_LINK = "https://github.com/Shadat-tonmoy/";
