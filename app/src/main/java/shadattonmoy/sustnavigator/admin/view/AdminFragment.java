@@ -196,7 +196,7 @@ public class AdminFragment extends android.app.Fragment {
                                     if(Values.LOGIN_TIME)
                                     {
                                         Values.LOGGED_IN_ADMIN = admin;
-                                        Values.showToast(context,"ShowingUI");
+//                                        Values.showToast(context,"ShowingUI");
                                         Log.e("Loggedin",Values.LOGGED_IN_ADMIN.toString());
                                         Log.e("Showing","UI");
                                         try {
