@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#5d2d70</color>
-    <color name="colorPrimaryDark">#522564</color>
+    <color name="colorPrimary">#202d39</color>
+    <color name="colorPrimaryDark">#202D39</color>
     <color name="colorChipBackground">#e0e0e0</color>
     <color name="colorAccent">#263238</color>
     <color name="warningRed">#e74c3c</color>
@@ -18,5 +18,6 @@
     <color name="transparent">#00FFFFFF</color>
     <color name="blue">#2980b9</color>
     <color name="teel">#16a085</color>
+    <color name="darkTeel">#0e7460</color>
     <color name="cardBlue">#01579B</color>
 </resources>

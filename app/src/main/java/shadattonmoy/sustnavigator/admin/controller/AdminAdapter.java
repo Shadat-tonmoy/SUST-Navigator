@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -307,9 +308,9 @@ public class AdminAdapter extends ArrayAdapter<Admin>{
         progressBar.setVisibility(View.VISIBLE);
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference().child("admin").child(id).child("varified");
-        databaseReference.setValue(new Boolean(true)).addOnCompleteListener(new OnCompleteListener<Void>() {
+        databaseReference.setValue(new Boolean(true)).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
-            public void onComplete(@NonNull Task<Void> task) {
+            public void onSuccess(Void aVoid) {
                 createAdmin(admin,email,password,approveIcon,notAdminMsg);
             }
         });
@@ -325,13 +326,14 @@ public class AdminAdapter extends ArrayAdapter<Admin>{
         progressDialog.show();
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference().child("admin").child(id).child("superAdmin");
-        databaseReference.setValue(new Boolean(true)).addOnCompleteListener(new OnCompleteListener<Void>() {
+
+        databaseReference.setValue(new Boolean(true)).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                Toast.makeText(context,"Super Admin Made",Toast.LENGTH_SHORT).show();
+            public void onSuccess(Void aVoid) {
                 admin.setSuperAdmin(true);
                 notifyDataSetChanged();
                 progressDialog.dismiss();
+                showSnackbar("Super Admin Made");
             }
         });
 
@@ -345,11 +347,12 @@ public class AdminAdapter extends ArrayAdapter<Admin>{
         progressDialog.setCancelable(false);
         progressDialog.show();
         firebaseAuth = FirebaseAuth.getInstance();
-        firebaseAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+        firebaseAuth.createUserWithEmailAndPassword(email,password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
             @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
+            public void onSuccess(AuthResult authResult) {
                 progressBar.setVisibility(View.GONE);
                 firebaseAuth.signOut();
+//                activity.getFragmentManager().popBackStack();
                 admin.setVarified(true);
                 notifyDataSetChanged();
                 signInWithCurrentAdmin(progressDialog,"Admin is approved");
@@ -357,7 +360,6 @@ public class AdminAdapter extends ArrayAdapter<Admin>{
                     approveIcon.setVisibility(View.GONE);
                 if(notApprovedMsg!=null)
                     notApprovedMsg.setVisibility(View.GONE);
-
             }
         });
     }
@@ -371,52 +373,85 @@ public class AdminAdapter extends ArrayAdapter<Admin>{
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference databaseReference = firebaseDatabase.getReference().child("admin").child(admin.getId());
+        String loggedInUserEmail = Values.LOGGED_IN_ADMIN.getEmail();
+        Log.e("loggedInUserEmail ",loggedInUserEmail);
+        Log.e("WillRemove ",admin.getEmail()+" "+admin.getPassword());
         databaseReference.setValue(null, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
-                firebaseAuth.signOut();
-                firebaseAuth.signInWithEmailAndPassword(admin.getEmail(),admin.getPassword()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(firebaseAuth.getCurrentUser()!=null)
-                        {
-                            firebaseAuth.getCurrentUser().delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                if(!admin.isVarified())
+                {
+                    remove(admin);
+                    showSnackbar("Admin is removed");
+                    progressDialog.dismiss();
+                }
+                else
+                {
+                    firebaseAuth.signOut();
+                    Log.e("WillSignInWith ",admin.getEmail()+" "+admin.getPassword());
+                    firebaseAuth.signInWithEmailAndPassword(admin.getEmail(),admin.getPassword()).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                        @Override
+                        public void onSuccess(AuthResult authResult) {
+                            Log.e("loggedInAfterSignout",firebaseAuth.getCurrentUser().getEmail());
+                            firebaseAuth.getCurrentUser().delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    signInWithCurrentAdmin(progressDialog,"Admin is removed");
+                                public void onSuccess(Void aVoid) {
+                                    if(admin.getEmail().equals(Values.LOGGED_IN_ADMIN.getEmail()))
+                                    {
+                                        FragmentManager manager = activity.getFragmentManager();
+                                        for (int i = 0; i < manager.getBackStackEntryCount(); ++i) {
+                                            manager.popBackStack();
+                                        }
+                                        progressDialog.dismiss();
+                                    }
+                                    else signInWithCurrentAdmin(progressDialog,"Admin is removed");
                                     remove(admin);
                                 }
                             });
-                        }
-                        else progressDialog.dismiss();
-                    }
-                });
 
+                        }
+                    });
+                }
             }
         });
     }
 
     private void signInWithCurrentAdmin(ProgressDialog progressDialog,String message)
     {
+        try{
+            firebaseAuth.signOut();
+            Log.e("SignoutAgain","done for "+firebaseAuth.getCurrentUser().getEmail());
+        }catch (Exception e)
+        {
+            Log.e("ExceptionSigningOut",e.getMessage());
+        }
         String currentAdminEmail = Values.LOGGED_IN_ADMIN.getEmail();
         String currentAdminpassword = Values.LOGGED_IN_ADMIN.getPassword();
-        firebaseAuth.signInWithEmailAndPassword(currentAdminEmail,currentAdminpassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+        Log.e("AgainSignIn",currentAdminEmail+" "+currentAdminpassword);
+        firebaseAuth.signInWithEmailAndPassword(currentAdminEmail,currentAdminpassword).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
             @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
+            public void onSuccess(AuthResult authResult) {
                 progressDialog.dismiss();
-                Snackbar snackbar = Snackbar.make(relativeLayout,message,Snackbar.LENGTH_SHORT);
-                snackbar.show();
-                if(firebaseAuth.getCurrentUser()==null)
+                Log.e("AgainSignIn","done");
+                try
                 {
-                    firebaseAuth.signOut();
-                    FragmentManager manager = activity.getFragmentManager();
-                    for (int i = 0; i < manager.getBackStackEntryCount(); ++i) {
-                        manager.popBackStack();
-                    }
-                }
-                else Values.updateLastModified();
+                    showSnackbar(message);
+                    Values.updateLastModified();
+                }catch (Exception e)
+                {
+                    Values.showToast(context,message);
+                    if(message.equals("Admin is removed"))
+                        activity.getFragmentManager().popBackStack();
+                    Log.e("Exception",e.getMessage());
 
+                }
             }
         });
+    }
+
+    private void showSnackbar(String  message)
+    {
+        Snackbar snackbar = Snackbar.make(relativeLayout,message,Snackbar.LENGTH_SHORT);
+        snackbar.show();
     }
 }

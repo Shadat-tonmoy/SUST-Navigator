@@ -66,6 +66,7 @@ public class Values {
     public static final String PURPOSE_STAFF_MANAGE = "staff_manage";
     public static final String PURPOSE_TEACHER_MANAGE = "teacher_manage";
     public static Admin LOGGED_IN_ADMIN = null;
+    public static boolean LOGIN_TIME = false;
 
 
 

@@ -11,7 +11,7 @@
         android:id="@+id/add_more_course"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/textBlack"
+        android:background="@color/darkTeel"
         android:orientation="horizontal"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -252,12 +252,9 @@
             android:id="@+id/tab_button_panel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimaryDark"
+            android:background="@color/darkTeel"
             android:orientation="horizontal"
-            android:padding="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:padding="8dp">
 
             <TextView
                 android:id="@+id/course_code_button"

@@ -15,7 +15,7 @@
         <item name="android:textAlignment">center</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:textSize">16sp</item>
-        <item name="android:background">@color/colorPrimaryDark</item>    </style>
+        <item name="android:background">@color/darkTeel</item>    </style>
 
     <style name="dept_code_ss">
         <item name="android:textSize">24dp</item>

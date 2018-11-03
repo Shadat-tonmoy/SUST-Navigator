@@ -145,11 +145,11 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 user = firebaseAuth.getCurrentUser();
-                /*if(user!=null)
+                if(user!=null)
                 {
-//                    Log.e("currentUser",user.getEmail()+" is ");
+                    Log.e("currentUser",user.getEmail()+" is ");
                 }
-                else Log.e("currentUser","Null");*/
+                else Log.e("currentUser","Null");
 
 //                Log.e("currentUser",firebaseAuth.getCurrentUser().getDisplayName());
 

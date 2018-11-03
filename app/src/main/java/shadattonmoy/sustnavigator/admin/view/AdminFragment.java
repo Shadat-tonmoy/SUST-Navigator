@@ -63,6 +63,7 @@ public class AdminFragment extends android.app.Fragment {
     private String email,password;
     private Admin admin;
     private GoogleApiClient mGoogleApiClient;
+    private Context context;
 
     public AdminFragment() {
 
@@ -72,6 +73,7 @@ public class AdminFragment extends android.app.Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         fragmentActivity = (FragmentActivity) context;
+        this.context = context;
     }
 
     @Override
@@ -102,6 +104,7 @@ public class AdminFragment extends android.app.Fragment {
         super.onActivityCreated(savedInstanceState);
         firebaseAuth = FirebaseAuth.getInstance();
         appBarLayout.setExpanded(false);
+        Values.LOGIN_TIME = true;
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -190,15 +193,26 @@ public class AdminFragment extends android.app.Fragment {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
-                                    Values.LOGGED_IN_ADMIN = admin;
-                                    android.app.FragmentManager manager = getFragmentManager();
-                                    FragmentTransaction transaction = manager.beginTransaction();
-                                    AdminPanelFragment adminPanelFragment = new AdminPanelFragment();
-                                    transaction.replace(R.id.main_content_root, adminPanelFragment);
-                                    transaction.addToBackStack("admin_panel_fragment");
-                                    transaction.commit();
+                                    if(Values.LOGIN_TIME)
+                                    {
+                                        Values.LOGGED_IN_ADMIN = admin;
+                                        Values.showToast(context,"ShowingUI");
+                                        Log.e("Loggedin",Values.LOGGED_IN_ADMIN.toString());
+                                        Log.e("Showing","UI");
+                                        try {
+                                            android.app.FragmentManager manager = getFragmentManager();
+                                            FragmentTransaction transaction = manager.beginTransaction();
+                                            AdminPanelFragment adminPanelFragment = new AdminPanelFragment();
+                                            transaction.replace(R.id.main_content_root, adminPanelFragment);
+                                            transaction.addToBackStack("admin_panel_fragment");
+                                            transaction.commit();
+                                            Values.LOGIN_TIME = false;
+                                        }catch (Exception e)
+                                        {
+                                            Log.e("Exception",e.getMessage());
+                                        }
 
-
+                                    }
                                 } else {
 //                                    Log.e("Error",task.getException().getMessage());
                                     loginErrorMsg.setVisibility(View.VISIBLE);
