@@ -20,7 +20,6 @@ import shadattonmoy.sustnavigator.utils.Values;
 public class HelpActivity extends AppCompatActivity {
     private Context context;
     private ActionBar supportActionBar;
-    private GifView tiredGif;
     private TextView contributeTextView;
 
     @Override
@@ -63,11 +62,6 @@ public class HelpActivity extends AppCompatActivity {
 
     public void initComponents()
     {
-        tiredGif = (GifView) findViewById(R.id.loading_screen_image);
-        tiredGif.setVisibility(View.VISIBLE);
-        tiredGif.setGifResource(R.drawable.tired_dev);
-        tiredGif.play();
-
         contributeTextView = (TextView) findViewById(R.id.contribute_link);
         contributeTextView.setOnClickListener(new View.OnClickListener() {
             @Override

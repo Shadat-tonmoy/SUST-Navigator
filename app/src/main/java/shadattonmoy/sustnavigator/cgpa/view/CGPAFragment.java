@@ -264,6 +264,7 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
                     Toast.makeText(context, "Sorry!! No Records Found", Toast.LENGTH_SHORT).show();
                 }
                 else {
+                    noCourseFound.setVisibility(View.GONE);
                     adapter = new CGPAAdapter(context, R.layout.fragment_cgpa, R.id.cgpa_calculate_button, cgpaForCourse, getFragmentManager());
                     courseList.setAdapter(adapter);
 

@@ -48,6 +48,7 @@ public class DetectedTextDialog extends DialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         view = inflater.inflate(R.layout.detected_text_dialog,null,false);
         detectedTextContainer = (FlexboxLayout) view.findViewById(R.id.detected_text_container);
+        context = getActivity();
         generateDetectedTexts(inflater,view);
         builder.setView(view);
         builder.setNegativeButton("Scan Again", new DialogInterface.OnClickListener() {

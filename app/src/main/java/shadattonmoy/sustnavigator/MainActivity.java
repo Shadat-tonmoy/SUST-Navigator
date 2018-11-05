@@ -567,6 +567,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void openHelpFragment(View view) {
+        Log.e("Opening","Help");
         Intent intent = new Intent(MainActivity.this, HelpActivity.class);
         startActivity(intent);
 

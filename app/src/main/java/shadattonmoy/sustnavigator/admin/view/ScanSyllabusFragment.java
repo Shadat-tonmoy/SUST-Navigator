@@ -305,6 +305,7 @@ public class ScanSyllabusFragment extends android.app.Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            Log.e("Start","scanning");
             progressDialog = new ProgressDialog(activity);
             progressDialog.setTitle("Scanning Image");
             progressDialog.setMessage("Please Wait....");
@@ -329,12 +330,13 @@ public class ScanSyllabusFragment extends android.app.Fragment {
             foundText = new HashMap<>();
             firebaseVisionImage = FirebaseVisionImage.fromBitmap(bitmap);
             firebaseVisionTextDetector = FirebaseVision.getInstance().getVisionTextDetector();
-
+            Log.e("Start","scanning processing");
             Task<FirebaseVisionText> result =
                     firebaseVisionTextDetector.detectInImage(firebaseVisionImage)
                             .addOnSuccessListener(new OnSuccessListener<FirebaseVisionText>() {
                                 @Override
                                 public void onSuccess(FirebaseVisionText firebaseVisionText) {
+                                    Log.e("Start","scanningDonne "+firebaseVisionText.getBlocks().size()+" is found");
                                     for (FirebaseVisionText.Block block : firebaseVisionText.getBlocks()) {
                                         Rect boundingBox = block.getBoundingBox();
                                         Point[] cornerPoints = block.getCornerPoints();
@@ -348,7 +350,7 @@ public class ScanSyllabusFragment extends android.app.Fragment {
                                                 if (foundText.get(textBlockValue) == null || !foundText.get(textBlockValue)) {
                                                     detectedTexts.add(textBlockValue);
                                                     foundText.put(textBlockValue, true);
-//                                                    Log.e("OutputText", textBlockValue);
+                                                    Log.e("OutputText", textBlockValue);
                                                 }
 //                                                detectedTexts.add(line.getText());
                                             }
@@ -372,8 +374,8 @@ public class ScanSyllabusFragment extends android.app.Fragment {
         private void showDialog() {
 
             DetectedTextDialog detectedTextDialog = new DetectedTextDialog(context, detectedTexts,session,semester,dept,mCurrentPhotoPath);
-
-            detectedTextDialog.show(fragmentManager, "detectedTextDialog");
+            detectedTextDialog.show(getActivity().getFragmentManager(), "detectedTextDialog");
+            Log.e("dialog","showing");
 
         }
     }
