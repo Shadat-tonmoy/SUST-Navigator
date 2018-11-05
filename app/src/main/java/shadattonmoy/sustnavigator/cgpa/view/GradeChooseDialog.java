@@ -113,11 +113,11 @@ public class GradeChooseDialog  extends DialogFragment {
         public void onClick(View view) {
             TextView gradeView = (TextView) view;
             String grade = gradeView.getText().toString();
-            Log.e("SelectedGrade",grade);
+//            Log.e("SelectedGrade",grade);
 
             if(CGPAAdapter.record.get(courseCode)==null)
             {
-                Log.e("Msg : ","onItemSelected called for "+courseCode+" null");
+//                Log.e("Msg : ","onItemSelected called for "+courseCode+" null");
 
                 grade = ((TextView)view).getText().toString();
                 CGPAAdapter.record.put(courseCode,grade);
@@ -125,7 +125,7 @@ public class GradeChooseDialog  extends DialogFragment {
             }
             else
             {
-                Log.e("Msg : ","onItemSelected called for "+courseCode+" not null "+CGPAAdapter.record.get(courseCode));
+//                Log.e("Msg : ","onItemSelected called for "+courseCode+" not null "+CGPAAdapter.record.get(courseCode));
 
                 grade = gradeView.getText().toString();
                 CGPAAdapter.record.put(courseCode,grade);

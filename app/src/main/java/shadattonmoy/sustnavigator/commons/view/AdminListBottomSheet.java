@@ -68,6 +68,8 @@ public class AdminListBottomSheet extends BottomSheetDialogFragment {
         View contentView = View.inflate(getContext(), R.layout.admin_selection_bottom_sheet, null);
         initNodesFromServer(contentView);
         dialog.setContentView(contentView);
+        context = getActivity();
+        activity = getActivity();
         this.dialog = dialog;
     }
 

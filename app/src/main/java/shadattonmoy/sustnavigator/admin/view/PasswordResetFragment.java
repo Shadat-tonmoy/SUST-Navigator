@@ -72,6 +72,7 @@ public class PasswordResetFragment extends android.app.Fragment {
         progressBar = (ProgressBar) view.findViewById(R.id.reset_progress);
         resetEmail = (EditText) view.findViewById(R.id.reset_email);
         passwordResetMsg = (TextView) view.findViewById(R.id.reset_msg);
+        context = getActivity();
         initialize();
         return view;
     }

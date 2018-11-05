@@ -85,7 +85,7 @@ public class DetectedTextDialog extends DialogFragment {
         detectedTextContainer.removeAllViews();
         for(String text:detectedTexts)
         {
-            Log.e("TextDetected",text);
+//            Log.e("TextDetected",text);
             detectedTextLayout = inflater.inflate(R.layout.detected_text_chip,null,false);
             detectedTextView = (TextView) detectedTextLayout.findViewById(R.id.detected_text_chip);
             detectedTextView.setText(text);

@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetDialogFragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -67,6 +68,7 @@ public class SyllabusSessionBottomSheet extends BottomSheetDialogFragment {
     @Override
     public void setupDialog(Dialog dialog, int style) {
         View contentView = View.inflate(getContext(), R.layout.session_selection_bottom_sheet, null);
+        context = getActivity();
         if(fetchFromServer)
             initNodesFromServer(contentView);
         else initNodes(contentView);

@@ -116,13 +116,15 @@ public class ScanSyllabusDetailFragment extends Fragment {
         cropDoneButton = (Button) view.findViewById(R.id.crop_done_button);
         outputImage = (ImageView) view.findViewById(R.id.output_image);
         cropImageView = (CropImageView) view.findViewById(R.id.cropImageView);
+        context = getActivity();
+        activity = (FragmentActivity) getActivity();
         return view;
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == activity.RESULT_OK) {
-            Log.e("Image", "Taken");
+//            Log.e("Image", "Taken");
             setPic();
         }
     }
@@ -161,7 +163,7 @@ public class ScanSyllabusDetailFragment extends Fragment {
                         cropImageView.setVisibility(View.GONE);
                         outputImage.setVisibility(View.VISIBLE);
                         cropImageView.setImageBitmap(bitmapCropped);
-                        Log.e("CroppedImage", "Done");
+//                        Log.e("CroppedImage", "Done");
                     }
                 });
             }
@@ -224,7 +226,7 @@ public class ScanSyllabusDetailFragment extends Fragment {
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
-                Log.e("PhotoFile", photoFile.getName());
+//                Log.e("PhotoFile", photoFile.getName());
                 Uri photoURI = FileProvider.getUriForFile(context,
                         packageName + ".fileprovider",
                         photoFile);
@@ -317,15 +319,6 @@ public class ScanSyllabusDetailFragment extends Fragment {
                                         Point[] cornerPoints = block.getCornerPoints();
                                         String text = block.getText();
                                         detectedText += text;
-                                        /*for (FirebaseVisionText.Line line : block.getLines()) {
-
-                                            Log.e("LineText", line.getText());
-                                            for (FirebaseVisionText.Element element : line.getElements()) {
-                                                Log.e("LineElement", element.getText());
-                                                String textBlockValue = line.getText();
-                                                detectedTexts.add(textBlockValue);
-                                            }
-                                        }*/
                                     }
                                     detectedTexts.add(detectedText);
                                     showDialog(detectedText);

@@ -43,7 +43,7 @@ public class WebCrawler{
             Elements titles = doc.select("a[data-title]");
             Elements designations = doc.select("a[data-designation]");
             Elements descriptions = doc.select("a[data-description]");
-            Log.e("Total",titles.size()+"");
+//            Log.e("Total",titles.size()+"");
 
             for(int i=0;i<titles.size();i++)
             {
@@ -51,14 +51,14 @@ public class WebCrawler{
                 String facultyTitle = titles.get(i).attr("data-title");
                 String facultyDesignation = designations.get(i).attr("data-designation");
                 String facultyDescription = descriptions.get(i).attr("data-description");
-                Log.e("Faculty","Title "+facultyTitle+" Designation "+facultyDesignation);
+//                Log.e("Faculty","Title "+facultyTitle+" Designation "+facultyDesignation);
                 Teacher teacher = new Teacher(facultyTitle,facultyDesignation,"","","");
                 teacher = addContactInfo(teacher,facultyDescription);
                 teachers.add(teacher);
             }
 
         } catch (IOException e) {
-            Log.e("Crawler Error",e.getMessage());
+//            Log.e("Crawler Error",e.getMessage());
         }
         return teachers;
     }

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,23 +68,24 @@ public class SemesterAddFragment extends android.app.Fragment {
         semesterSpinner = (Spinner) rootView.findViewById(R.id.semester_spinner);
         semesterSpinnerContainer = (LinearLayout) rootView.findViewById(R.id.semester_spinner_container);
         semesterAddSubmitButton = (Button) rootView.findViewById(R.id.semester_add_submit_btn);
+        context = getActivity();
         return rootView;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Log.e("LocalAdmin",Values.IS_LOCAL_ADMIN+" ");
-        context =  getActivity().getApplicationContext();
+//        Log.e("LocalAdmin",Values.IS_LOCAL_ADMIN+" ");
+        context =  getActivity();
         selectedSemesterMap = new HashMap<>();
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity().getApplicationContext(), R.array.semester_list, R.layout.spinner_layout);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(context, R.array.semester_list, R.layout.spinner_layout);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         semesterSpinner.setAdapter(adapter);
         semesterSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 String selectedSemester = adapterView.getItemAtPosition(i).toString();
-                Log.e("Selected",i+" "+adapterView.getItemAtPosition(i).toString());
+//                Log.e("Selected",i+" "+adapterView.getItemAtPosition(i).toString());
                 selectedSemesterMap.put(i,selectedSemester);
             }
 
@@ -99,14 +101,14 @@ public class SemesterAddFragment extends android.app.Fragment {
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 View semesterSpinnerLayout = inflater.inflate(R.layout.semester_title_single_row,semesterSpinnerContainer,false);
                 Spinner semesterSpinner = (Spinner) semesterSpinnerLayout.findViewById(R.id.semester_spinner);
-                ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity().getApplicationContext(), R.array.semester_list, R.layout.spinner_layout);
+                ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.semester_list, R.layout.spinner_layout);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 semesterSpinner.setAdapter(adapter);
                 semesterSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                         String selectedSemester = adapterView.getItemAtPosition(i).toString();
-                        Log.e("Selected",i+" "+adapterView.getItemAtPosition(i).toString());
+//                        Log.e("Selected",i+" "+adapterView.getItemAtPosition(i).toString());
                         selectedSemesterMap.put(i,selectedSemester);
                     }
 
@@ -167,7 +169,7 @@ public class SemesterAddFragment extends android.app.Fragment {
                         if (semesterCode!=null)
                         {
                             databaseReference = firebaseDatabase.getReference().child("syllabus").child(session).child(dept).child(semesterCode);
-                            Log.e("SemesterToAdd",semesterCode);
+//                            Log.e("SemesterToAdd",semesterCode);
                             databaseReference.setValue("", new DatabaseReference.CompletionListener() {
                                 @Override
                                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {

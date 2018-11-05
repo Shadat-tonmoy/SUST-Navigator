@@ -66,6 +66,7 @@ public class CGPAShowFragment extends android.app.Fragment implements View.OnCli
         gpaFinalView = (TextView) view.findViewById(R.id.final_cgpa_view2);
         totalCreditView = (TextView) view.findViewById(R.id.total_credit_view);
         passedCreditView = (TextView) view.findViewById(R.id.final_passed_credit_view);
+        context = getActivity();
         return view;
     }
 

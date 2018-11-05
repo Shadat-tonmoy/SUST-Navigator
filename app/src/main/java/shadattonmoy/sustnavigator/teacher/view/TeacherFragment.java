@@ -94,7 +94,7 @@ public class TeacherFragment extends android.app.Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.e("isAdmin",isAdmin+"");
+//        Log.e("isAdmin",isAdmin+"");
 
 
     }
@@ -110,6 +110,10 @@ public class TeacherFragment extends android.app.Fragment {
         addMoreTeacherFab =  view.findViewById(R.id.add_more_teacher_fab);
         addCustomTeacher =  view.findViewById(R.id.custom_teacher_fab);
         grabFromWebsite =  view.findViewById(R.id.grab_teacher_fab);
+        teacherListView = view.findViewById(R.id.teacherList);
+        context = getActivity();
+        activity = (FragmentActivity) getActivity();
+        setRetainInstance(true);
         return view;
     }
 
@@ -140,8 +144,7 @@ public class TeacherFragment extends android.app.Fragment {
                     manager = getFragmentManager();
                     adapter = new TeacherListAdapter(context, R.layout.teacher_single_row, R.id.teacher_icon, teachers, dept);
                     adapter.setFragmentManager(getFragmentManager());
-                    Log.e("isAdmin",isAdmin+"");
-                    teacherListView = (ListView) view.findViewById(R.id.teacherList);
+//                    Log.e("isAdmin",isAdmin+"");
                     teacherListView.setAdapter(adapter);
                     teacherListView.setOnItemClickListener(new DetailListener());
                     if (isAdmin) {
@@ -231,7 +234,7 @@ public class TeacherFragment extends android.app.Fragment {
                     public void onClick(View v) {
                         Toast.makeText(context, "Sorted By Name Asc ", Toast.LENGTH_SHORT).show();
                         sortTeacherList("name", false);
-                        Log.e("SortingOption", "Sorted By Name Asc");
+//                        Log.e("SortingOption", "Sorted By Name Asc");
 
                     }
                 });
@@ -395,12 +398,23 @@ public class TeacherFragment extends android.app.Fragment {
 
     private void requestAdmin()
     {
-        AdminListBottomSheet adminListBottomSheet = new AdminListBottomSheet();
-        Bundle args = new Bundle();
-        args.putSerializable("dept",dept);
-        args.putInt("purpose",Values.CONTACT_FOR_FACULTY);
-        adminListBottomSheet.setArguments(args);
-        adminListBottomSheet.show(activity.getSupportFragmentManager(),"adminList");
+
+
+        try {
+
+            AdminListBottomSheet adminListBottomSheet = new AdminListBottomSheet();
+            Bundle args = new Bundle();
+            args.putSerializable("dept",dept);
+            args.putInt("purpose",Values.CONTACT_FOR_FACULTY);
+            adminListBottomSheet.setArguments(args);
+            if(activity==null)
+                activity = (FragmentActivity) getActivity();
+            adminListBottomSheet.show(activity.getSupportFragmentManager(),"adminList");
+        }catch (Exception e)
+        {
+            Values.showToast(context,"Sorry!! An error occurred");
+        }
+
     }
 
     @Override
@@ -476,10 +490,6 @@ public class TeacherFragment extends android.app.Fragment {
             else
             {
                 Toast.makeText(context,"Sorry There was an Error. May be the website is not working or No Faculty Information is Found",Toast.LENGTH_SHORT).show();
-            }
-            for(Teacher teacher:facultyList)
-            {
-                Log.e("Teacher ",teacher.toString());
             }
         }
     }

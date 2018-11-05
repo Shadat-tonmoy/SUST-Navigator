@@ -101,7 +101,7 @@ public class CameraActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Log.e("Image", "Taken");
+//            Log.e("Image", "Taken");
             setPic();
         }
     }
@@ -166,7 +166,7 @@ public class CameraActivity extends AppCompatActivity {
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
-                Log.e("PhotoFile", photoFile.getName());
+//                Log.e("PhotoFile", photoFile.getName());
                 Uri photoURI = FileProvider.getUriForFile(this,
                         packageName + ".fileprovider",
                         photoFile);
@@ -236,7 +236,7 @@ public class CameraActivity extends AppCompatActivity {
                                     String text = block.getText();
                                     for (FirebaseVisionText.Line line: block.getLines()) {
 
-                                        Log.e("LineText",line.getText());
+//                                        Log.e("LineText",line.getText());
                                         for (FirebaseVisionText.Element element: line.getElements()) {
 //                                            Log.e("LineElement",element.getText());
                                         }
@@ -273,11 +273,11 @@ public class CameraActivity extends AppCompatActivity {
             TextBlock textBlock = text.valueAt(i);
             if (textBlock != null && textBlock.getValue() != null) {
                 detectedText += textBlock.getValue();
-                Log.e("OutputText",textBlock.getValue());
+//                Log.e("OutputText",textBlock.getValue());
             }
         }
         extractedText.setText(detectedText);
-        Log.e("OutputText",detectedText);
+//        Log.e("OutputText",detectedText);
     }
 
 

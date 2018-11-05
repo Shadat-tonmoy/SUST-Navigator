@@ -123,6 +123,18 @@
     </com.github.clans.fab.FloatingActionMenu>
 
 
+    <TextView
+        android:id="@+id/no_course_found_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textAlignment="center"
+        android:textColor="@color/blue"
+        android:visibility="gone"
+        android:textSize="16sp"
+        />
+
+
 
 
 

@@ -96,6 +96,8 @@ public class AdminFragment extends android.app.Fragment {
         notAnAdminView = (TextView) view.findViewById(R.id.not_an_admint_btn);
         forgetPasswordView = (TextView) view.findViewById(R.id.forget_password_btn);
         appBarLayout = (AppBarLayout) getActivity().findViewById(R.id.appbar_layout);
+        fragmentActivity = (FragmentActivity) getActivity();
+        context = getActivity();
         return view;
     }
 
@@ -183,7 +185,7 @@ public class AdminFragment extends android.app.Fragment {
                         adminMatched = true;
                         break;
                     }
-                    Log.e("Admin",admin.toString());
+//                    Log.e("Admin",admin.toString());
                 }
                 if(adminMatched)
                 {
@@ -197,8 +199,8 @@ public class AdminFragment extends android.app.Fragment {
                                     {
                                         Values.LOGGED_IN_ADMIN = admin;
 //                                        Values.showToast(context,"ShowingUI");
-                                        Log.e("Loggedin",Values.LOGGED_IN_ADMIN.toString());
-                                        Log.e("Showing","UI");
+//                                        Log.e("Loggedin",Values.LOGGED_IN_ADMIN.toString());
+//                                        Log.e("Showing","UI");
                                         try {
                                             android.app.FragmentManager manager = getFragmentManager();
                                             FragmentTransaction transaction = manager.beginTransaction();
@@ -209,7 +211,7 @@ public class AdminFragment extends android.app.Fragment {
                                             Values.LOGIN_TIME = false;
                                         }catch (Exception e)
                                         {
-                                            Log.e("Exception",e.getMessage());
+//                                            Log.e("Exception",e.getMessage());
                                         }
 
                                     }

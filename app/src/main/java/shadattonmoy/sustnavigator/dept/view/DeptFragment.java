@@ -98,6 +98,9 @@ public class DeptFragment extends android.app.Fragment{
         appBarLayout = (AppBarLayout) getActivity().findViewById(R.id.appbar_layout);
         progressBar = (ProgressBar) view.findViewById(R.id.dept_progressbar);
         deptAddFab = (FloatingActionButton) view.findViewById(R.id.add_dept_fab);
+        setRetainInstance(true);
+        context = getActivity();
+        fragmentActivity = (FragmentActivity) getActivity();
         return view;
     }
 
@@ -126,7 +129,7 @@ public class DeptFragment extends android.app.Fragment{
                 {
                     School school= child.getValue(School.class);
                     schoolList.add(school);
-                    Log.e("GettingData",school.getSchoolTitle());
+//                    Log.e("GettingData",school.getSchoolTitle());
                 }
                 progressBar.setVisibility(View.GONE);
                 schoolListAdapter = new SchoolListAdapter(schoolList,context,getFragmentManager(),purpose);
@@ -188,7 +191,7 @@ public class DeptFragment extends android.app.Fragment{
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        Log.e("OnCreateOption","Menu");
+//        Log.e("OnCreateOption","Menu");
         inflater.inflate(R.menu.dept_fragment_menu, menu);
         MenuItem searchItem = menu.findItem(R.id.search_dept);
         searchView = new SearchView(getActivity());

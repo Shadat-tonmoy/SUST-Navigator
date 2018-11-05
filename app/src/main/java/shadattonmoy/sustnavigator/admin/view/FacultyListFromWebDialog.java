@@ -68,6 +68,8 @@ public class FacultyListFromWebDialog extends android.app.DialogFragment {
         facultyList= view.findViewById(R.id.faculty_list);
         selectAllBtn=  view.findViewById(R.id.select_all_btn);
         saveSelectedBtn=  view.findViewById(R.id.save_selected_btn);
+        context = getActivity();
+        activity = (FragmentActivity) getActivity();
 
         initialize();
         builder.setView(view);

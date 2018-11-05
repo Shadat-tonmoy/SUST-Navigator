@@ -48,6 +48,7 @@ public class AdminPanelFragment extends android.app.Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_admin_panel, container, false);
+        context = getActivity();
         adminReqTextView = (TextView) view.findViewById(R.id.admin_request_msg);
         adminReqTextView.setOnClickListener(new View.OnClickListener() {
             @Override

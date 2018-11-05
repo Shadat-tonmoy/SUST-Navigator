@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -84,7 +85,18 @@ public class StaffAddFragment extends android.app.Fragment implements View.OnCli
         roomNoField = view.findViewById(R.id.staff_add_room_no_field);
         designationField = view.findViewById(R.id.staff_add_designation_field);
         submitButton = view.findViewById(R.id.staff_add_submit_btn);
+        context = getActivity();
+        activity = (FragmentActivity) getActivity();
         return view;
+    }
+
+    private void resetFields()
+    {
+        nameField.setText("");
+        contactNoField.setText("");
+        roomNoField.setText("");
+        designationField.setText("");
+
     }
 
     @Override
@@ -175,12 +187,12 @@ public class StaffAddFragment extends android.app.Fragment implements View.OnCli
                                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                                     progressDialog.dismiss();
                                     Snackbar snackbar = Snackbar.make(view, "Staff Record added...", Snackbar.LENGTH_INDEFINITE);
-                                    snackbar.setAction("Back", new View.OnClickListener() {
+                                    snackbar.setAction("Add New", new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            getFragmentManager().popBackStack();
+                                            resetFields();
                                         }
-                                    });
+                                    }).setActionTextColor(context.getResources().getColor(R.color.blue));;
                                     snackbar.show();
                                     Values.updateLastModified();
 

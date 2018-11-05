@@ -99,6 +99,8 @@ public class HolidaysFragment extends android.app.Fragment {
         noHolidayFoundImage = (ImageView) view.findViewById(R.id.nothing_found_image);
         appBarLayout = (AppBarLayout) getActivity().findViewById(R.id.appbar_layout);
         addHolidayFab = (FloatingActionButton) view.findViewById(R.id.add_holiday_fab);
+        context = getActivity();
+        activity = (FragmentActivity) getActivity();
 
         return view;
     }
@@ -163,7 +165,7 @@ public class HolidaysFragment extends android.app.Fragment {
                 }
                 else
                 {
-                    HolidayAdapter adapter = new HolidayAdapter(getActivity().getApplicationContext(),R.layout.holiday_single_row,R.id.holiday_desc,holidays,isAdmin,manager,view);
+                    HolidayAdapter adapter = new HolidayAdapter(context,R.layout.holiday_single_row,R.id.holiday_desc,holidays,isAdmin,manager,view);
                     holidayList.setAdapter(adapter);
                     adapter.setActivity(getActivity());
                 }
@@ -213,10 +215,19 @@ public class HolidaysFragment extends android.app.Fragment {
     
     private void requestAdmin()
     {
-        AdminListBottomSheet adminListBottomSheet = new AdminListBottomSheet();
-        Bundle args = new Bundle();
-        args.putInt("purpose",Values.CONTACT_FOR_HOLIDAY);
-        adminListBottomSheet.setArguments(args);
-        adminListBottomSheet.show(activity.getSupportFragmentManager(),"adminList");
+        try {
+            AdminListBottomSheet adminListBottomSheet = new AdminListBottomSheet();
+            Bundle args = new Bundle();
+            args.putInt("purpose",Values.CONTACT_FOR_HOLIDAY);
+            adminListBottomSheet.setArguments(args);
+            if(activity==null)
+                activity = (FragmentActivity) getActivity();
+            adminListBottomSheet.show(activity.getSupportFragmentManager(),"adminList");
+        }
+        catch (Exception e)
+        {
+            Values.showToast(context,"Sorry!! An error occurred");
+        }
+
     }
 }

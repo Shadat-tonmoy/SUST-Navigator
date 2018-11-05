@@ -141,7 +141,7 @@ public class TeacherDetailsActivity extends AppCompatActivity {
 
     private void makeCall(String phoneNo)
     {
-        Log.e("Phone",phoneNo);
+//        Log.e("Phone",phoneNo);
         if(phoneNo==null || phoneNo.length()<4 )
         {
             Values.showToast(context,"Contact Number not Available");

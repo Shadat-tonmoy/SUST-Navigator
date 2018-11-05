@@ -25,6 +25,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -109,6 +110,8 @@ public class ScanSyllabusFragment extends android.app.Fragment {
         cropDoneButton = (Button) view.findViewById(R.id.crop_done_button);
         outputImage = (ImageView) view.findViewById(R.id.output_image);
         cropImageView = (CropImageView) view.findViewById(R.id.cropImageView);
+        context = getActivity();
+        activity = (FragmentActivity) getActivity();
 
 
         return view;
@@ -157,7 +160,7 @@ public class ScanSyllabusFragment extends android.app.Fragment {
                             cropImageView.setVisibility(View.GONE);
                             outputImage.setVisibility(View.VISIBLE);
                             cropImageView.setImageBitmap(bitmapCropped);
-                            Log.e("CroppedImage", "Done");
+//                            Log.e("CroppedImage", "Done");
                         }
                     });
                 }
@@ -184,7 +187,7 @@ public class ScanSyllabusFragment extends android.app.Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == activity.RESULT_OK) {
-            Log.e("Image", "Taken");
+//            Log.e("Image", "Taken");
             setPic();
         }
     }
@@ -223,7 +226,7 @@ public class ScanSyllabusFragment extends android.app.Fragment {
 
         // Save a file: path for use with ACTION_VIEW intents
         mCurrentPhotoPath = image.getAbsolutePath();
-        Log.e("ImagePath",mCurrentPhotoPath);
+//        Log.e("ImagePath",mCurrentPhotoPath);
         return image;
     }
 
@@ -242,7 +245,7 @@ public class ScanSyllabusFragment extends android.app.Fragment {
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
-                Log.e("PhotoFile", photoFile.getName());
+//                Log.e("PhotoFile", photoFile.getName());
                 Uri photoURI = FileProvider.getUriForFile(context,
                         packageName + ".fileprovider",
                         photoFile);
@@ -338,14 +341,14 @@ public class ScanSyllabusFragment extends android.app.Fragment {
                                         String text = block.getText();
                                         for (FirebaseVisionText.Line line : block.getLines()) {
 
-                                            Log.e("LineText", line.getText());
+//                                            Log.e("LineText", line.getText());
                                             for (FirebaseVisionText.Element element : line.getElements()) {
-                                                Log.e("LineElement", element.getText());
+//                                                Log.e("LineElement", element.getText());
                                                 String textBlockValue = line.getText();
                                                 if (foundText.get(textBlockValue) == null || !foundText.get(textBlockValue)) {
                                                     detectedTexts.add(textBlockValue);
                                                     foundText.put(textBlockValue, true);
-                                                    Log.e("OutputText", textBlockValue);
+//                                                    Log.e("OutputText", textBlockValue);
                                                 }
 //                                                detectedTexts.add(line.getText());
                                             }

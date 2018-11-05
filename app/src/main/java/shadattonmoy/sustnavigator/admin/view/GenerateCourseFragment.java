@@ -126,6 +126,8 @@ public class GenerateCourseFragment extends android.app.Fragment {
         courseAddSubmitButton = (Button) view.findViewById(R.id.course_add_submit_btn);
         detectedCreditContainer.setVisibility(View.GONE);
         detectedTitleContainer.setVisibility(View.GONE);
+        context = getActivity();
+        activity = (FragmentActivity) getActivity();
         initTabClickListener();
         generateDetectedTextsLayout(inflater);
         return view;
@@ -350,7 +352,7 @@ public class GenerateCourseFragment extends android.app.Fragment {
         for (String text : detectedTexts) {
             TextView detectedTextView;
             View detectedTextLayout;
-            Log.e("TextDetected", text);
+//            Log.e("TextDetected", text);
             detectedTextLayout = inflater.inflate(R.layout.detected_text_chip, null, false);
             detectedTextView = (TextView) detectedTextLayout.findViewById(R.id.detected_text_chip);
             detectedTextView.setId(i);
@@ -363,19 +365,19 @@ public class GenerateCourseFragment extends android.app.Fragment {
             if(getDetectedTextType(text)==Values.DETECTED_TYPE_COURSE_CODE)
             {
                 detectedCodeContainer.addView(detectedTextView);
-                Log.e("Code",text);
+//                Log.e("Code",text);
 
             }
             else if(getDetectedTextType(text)==Values.DETECTED_TYPE_COURSE_TITLE)
             {
                 detectedTitleContainer.addView(detectedTextView);
-                Log.e("Title",text);
+//                Log.e("Title",text);
 
             }
             else if(getDetectedTextType(text)==Values.DETECTED_TYPE_COURSE_CREDIT)
             {
                 detectedCreditContainer.addView(detectedTextView);
-                Log.e("Credit",text);
+//                Log.e("Credit",text);
 
             }
             /*else {

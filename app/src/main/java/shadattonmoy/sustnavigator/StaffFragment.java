@@ -89,6 +89,8 @@ public class StaffFragment extends android.app.Fragment {
         nothingFoundText =  view.findViewById(R.id.nothing_found_txt);
         nothingFoundImage =  view.findViewById(R.id.nothing_found_image);
         addFab = view.findViewById(R.id.staff_add_fab);
+        context = getActivity();
+        activity = (FragmentActivity) getActivity();
         return view;
     }
 
@@ -108,7 +110,7 @@ public class StaffFragment extends android.app.Fragment {
         int i=0;
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference().child("staff").child(dept.getDeptCode().toLowerCase());
-        Log.e("CheckingAt",dept.getDeptCode().toLowerCase());
+//        Log.e("CheckingAt",dept.getDeptCode().toLowerCase());
         staffArray = new ArrayList<Staff>();
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -203,12 +205,20 @@ public class StaffFragment extends android.app.Fragment {
 
     private void requestAdmin()
     {
-        AdminListBottomSheet adminListBottomSheet = new AdminListBottomSheet();
-        Bundle args = new Bundle();
-        args.putInt("purpose",Values.CONTACT_FOR_STAFF);
-        args.putSerializable("dept",dept);
-        adminListBottomSheet.setArguments(args);
-        adminListBottomSheet.show(activity.getSupportFragmentManager(),"adminList");
+        try {
+            AdminListBottomSheet adminListBottomSheet = new AdminListBottomSheet();
+            Bundle args = new Bundle();
+            args.putInt("purpose",Values.CONTACT_FOR_STAFF);
+            args.putSerializable("dept",dept);
+            adminListBottomSheet.setArguments(args);
+            if(activity==null)
+                activity = (FragmentActivity) getActivity();
+            adminListBottomSheet.show(activity.getSupportFragmentManager(),"adminList");
+        }catch (Exception e)
+        {
+            Values.showToast(context,"Sorry!! An error occurred");
+        }
+
     }
 
     public boolean isEditable() {

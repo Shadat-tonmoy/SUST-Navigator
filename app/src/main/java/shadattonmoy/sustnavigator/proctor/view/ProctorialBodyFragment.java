@@ -87,6 +87,8 @@ public class ProctorialBodyFragment extends android.app.Fragment {
         nothingFoundText = (TextView) view.findViewById(R.id.nothing_found_txt);
         appBarLayout = (AppBarLayout) getActivity().findViewById(R.id.appbar_layout);
         setHasOptionsMenu(true);
+        context = getActivity();
+        activity = (FragmentActivity) getActivity();
         return view;
     }
 
@@ -97,11 +99,9 @@ public class ProctorialBodyFragment extends android.app.Fragment {
         getProctorListFromServer();
 
 
-
     }
 
-    public void getProctorListFromServer()
-    {
+    public void getProctorListFromServer() {
         proctors = new ArrayList<Proctor>();
         progressBar.setVisibility(View.VISIBLE);
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -109,27 +109,23 @@ public class ProctorialBodyFragment extends android.app.Fragment {
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot child : dataSnapshot.getChildren())
-                {
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
                     String key = child.getKey();
                     Proctor proctor = child.getValue(Proctor.class);
                     proctor.setProctorId(key);
                     proctors.add(proctor);
                 }
-                if(proctors.size()>0)
-                {
-                    Log.e("Editabel",isEditable+" ");
-                    adapter = new ProctorAdapter(context,R.layout.teacher_single_row,R.id.teacher_icon,proctors,isEditable,getFragmentManager());
+                if (proctors.size() > 0) {
+//                    Log.e("Editabel", isEditable + " ");
+                    adapter = new ProctorAdapter(context, R.layout.teacher_single_row, R.id.teacher_icon, proctors, isEditable, getFragmentManager());
                     adapter.setActivity(getActivity());
                     adapter.setView(view);
                     proctorList.setAdapter(adapter);
-                }
-                else
-                {
+                } else {
 
                     nothingFoundImage.setVisibility(View.VISIBLE);
                     nothingFoundText.setVisibility(View.VISIBLE);
-                    if(isEditable)
+                    if (isEditable)
                         nothingFoundText.setText(Html.fromHtml("Sorry! No Records found for Proctorial Body. <b>Tap '+' to Add</b>"));
                     else {
                         nothingFoundText.setText(Html.fromHtml("Sorry! No Records found for Proctorial Body. <b>Please Contact Admin</b>"));
@@ -140,19 +136,17 @@ public class ProctorialBodyFragment extends android.app.Fragment {
                             }
                         });
                     }
-                    try{
+                    try {
                         Glide.with(context).load(context.getResources()
                                 .getIdentifier("nothing_found", "drawable", context.getPackageName())).thumbnail(0.5f)
                                 .crossFade()
                                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                                 .into(nothingFoundImage);
-                    }catch (Exception e)
-                    {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
-                if(isEditable)
-                {
+                if (isEditable) {
                     floatingActionButton.setVisibility(View.VISIBLE);
                     floatingActionButton.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -160,7 +154,7 @@ public class ProctorialBodyFragment extends android.app.Fragment {
                             FragmentManager manager = getFragmentManager();
                             FragmentTransaction transaction = manager.beginTransaction();
                             ProctorAddFragment proctorAddFragment = new ProctorAddFragment(false);
-                            transaction.replace(R.id.main_content_root,proctorAddFragment);
+                            transaction.replace(R.id.main_content_root, proctorAddFragment);
                             transaction.addToBackStack("proctor_add_fragment");
                             transaction.commit();
                         }
@@ -177,13 +171,21 @@ public class ProctorialBodyFragment extends android.app.Fragment {
 
     }
 
-    private void requestAdmin()
-    {
-        AdminListBottomSheet adminListBottomSheet = new AdminListBottomSheet();
-        Bundle args = new Bundle();
-        args.putInt("purpose",Values.CONTACT_FOR_PROCTOR);
-        adminListBottomSheet.setArguments(args);
-        adminListBottomSheet.show(activity.getSupportFragmentManager(),"adminList");
+    private void requestAdmin() {
+        try {
+
+            AdminListBottomSheet adminListBottomSheet = new AdminListBottomSheet();
+            Bundle args = new Bundle();
+            args.putInt("purpose", Values.CONTACT_FOR_PROCTOR);
+            adminListBottomSheet.setArguments(args);
+            if (activity == null)
+                activity = (FragmentActivity) getActivity();
+            adminListBottomSheet.show(activity.getSupportFragmentManager(), "adminList");
+
+        } catch (Exception e) {
+            Values.showToast(context, "Sorry!! An error occurred");
+        }
+
     }
 
     @Override

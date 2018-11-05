@@ -12,7 +12,7 @@
     <item
         android:id="@+id/sort_teacher"
         android:icon="@drawable/sort_white_24"
-        app:showAsAction="never"
+        app:showAsAction="always"
         android:title="Sort"/>
 
     <item

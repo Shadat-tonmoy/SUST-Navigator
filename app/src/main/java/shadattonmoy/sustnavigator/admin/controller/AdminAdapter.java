@@ -374,8 +374,8 @@ public class AdminAdapter extends ArrayAdapter<Admin>{
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference databaseReference = firebaseDatabase.getReference().child("admin").child(admin.getId());
         String loggedInUserEmail = Values.LOGGED_IN_ADMIN.getEmail();
-        Log.e("loggedInUserEmail ",loggedInUserEmail);
-        Log.e("WillRemove ",admin.getEmail()+" "+admin.getPassword());
+//        Log.e("loggedInUserEmail ",loggedInUserEmail);
+//        Log.e("WillRemove ",admin.getEmail()+" "+admin.getPassword());
         databaseReference.setValue(null, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
@@ -388,11 +388,11 @@ public class AdminAdapter extends ArrayAdapter<Admin>{
                 else
                 {
                     firebaseAuth.signOut();
-                    Log.e("WillSignInWith ",admin.getEmail()+" "+admin.getPassword());
+//                    Log.e("WillSignInWith ",admin.getEmail()+" "+admin.getPassword());
                     firebaseAuth.signInWithEmailAndPassword(admin.getEmail(),admin.getPassword()).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                         @Override
                         public void onSuccess(AuthResult authResult) {
-                            Log.e("loggedInAfterSignout",firebaseAuth.getCurrentUser().getEmail());
+//                            Log.e("loggedInAfterSignout",firebaseAuth.getCurrentUser().getEmail());
                             firebaseAuth.getCurrentUser().delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
@@ -420,19 +420,19 @@ public class AdminAdapter extends ArrayAdapter<Admin>{
     {
         try{
             firebaseAuth.signOut();
-            Log.e("SignoutAgain","done for "+firebaseAuth.getCurrentUser().getEmail());
+//            Log.e("SignoutAgain","done for "+firebaseAuth.getCurrentUser().getEmail());
         }catch (Exception e)
         {
-            Log.e("ExceptionSigningOut",e.getMessage());
+//            Log.e("ExceptionSigningOut",e.getMessage());
         }
         String currentAdminEmail = Values.LOGGED_IN_ADMIN.getEmail();
         String currentAdminpassword = Values.LOGGED_IN_ADMIN.getPassword();
-        Log.e("AgainSignIn",currentAdminEmail+" "+currentAdminpassword);
+//        Log.e("AgainSignIn",currentAdminEmail+" "+currentAdminpassword);
         firebaseAuth.signInWithEmailAndPassword(currentAdminEmail,currentAdminpassword).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
             @Override
             public void onSuccess(AuthResult authResult) {
                 progressDialog.dismiss();
-                Log.e("AgainSignIn","done");
+//                Log.e("AgainSignIn","done");
                 try
                 {
                     showSnackbar(message);
@@ -442,7 +442,7 @@ public class AdminAdapter extends ArrayAdapter<Admin>{
                     Values.showToast(context,message);
                     if(message.equals("Admin is removed"))
                         activity.getFragmentManager().popBackStack();
-                    Log.e("Exception",e.getMessage());
+//                    Log.e("Exception",e.getMessage());
 
                 }
             }

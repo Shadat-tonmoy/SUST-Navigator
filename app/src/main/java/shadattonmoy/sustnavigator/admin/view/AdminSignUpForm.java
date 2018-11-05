@@ -96,6 +96,7 @@ public class AdminSignUpForm extends android.app.Fragment {
         signUpButton = (Button) view.findViewById(R.id.admin_signup_submit_btn);
         signUpConfirmation = (CardView) view.findViewById(R.id.admin_signup_confirmation_msg);
         signUpMessage = (TextView) view.findViewById(R.id.signup_msg);
+        context = getActivity();
         return view;
     }
 
@@ -185,7 +186,7 @@ public class AdminSignUpForm extends android.app.Fragment {
         final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference databaseReference = firebaseDatabase.getReference().child("admin");
         Query queryRef = databaseReference.child("admin").orderByChild("email").equalTo(email);
-        Log.e("EmailToMatch",email);
+//        Log.e("EmailToMatch",email);
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             boolean found = false;
             @Override

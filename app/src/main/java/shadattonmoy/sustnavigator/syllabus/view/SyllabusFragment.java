@@ -119,6 +119,9 @@ public class SyllabusFragment extends android.app.Fragment {
         syllabusLoadingProgress = (ProgressBar) view.findViewById(R.id.syllabus_loading);
         nothingFoundText = (TextView) view.findViewById(R.id.nothing_found_txt);
         nothingFoundImage = (ImageView) view.findViewById(R.id.nothing_found_image);
+        context = getActivity();
+        activity = (FragmentActivity) getActivity();
+        setRetainInstance(true);
         return view;
     }
 
@@ -391,13 +394,13 @@ public class SyllabusFragment extends android.app.Fragment {
                     }
                 });
             } catch (Exception e) {
-                Log.e("Exception", e.getMessage());
+//                Log.e("Exception", e.getMessage());
 
             }
 
 
         } catch (Exception e) {
-            Log.e("Exception", e.getMessage());
+//            Log.e("Exception", e.getMessage());
         }
         return sortingOptions;
     }
@@ -452,7 +455,7 @@ public class SyllabusFragment extends android.app.Fragment {
                         credit2 = Double.parseDouble(o2.getCourse_credit());
                     }catch (Exception e)
                     {
-                        Log.e("Exception",e.getMessage());
+//                        Log.e("Exception",e.getMessage());
                     }
 
                     if (credit1>=credit2) {
@@ -516,13 +519,25 @@ public class SyllabusFragment extends android.app.Fragment {
 
     private void requestAdmin()
     {
-        AdminListBottomSheet adminListBottomSheet = new AdminListBottomSheet();
-        Bundle args = new Bundle();
-        args.putSerializable("dept",dept);
-        args.putSerializable("session",session);
-        args.putInt("purpose",Values.CONTACT_FOR_SYLLABUS);
-        adminListBottomSheet.setArguments(args);
-        adminListBottomSheet.show(activity.getSupportFragmentManager(),"adminList");
+
+        try {
+
+            AdminListBottomSheet adminListBottomSheet = new AdminListBottomSheet();
+            Bundle args = new Bundle();
+            args.putSerializable("dept",dept);
+            args.putSerializable("session",session);
+            args.putInt("purpose",Values.CONTACT_FOR_SYLLABUS);
+            adminListBottomSheet.setArguments(args);
+            if(activity==null)
+                activity = (FragmentActivity) getActivity();
+            adminListBottomSheet.show(activity.getSupportFragmentManager(),"adminList");
+        }catch (Exception e)
+        {
+            Values.showToast(context,"Sorry!! An error occurred");
+        }
+
+
+
     }
 
     @Override

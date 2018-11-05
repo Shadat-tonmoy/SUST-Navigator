@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
@@ -68,6 +69,8 @@ public class HolidayAddFragment extends android.app.Fragment implements View.OnC
         holidayEnd = (TextView) view.findViewById(R.id.holiday_add_end_at);
         holidayAddSubmit = (Button) view.findViewById(R.id.holiday_add_submit);
         resetAllFieldButton = (TextView) view.findViewById(R.id.reset_all_field_button);
+        context = getActivity();
+        activity = (FragmentActivity) getActivity();
         args = getArguments();
         if (args != null) {
             isEditing = args.getBoolean("isEditing", false);
@@ -97,7 +100,7 @@ public class HolidayAddFragment extends android.app.Fragment implements View.OnC
                         break;
                     }
                 }
-                Log.e("Date","StartDate "+startDate+" End "+endDate);
+//                Log.e("Date","StartDate "+startDate+" End "+endDate);
                 holidayStart.setText(startDate);
                 holidayEnd.setText(endDate);
                 holidayIdToUpdate = holiday.getHoliayId();
@@ -106,6 +109,15 @@ public class HolidayAddFragment extends android.app.Fragment implements View.OnC
             }
         }
         return view;
+    }
+
+    private void resetAllFields()
+    {
+        holidayTile.setText("");
+        holidayStart.setText("");
+        holidayEnd.setText("");
+        startDay = null;
+        endDay = null;
     }
 
     @Override
@@ -131,7 +143,7 @@ public class HolidayAddFragment extends android.app.Fragment implements View.OnC
     public void onClick(View v) {
         if (v.getId() == R.id.holiday_add_submit) {
             if (awesomeValidation.validate()) {
-                Log.e("testing",holidayStart.getText().toString()+" "+holidayEnd.getText().toString());
+//                Log.e("testing",holidayStart.getText().toString()+" "+holidayEnd.getText().toString());
                 if (holidayStart.getText().toString() == null || holidayStart.getText().toString().equals("")) {
                     Toast.makeText(context, "Please Choose a start date", Toast.LENGTH_SHORT).show();
                 }
@@ -186,10 +198,11 @@ public class HolidayAddFragment extends android.app.Fragment implements View.OnC
                                 if (databaseError == null) {
                                     progressDialog.dismiss();
                                     Snackbar snackbar = Snackbar.make(view, "Holiday Record is added", Snackbar.LENGTH_INDEFINITE);
-                                    snackbar.setAction("Back", new View.OnClickListener() {
+                                    snackbar.setAction("Add New", new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            getFragmentManager().popBackStack();
+                                            resetAllFields();
+
                                         }
                                     }).setActionTextColor(context.getResources().getColor(R.color.blue));
                                     snackbar.show();

@@ -80,6 +80,8 @@ public class SyllabusDetailFragment extends Fragment {
         floatingActionMenu = (FloatingActionMenu) view.findViewById(R.id.add_fab);
         scanFromSyllabusFab = (FloatingActionButton) view.findViewById(R.id.scan_detail_fab);
         addCustomSyllabusFab = (FloatingActionButton) view.findViewById(R.id.custom_detail_fab);
+        context = getActivity();
+        activity = (FragmentActivity) getActivity();
         return view;
     }
 
@@ -130,15 +132,27 @@ public class SyllabusDetailFragment extends Fragment {
 
     private void requestAdmin()
     {
-        AdminListBottomSheet adminListBottomSheet = new AdminListBottomSheet();
-        Bundle args = new Bundle();
-        args.putSerializable("dept",dept);
-        args.putSerializable("course",course);
-        args.putSerializable("session",session);
-        args.putSerializable("semester",semester);
-        args.putInt("purpose",Values.CONTACT_FOR_SYLLABUS_DETAILS);
-        adminListBottomSheet.setArguments(args);
-        adminListBottomSheet.show(activity.getSupportFragmentManager(),"adminList");
+
+        try {
+
+            AdminListBottomSheet adminListBottomSheet = new AdminListBottomSheet();
+            Bundle args = new Bundle();
+            args.putSerializable("dept",dept);
+            args.putSerializable("course",course);
+            args.putSerializable("session",session);
+            args.putSerializable("semester",semester);
+            args.putInt("purpose",Values.CONTACT_FOR_SYLLABUS_DETAILS);
+            adminListBottomSheet.setArguments(args);
+            if(activity==null)
+                activity = (FragmentActivity) getActivity();
+            adminListBottomSheet.show(activity.getSupportFragmentManager(),"adminList");
+
+
+        }catch (Exception e)
+        {
+            Values.showToast(context,"Sorry!! An error occurred");
+        }
+
     }
 
     public void populateFloatingActionMenu() {

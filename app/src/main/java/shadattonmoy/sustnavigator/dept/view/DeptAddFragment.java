@@ -74,6 +74,8 @@ public class DeptAddFragment extends android.app.Fragment {
         nameField = (EditText) view.findViewById(R.id.dept_add_name_field);
         codeField = (EditText) view.findViewById(R.id.dept_add_code_field);
         deptAddSubmitButton = (Button) view.findViewById(R.id.dept_add_submit_btn);
+        context = getActivity();
+        activity = (FragmentActivity) getActivity();
         return view;
     }
 

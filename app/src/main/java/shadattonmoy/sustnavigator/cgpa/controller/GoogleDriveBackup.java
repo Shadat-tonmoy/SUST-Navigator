@@ -85,7 +85,7 @@ public class GoogleDriveBackup {
                 .addOnSuccessListener(new OnSuccessListener<DriveFile>() {
                     @Override
                     public void onSuccess(DriveFile driveFile) {
-                        Log.e("SavedFile","Successfully "+driveFile.toString());
+//                        Log.e("SavedFile","Successfully "+driveFile.toString());
 
                     }
                 })
@@ -93,7 +93,7 @@ public class GoogleDriveBackup {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Values.showToast(context,"Error Saving File");
-                        Log.e("Error",e.getMessage());
+//                        Log.e("Error",e.getMessage());
                     }
                 });
     }
@@ -119,10 +119,10 @@ public class GoogleDriveBackup {
                             driveResourceClient.delete(driveFile).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
-                                    Log.e("Deleting","AllFiles");
+//                                    Log.e("Deleting","AllFiles");
                                 }
                             });
-                            Log.e("Files are ",metadata.getOriginalFilename()+"."+metadata.getFileExtension());
+//                            Log.e("Files are ",metadata.getOriginalFilename()+"."+metadata.getFileExtension());
                         }
                     }
                 });
@@ -146,15 +146,15 @@ public class GoogleDriveBackup {
             @Override
             public void onSuccess(Void aVoid) {
                 DriveFolder parent = appFolderTask.getResult();
-                Log.e("DriveFolder",parent.getDriveId().asDriveFolder().toString());
+//                Log.e("DriveFolder",parent.getDriveId().asDriveFolder().toString());
                 Task<MetadataBuffer> files = driveResourceClient.listChildren(parent);
                 files.addOnSuccessListener(new OnSuccessListener<MetadataBuffer>() {
                     @Override
                     public void onSuccess(MetadataBuffer metadatas) {
-                        Log.e("ReadingData","Success "+metadatas.toString()+" Size "+metadatas.getCount());
+//                        Log.e("ReadingData","Success "+metadatas.toString()+" Size "+metadatas.getCount());
                         for(Metadata metadata:metadatas)
                         {
-                            Log.e("Files are ",metadata.getOriginalFilename()+"."+metadata.getFileExtension());
+//                            Log.e("Files are ",metadata.getOriginalFilename()+"."+metadata.getFileExtension());
                             DriveFile driveFile = metadata.getDriveId().asDriveFile();
                             driveResourceClient.openFile(driveFile,DriveFile.MODE_READ_ONLY).addOnSuccessListener(new OnSuccessListener<DriveContents>() {
                                 @Override
@@ -167,7 +167,7 @@ public class GoogleDriveBackup {
                                     }
                                 }
                             });
-                            Log.e("Files are ",metadata.getOriginalFilename()+"."+metadata.getFileExtension());
+//                            Log.e("Files are ",metadata.getOriginalFilename()+"."+metadata.getFileExtension());
                         }
                     }
                 });
@@ -175,7 +175,7 @@ public class GoogleDriveBackup {
                 files.addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.e("BackupReadingFailed",e.getMessage());
+//                        Log.e("BackupReadingFailed",e.getMessage());
                     }
                 });
 
@@ -216,7 +216,7 @@ public class GoogleDriveBackup {
 
         } catch (Exception e) {
 //            e.printStackTrace();
-            Log.e("Error",e.getMessage());
+//            Log.e("Error",e.getMessage());
         }
 
     }
@@ -243,7 +243,7 @@ public class GoogleDriveBackup {
         cloudDB.close();
 //        context.deleteDatabase(cloudDBName);
         boolean deleteDB = context.deleteDatabase(Values.DATABASE_NAME + "_tmp");
-        Log.e("DBDelete",deleteDB+" ");
+//        Log.e("DBDelete",deleteDB+" ");
     }
 
     public void startBackupTask()
@@ -255,7 +255,7 @@ public class GoogleDriveBackup {
     public void startRestoreTask()
     {
 
-        Log.e("Restoring","WillStartSoon");
+//        Log.e("Restoring","WillStartSoon");
         DriveRestoreTask driveRestoreTask = new DriveRestoreTask();
         driveRestoreTask.execute();
     }
@@ -298,7 +298,7 @@ public class GoogleDriveBackup {
         protected void onPreExecute() {
             super.onPreExecute();
 
-            Log.e("Restoring","PreExecute");
+//            Log.e("Restoring","PreExecute");
             progressDialog = new ProgressDialog(activity);
             progressDialog.setTitle("Please Wait");
             progressDialog.setMessage("Restoring Data is in progress. This may take a while");
@@ -312,7 +312,7 @@ public class GoogleDriveBackup {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            Log.e("Restoring","DoInBG");
+//            Log.e("Restoring","DoInBG");
             readDBFromDrive();
             return null;
         }
@@ -321,7 +321,7 @@ public class GoogleDriveBackup {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             progressDialog.dismiss();
-            Log.e("Restoring","PostExecute");
+//            Log.e("Restoring","PostExecute");
             Values.showToast(context,"Data Restored Successfully");
         }
     }

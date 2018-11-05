@@ -4,6 +4,7 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -79,6 +80,7 @@ public class TeacherAddFragment extends android.app.Fragment {
         phoneField = (EditText) view.findViewById(R.id.teacher_add_contact_no_field);
         roomField = (EditText) view.findViewById(R.id.teacher_add_room_no_field);
         teacherAddSubmitButton = (Button) view.findViewById(R.id.teacher_add_submit_btn);
+        context = getActivity();
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(context, R.array.designation, R.layout.spinner_layout);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         designationField.setAdapter(adapter);

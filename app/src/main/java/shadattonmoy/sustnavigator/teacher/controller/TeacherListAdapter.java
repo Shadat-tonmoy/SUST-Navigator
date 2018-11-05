@@ -92,7 +92,7 @@ public class TeacherListAdapter extends ArrayAdapter<Teacher>{
         TextView teacherDesignation = (TextView) row.findViewById(R.id.teacher_designation);
         TextView teacherRoom = (TextView) row.findViewById(R.id.teacher_room);
         imageView = (ImageView) row.findViewById(R.id.contact_teacher);
-        Log.e("ValueIn",position+" "+selectedTeachers.get(position));
+//        Log.e("ValueIn",position+" "+selectedTeachers.get(position));
         if(selectedTeachers.get(position)!=null && selectedTeachers.get(position))
             row.setBackgroundColor(context.getResources().getColor(R.color.textLightAsh));
         else row.setBackgroundColor(context.getResources().getColor(R.color.cardview_light_background));
@@ -206,7 +206,7 @@ public class TeacherListAdapter extends ArrayAdapter<Teacher>{
         if(isWebData)
         {
             views.put(position,row);
-            Log.e("PuttingAt",position+" "+views.get(position));
+//            Log.e("PuttingAt",position+" "+views.get(position));
             row.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -247,7 +247,7 @@ public class TeacherListAdapter extends ArrayAdapter<Teacher>{
 
     private void toggleTeacherSelection(int position, View view)
     {
-        Log.e("Toggling",selectedTeachers.get(position)+" "+view);
+//        Log.e("Toggling",selectedTeachers.get(position)+" "+view);
         if(selectedTeachers.get(position)==null)
         {
             selectedTeachers.put(position,true);

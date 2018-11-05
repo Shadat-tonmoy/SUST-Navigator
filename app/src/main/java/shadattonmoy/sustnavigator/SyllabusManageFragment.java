@@ -3,6 +3,7 @@ package shadattonmoy.sustnavigator;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,8 +50,7 @@ public class SyllabusManageFragment extends android.app.Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_syllabus_manage, container, false);
         semesterList = (ListView) view.findViewById(R.id.semester_list);
-
-
+        context = getActivity();
         return view;
     }
 

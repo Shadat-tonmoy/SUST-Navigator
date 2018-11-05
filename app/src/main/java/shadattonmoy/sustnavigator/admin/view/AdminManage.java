@@ -60,6 +60,8 @@ public class AdminManage extends android.app.Fragment {
                              Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragment_admin_manage, container, false);
+        context = getActivity();
+        activity = (FragmentActivity) getActivity();
         appBarLayout = (AppBarLayout) activity.findViewById(R.id.appbar_layout);
         return view;
     }

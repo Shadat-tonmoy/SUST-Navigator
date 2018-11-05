@@ -72,6 +72,8 @@ public class CourseAddFragment extends android.app.Fragment {
         courseCreditField = (EditText) view.findViewById(R.id.course_credit_field);
         courseAddSubmitBtn = (Button) view.findViewById(R.id.course_add_submit_btn);
         courseAddResetBtn = (TextView) view.findViewById(R.id.course_add_reset_btn);
+        activity = getActivity();
+        context = getActivity().getApplicationContext();
         return view;
     }
 
@@ -79,8 +81,8 @@ public class CourseAddFragment extends android.app.Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         awesomeValidation = new AwesomeValidation(ValidationStyle.BASIC);
-        awesomeValidation.addValidation(getActivity(), R.id.course_title_field, "^[A-Za-z0-9\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$", R.string.course_title_error);
-        awesomeValidation.addValidation(getActivity(), R.id.course_code_field, "^[A-Za-z0-9\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$", R.string.course_code_error);
+        awesomeValidation.addValidation(getActivity(), R.id.course_title_field, "^[A-Za-z0-9\\s]{1,}[\\.]{0,1}[A-Za-z0-9\\s]{4,}$", R.string.course_title_error);
+        awesomeValidation.addValidation(getActivity(), R.id.course_code_field, "^[A-Za-z0-9\\s]{1,}[\\.]{0,1}[A-Za-z0-9\\s]{4,}$", R.string.course_code_error);
         awesomeValidation.addValidation(getActivity(), R.id.course_credit_field, "^[0-9\\.]+$", R.string.course_credit_error);
 
 
@@ -101,11 +103,10 @@ public class CourseAddFragment extends android.app.Fragment {
                         SQLiteAdapter sqLiteAdapter = SQLiteAdapter.getInstance(context);
                         Course course = new Course(courseCode, courseTitle, courseCredit);
                         sqLiteAdapter.addCourse(course,semester);
-                        Snackbar snackbar = Snackbar.make(view,"Course Has Been Added",Snackbar.LENGTH_LONG).setAction("Back", new View.OnClickListener() {
+                        Snackbar snackbar = Snackbar.make(view,"Course Has Been Added",Snackbar.LENGTH_LONG).setAction("Add New", new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                android.app.FragmentManager manager = getFragmentManager();
-                                manager.popBackStack();
+                                reset();
                             }
                         }).setActionTextColor(context.getResources().getColor(R.color.blue));
                         snackbar.show();
@@ -127,11 +128,10 @@ public class CourseAddFragment extends android.app.Fragment {
                             @Override
                             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                                 //Toast.makeText(getActivity().getApplicationContext(),"Added...",Toast.LENGTH_SHORT).show();
-                                Snackbar snackbar = Snackbar.make(view,"Course Has Been Added",Snackbar.LENGTH_LONG).setAction("Back", new View.OnClickListener() {
+                                Snackbar snackbar = Snackbar.make(view,"Course Has Been Added",Snackbar.LENGTH_LONG).setAction("Add New", new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        android.app.FragmentManager manager = getFragmentManager();
-                                        manager.popBackStack();
+                                        reset();
                                     }
                                 }).setActionTextColor(context.getResources().getColor(R.color.blue));
                                 progressDialog.dismiss();
@@ -158,8 +158,8 @@ public class CourseAddFragment extends android.app.Fragment {
     public void reset()
     {
         courseCodeField.setText("");
+        courseCreditField.setText("");
         courseTitleField.setText("");
-        courseTitleField.setText("");
-        Toast.makeText(getActivity().getApplicationContext(),"All Field Has Been Reset",Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getActivity().getApplicationContext(),"All Field Has Been Reset",Toast.LENGTH_SHORT).show();
     }
 }

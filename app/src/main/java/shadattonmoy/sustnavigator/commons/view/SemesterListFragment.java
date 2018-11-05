@@ -124,6 +124,8 @@ public class SemesterListFragment extends android.app.Fragment {
         loadFromLocal = (TextView) view.findViewById(R.id.load_from_local);
         nothingFoundImage = (ImageView) view.findViewById(R.id.nothing_found_image);
         semesterAddFab = (FloatingActionButton) view.findViewById(R.id.semester_add_fab);
+        context = getActivity();
+        activity = (FragmentActivity) getActivity();
         return view;
     }
 
@@ -164,7 +166,7 @@ public class SemesterListFragment extends android.app.Fragment {
                 }
             });
         } else if (purpose.equals("syllabus_manage")) {
-            Log.e("Purpose", "syllabus_manage");
+//            Log.e("Purpose", "syllabus_manage");
             semesterList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -300,13 +302,13 @@ public class SemesterListFragment extends android.app.Fragment {
         Values.IS_LOCAL_ADMIN = false;
         semesters = new ArrayList<>();
         databaseReference = firebaseDatabase.getReference().child("syllabus").child(session).child(dept.getDeptCode().trim().toLowerCase());
-        Log.e("LoadingFor",dept.getDeptCode().toLowerCase()+" "+session);
+//        Log.e("LoadingFor",dept.getDeptCode().toLowerCase()+" "+session);
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String txt = "";
                 subTotalCredit = 0;
-                Log.e("LoadingForDataChanged",dept.getDeptCode().toLowerCase()+" "+session);
+//                Log.e("LoadingForDataChanged",dept.getDeptCode().toLowerCase()+" "+session);
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                     txt += "\n Key : " + child.getKey() + "\n";
                     double totalCredit = 0.0;
@@ -352,9 +354,9 @@ public class SemesterListFragment extends android.app.Fragment {
                     else if (key.equals("o_p"))
                         semesters.add(new Semester(totalCourseString, totalCreditString, "Optionals", "O/P"));
                     txt += "\n";
-                    Log.e("TotalCredit", subTotalCredit + "");
+//                    Log.e("TotalCredit", subTotalCredit + "");
                 }
-                Log.e("Semesters", txt);
+//                Log.e("Semesters", txt);
                 if (semesters.size() > 0) {
                     SemesterAdapter adapter = new SemesterAdapter(context, R.layout.semester_single_row, R.id.semester_icon, semesters);
                     semesterList.setAdapter(adapter);
@@ -380,13 +382,21 @@ public class SemesterListFragment extends android.app.Fragment {
                         nothingFoundText.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                AdminListBottomSheet adminListBottomSheet = new AdminListBottomSheet();
-                                Bundle args = new Bundle();
-                                args.putSerializable("dept",dept);
-                                args.putString("session",session);
-                                args.putInt("purpose",Values.CONTACT_FOR_SYLLABUS);
-                                adminListBottomSheet.setArguments(args);
-                                adminListBottomSheet.show(activity.getSupportFragmentManager(),"adminList");
+                                try {
+                                    AdminListBottomSheet adminListBottomSheet = new AdminListBottomSheet();
+                                    Bundle args = new Bundle();
+                                    args.putSerializable("dept",dept);
+                                    args.putString("session",session);
+                                    args.putInt("purpose",Values.CONTACT_FOR_SYLLABUS);
+                                    adminListBottomSheet.setArguments(args);
+                                    if(activity==null)
+                                        activity = (FragmentActivity) getActivity();
+                                    adminListBottomSheet.show(activity.getSupportFragmentManager(),"adminList");
+                                }catch (Exception e)
+                                {
+                                    Values.showToast(context,"Sorry!! An error occurred");
+                                }
+
                             }
                         });
                     }
@@ -426,7 +436,7 @@ public class SemesterListFragment extends android.app.Fragment {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.e("DatabaseError",databaseError.getMessage());
+//                Log.e("DatabaseError",databaseError.getMessage());
 
             }
         });

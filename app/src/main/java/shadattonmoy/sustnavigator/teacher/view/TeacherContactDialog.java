@@ -49,6 +49,8 @@ public class TeacherContactDialog extends DialogFragment{
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_layout,null);
+        context = getActivity();
+        activity = (FragmentActivity) getActivity();
         numberContainer = dialogView.findViewById(R.id.number_container);
         getValues();
         generateNumberLayout(inflater);
