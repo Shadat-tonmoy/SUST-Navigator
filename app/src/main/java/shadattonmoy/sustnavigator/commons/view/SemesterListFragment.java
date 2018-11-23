@@ -288,7 +288,7 @@ public class SemesterListFragment extends android.app.Fragment {
     public void loadFromServer() {
         ProgressDialog progressDialog = new ProgressDialog(activity);
         progressDialog.setTitle("Please Wait");
-        progressDialog.setMessage("Data is Loading From Server");
+        progressDialog.setMessage("Data is Loading From Server. Please make sure you are connected to the internet");
 //        progressDialog.setCancelable(false);
         progressDialog.show();
         firebaseDatabase = FirebaseDatabase.getInstance();

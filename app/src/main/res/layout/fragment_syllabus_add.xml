@@ -97,7 +97,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
+                android:layout_marginBottom="8dp"
                 android:paddingBottom="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
 
@@ -120,15 +122,15 @@
                             android:id="@+id/course_title_field"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="8dp"
                             android:layout_marginStart="8dp"
                             android:layout_marginTop="8dp"
+                            android:layout_marginEnd="8dp"
                             android:background="@drawable/edit_text_bg"
                             android:drawableLeft="@drawable/edit_black"
                             android:drawablePadding="8dp"
                             android:ems="10"
-                            android:inputType="textAutoComplete|textAutoCorrect|textCapWords"
-                            android:hint="Course Title" />
+                            android:hint="Course Title"
+                            android:inputType="textAutoComplete|textAutoCorrect|textCapWords" />
 
                     </android.support.design.widget.TextInputLayout>
 
@@ -136,9 +138,9 @@
                         android:id="@+id/teacher_name_divider"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:layout_marginEnd="8dp"
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
                         android:background="?android:attr/listDivider"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -157,15 +159,15 @@
                             android:id="@+id/course_code_field"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="8dp"
                             android:layout_marginStart="8dp"
                             android:layout_marginTop="8dp"
+                            android:layout_marginEnd="8dp"
                             android:background="@drawable/edit_text_bg"
                             android:drawableLeft="@drawable/edit_black"
                             android:drawablePadding="8dp"
                             android:ems="10"
-                            android:inputType="textAutoComplete"
-                            android:hint="Course Code" />
+                            android:hint="Course Code"
+                            android:inputType="textAutoComplete" />
 
                     </android.support.design.widget.TextInputLayout>
 
@@ -173,14 +175,13 @@
                         android:id="@+id/teacher_room_divider"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:layout_marginEnd="8dp"
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
                         android:background="?android:attr/listDivider"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/room_no_layout" />
-
 
 
                     <android.support.design.widget.TextInputLayout
@@ -196,15 +197,15 @@
                             android:id="@+id/course_credit_field"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="8dp"
                             android:layout_marginStart="8dp"
                             android:layout_marginTop="8dp"
+                            android:layout_marginEnd="8dp"
                             android:background="@drawable/edit_text_bg"
                             android:drawableLeft="@drawable/edit_black"
                             android:drawablePadding="8dp"
                             android:ems="10"
-                            android:inputType="numberDecimal"
-                            android:hint="Course Credit" />
+                            android:hint="Course Credit"
+                            android:inputType="numberDecimal" />
 
                     </android.support.design.widget.TextInputLayout>
 
@@ -212,15 +213,13 @@
                         android:id="@+id/teacher_email_divider"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:layout_marginEnd="8dp"
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
                         android:background="?android:attr/listDivider"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/email_layout" />
-
-
 
 
                     <Button
@@ -228,8 +227,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="8dp"
-                        android:layout_marginEnd="8dp"
                         android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
                         android:backgroundTint="@color/colorPrimaryDark"
                         android:padding="20dp"
                         android:text="Submit"
@@ -242,10 +241,10 @@
                         android:id="@+id/course_add_reset_btn"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginRight="8dp"
                         android:layout_marginStart="8dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginRight="8dp"
                         android:padding="16dp"
                         android:text="Reset All Field"
                         android:textAlignment="center"

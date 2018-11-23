@@ -172,6 +172,7 @@ public class DeptFragment extends android.app.Fragment{
                 deptList.setLayoutManager(mLayoutManager);
                 deptList.setItemAnimator(new DefaultItemAnimator());
                 deptList.setAdapter(schoolListAdapter);
+                setHasOptionsMenu(true);
                 if(purpose.equals("syllabus") || purpose.equals("cgpa") || purpose.equals("syllabus_manage"))
                 {
                     setHasOptionsMenu(true);
