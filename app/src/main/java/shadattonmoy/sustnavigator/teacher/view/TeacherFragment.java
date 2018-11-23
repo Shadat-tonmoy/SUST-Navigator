@@ -74,7 +74,6 @@ public class TeacherFragment extends android.app.Fragment {
     private FloatingActionMenu addMoreTeacherFab;
     private com.github.clans.fab.FloatingActionButton addCustomTeacher,grabFromWebsite;
     private LinearLayout noNetMessage;
-    private ImageView noNetImage;
     private TeacherListAdapter adapter;
     private BottomDialog bottomDialog;
     private SearchView searchView;
@@ -120,7 +119,6 @@ public class TeacherFragment extends android.app.Fragment {
         grabFromWebsite =  view.findViewById(R.id.grab_teacher_fab);
         teacherListView = view.findViewById(R.id.teacherList);
         noNetMessage = view.findViewById(R.id.no_net_message);
-        noNetImage = view.findViewById(R.id.no_net_image);
         context = getActivity();
         activity = (FragmentActivity) getActivity();
         setRetainInstance(true);
@@ -153,18 +151,15 @@ public class TeacherFragment extends android.app.Fragment {
                         {
                             showNoInternetMessagge();
                         }
-
                     }
                 });
-
-
             }
         }).start();
     }
 
     private void showNoInternetMessagge()
     {
-        Values.showToast(context,"No Internet Connection");
+//        Values.showToast(context,"No Internet Connection");
         progressBar.setVisibility(View.GONE);
         noNetMessage.setVisibility(View.VISIBLE);
     }

@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -58,6 +59,8 @@ public class StaffFragment extends android.app.Fragment {
     private FloatingActionButton addFab;
     private View view;
     private FragmentActivity activity;
+    private LinearLayout noNetMessage;
+    private boolean connected = false;
     public StaffFragment() {
 
     }
@@ -89,6 +92,7 @@ public class StaffFragment extends android.app.Fragment {
         nothingFoundText =  view.findViewById(R.id.nothing_found_txt);
         nothingFoundImage =  view.findViewById(R.id.nothing_found_image);
         addFab = view.findViewById(R.id.staff_add_fab);
+        noNetMessage = view.findViewById(R.id.no_net_message);
         context = getActivity();
         activity = (FragmentActivity) getActivity();
         return view;
@@ -100,9 +104,39 @@ public class StaffFragment extends android.app.Fragment {
         setHasOptionsMenu(true);
         fragmentHeader.setText("Staff of "+dept.getDeptTitle());
         getStaffFromServer();
+        checkForConnectionWithDB();
 
 
 
+    }
+
+    private void checkForConnectionWithDB()
+    {
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(staffArray.size()==0  && !connected && !Values.isNetworkAvailable(context))
+                        {
+                            showNoInternetMessagge();
+                        }
+                    }
+                });
+            }
+        }).start();
+    }
+
+    private void showNoInternetMessagge()
+    {
+//        Values.showToast(context,"No Internet Connection");
+        progressBar.setVisibility(View.GONE);
+        noNetMessage.setVisibility(View.VISIBLE);
     }
 
     public void getStaffFromServer()
@@ -121,6 +155,7 @@ public class StaffFragment extends android.app.Fragment {
                     staff.setId(child.getKey());
                     staffArray.add(staff);
                 }
+                connected = true;
                 if(staffArray.size()>0)
                 {
                     adapter = new StaffAdapter(context,R.layout.teacher_single_row,R.id.teacher_icon,staffArray,isEditable);

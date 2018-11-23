@@ -97,7 +97,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
+                android:layout_marginBottom="8dp"
                 android:paddingBottom="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
 
@@ -120,9 +122,9 @@
                             android:id="@+id/dept_add_name_field"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="8dp"
                             android:layout_marginStart="8dp"
                             android:layout_marginTop="8dp"
+                            android:layout_marginEnd="8dp"
                             android:background="@drawable/edit_text_bg"
                             android:drawableLeft="@drawable/edit_black"
                             android:drawablePadding="8dp"
@@ -135,9 +137,9 @@
                         android:id="@+id/dept_name_divider"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:layout_marginEnd="8dp"
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
                         android:background="?android:attr/listDivider"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -156,9 +158,9 @@
                             android:id="@+id/dept_add_code_field"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="8dp"
                             android:layout_marginStart="8dp"
                             android:layout_marginTop="8dp"
+                            android:layout_marginEnd="8dp"
                             android:background="@drawable/edit_text_bg"
                             android:drawableLeft="@drawable/edit_black"
                             android:drawablePadding="8dp"
@@ -171,9 +173,9 @@
                         android:id="@+id/dept_code_divider"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:layout_marginEnd="8dp"
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
                         android:background="?android:attr/listDivider"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -192,34 +194,30 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/school_black_24"
                             android:layout_marginLeft="20dp"
                             android:layout_marginTop="16dp"
-                            />
+                            android:src="@drawable/school_black_24" />
 
                         <Spinner
                             android:id="@+id/dept_add_school_field"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
                             android:layout_marginLeft="10dp"
-                            android:layout_marginRight="20dp"/>
+                            android:layout_marginTop="8dp"
+                            android:layout_marginRight="20dp" />
                     </LinearLayout>
 
                     <View
                         android:id="@+id/teacher_designation_divider"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:layout_marginEnd="8dp"
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
                         android:background="?android:attr/listDivider"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/teacher_designation_layout" />
-
-
-
 
 
                     <Button
@@ -227,8 +225,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="8dp"
-                        android:layout_marginEnd="8dp"
                         android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
                         android:backgroundTint="@color/colorPrimaryDark"
                         android:padding="20dp"
                         android:text="Submit"

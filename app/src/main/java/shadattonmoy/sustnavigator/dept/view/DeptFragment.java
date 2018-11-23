@@ -22,6 +22,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -66,6 +67,8 @@ public class DeptFragment extends android.app.Fragment{
     private String selectedSession;
     private SearchView searchView;
     private FloatingActionButton deptAddFab;
+    private boolean connected = false;
+    private LinearLayout noNetMessage;
 
     public DeptFragment() {
 
@@ -98,6 +101,7 @@ public class DeptFragment extends android.app.Fragment{
         appBarLayout = (AppBarLayout) getActivity().findViewById(R.id.appbar_layout);
         progressBar = (ProgressBar) view.findViewById(R.id.dept_progressbar);
         deptAddFab = (FloatingActionButton) view.findViewById(R.id.add_dept_fab);
+        noNetMessage = view.findViewById(R.id.no_net_message);
         setRetainInstance(true);
         context = getActivity();
         fragmentActivity = (FragmentActivity) getActivity();
@@ -113,8 +117,38 @@ public class DeptFragment extends android.app.Fragment{
         headerText.setText(Html.fromHtml("Dept. for <b>"+ purposeFormatted +"</b>"));
         appBarLayout.setExpanded(false);
         getSchoolsFromServer(purpose);
+        checkForConnectionWithDB();
 
 
+    }
+
+    private void checkForConnectionWithDB()
+    {
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                fragmentActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(schoolList.size()==0  && !connected && !Values.isNetworkAvailable(context))
+                        {
+                            showNoInternetMessagge();
+                        }
+                    }
+                });
+            }
+        }).start();
+    }
+
+    private void showNoInternetMessagge()
+    {
+//        Values.showToast(context,"No Internet Connection");
+        progressBar.setVisibility(View.GONE);
+        noNetMessage.setVisibility(View.VISIBLE);
     }
 
     public void getSchoolsFromServer(final String purpose)
@@ -131,6 +165,7 @@ public class DeptFragment extends android.app.Fragment{
                     schoolList.add(school);
 //                    Log.e("GettingData",school.getSchoolTitle());
                 }
+                connected = true;
                 progressBar.setVisibility(View.GONE);
                 schoolListAdapter = new SchoolListAdapter(schoolList,context,getFragmentManager(),purpose);
                 RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(context);

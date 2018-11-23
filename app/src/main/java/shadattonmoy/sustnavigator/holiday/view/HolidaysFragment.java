@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -60,6 +61,8 @@ public class HolidaysFragment extends android.app.Fragment {
     private boolean isAdmin;
     private View view;
     private FragmentActivity activity;
+    private LinearLayout noNetMessage;
+    private boolean connected = false;
 
 
     public HolidaysFragment() {
@@ -99,6 +102,7 @@ public class HolidaysFragment extends android.app.Fragment {
         noHolidayFoundImage = (ImageView) view.findViewById(R.id.nothing_found_image);
         appBarLayout = (AppBarLayout) getActivity().findViewById(R.id.appbar_layout);
         addHolidayFab = (FloatingActionButton) view.findViewById(R.id.add_holiday_fab);
+        noNetMessage = view.findViewById(R.id.no_net_message);
         context = getActivity();
         activity = (FragmentActivity) getActivity();
 
@@ -118,10 +122,41 @@ public class HolidaysFragment extends android.app.Fragment {
         noHolidayFoundView.setVisibility(View.GONE);
         appBarLayout.setExpanded(false);
         setHasOptionsMenu(true);
+        getDataFromServer();
+        checkForConnectionWithDB();
+    }
 
+    private void checkForConnectionWithDB()
+    {
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(holidays.size()==0  && !connected && !Values.isNetworkAvailable(context))
+                        {
+                            showNoInternetMessagge();
+                        }
+                    }
+                });
+            }
+        }).start();
+    }
 
+    private void showNoInternetMessagge()
+    {
+//        Values.showToast(context,"No Internet Connection");
+        progressBar.setVisibility(View.GONE);
+        noNetMessage.setVisibility(View.VISIBLE);
+    }
 
-
+    private void getDataFromServer()
+    {
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference().child("holiday").child(String.valueOf(year));
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -136,6 +171,7 @@ public class HolidaysFragment extends android.app.Fragment {
                     holidays.add(holiday);
                     numOfHolidays++;
                 }
+                connected =true;
                 if(numOfHolidays==0)
                 {
                     if(isAdmin)
@@ -193,6 +229,7 @@ public class HolidaysFragment extends android.app.Fragment {
 
             }
         });
+
     }
 
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
