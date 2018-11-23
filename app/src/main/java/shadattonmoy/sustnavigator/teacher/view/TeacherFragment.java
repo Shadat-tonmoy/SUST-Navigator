@@ -1,11 +1,15 @@
 package shadattonmoy.sustnavigator.teacher.view;
 
+import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.MenuItemCompat;
@@ -34,6 +38,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.OnDisconnect;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -68,11 +73,14 @@ public class TeacherFragment extends android.app.Fragment {
     private boolean isAdmin;
     private FloatingActionMenu addMoreTeacherFab;
     private com.github.clans.fab.FloatingActionButton addCustomTeacher,grabFromWebsite;
+    private LinearLayout noNetMessage;
+    private ImageView noNetImage;
     private TeacherListAdapter adapter;
     private BottomDialog bottomDialog;
     private SearchView searchView;
     private ListView teacherListView;
     private FragmentActivity activity;
+    private boolean connected = false;
 
     @Override
     public void onAttach(Context context) {
@@ -111,6 +119,8 @@ public class TeacherFragment extends android.app.Fragment {
         addCustomTeacher =  view.findViewById(R.id.custom_teacher_fab);
         grabFromWebsite =  view.findViewById(R.id.grab_teacher_fab);
         teacherListView = view.findViewById(R.id.teacherList);
+        noNetMessage = view.findViewById(R.id.no_net_message);
+        noNetImage = view.findViewById(R.id.no_net_image);
         context = getActivity();
         activity = (FragmentActivity) getActivity();
         setRetainInstance(true);
@@ -122,15 +132,47 @@ public class TeacherFragment extends android.app.Fragment {
         super.onActivityCreated(savedInstanceState);
         fragmentHeader.setText(dept.getDeptTitle());
         getTeachersFromServer();
+        checkForConnectionWithDB();
 
 
+    }
+
+    private void checkForConnectionWithDB()
+    {
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(teachers.size()==0  && !connected && !Values.isNetworkAvailable(context))
+                        {
+                            showNoInternetMessagge();
+                        }
+
+                    }
+                });
+
+
+            }
+        }).start();
+    }
+
+    private void showNoInternetMessagge()
+    {
+        Values.showToast(context,"No Internet Connection");
+        progressBar.setVisibility(View.GONE);
+        noNetMessage.setVisibility(View.VISIBLE);
     }
 
     public void getTeachersFromServer() {
         teachers = new ArrayList<Teacher>();
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference().child("teacher").child(dept.getDeptCode().toLowerCase());
-
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -139,6 +181,7 @@ public class TeacherFragment extends android.app.Fragment {
                     currentTeachcer.setId(child.getKey());
                     teachers.add(currentTeachcer);
                 }
+                connected = true;
                 if (teachers.size() > 0) {
                     setHasOptionsMenu(true);
                     manager = getFragmentManager();
@@ -190,6 +233,7 @@ public class TeacherFragment extends android.app.Fragment {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+                Log.e("FBConnection",databaseError.getMessage());
 
             }
         });

@@ -346,5 +346,26 @@ public class Values {
         context.startActivity(Intent.createChooser(sharingIntent, "Share via"));
     }
 
+    public static void checkFirebaseConnected(Context context)
+    {
+        DatabaseReference connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected");
+        connectedRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                boolean connected = snapshot.getValue(Boolean.class);
+                if (connected) {
+                    showToast(context,"Connected");
+                } else {
+                    showToast(context,"Could not connect to db. Please enable the network connection");
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                System.err.println("Listener was cancelled");
+            }
+        });
+    }
+
 
 }

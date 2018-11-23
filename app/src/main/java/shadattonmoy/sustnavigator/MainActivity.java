@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity
 //        int i = 5/0;
         setContentView(R.layout.activity_main);
         lastModifiedText = (TextView) findViewById(R.id.last_modified);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.main__toolbar);
         toolbar.setTitle("SUST Navigator");
         setSupportActionBar(toolbar);
         context = MainActivity.this;
@@ -134,12 +134,17 @@ public class MainActivity extends AppCompatActivity
         root = (RelativeLayout) findViewById(R.id.main_content_root);
         if (root != null) {
             manager = getFragmentManager();
+            if(manager.getBackStackEntryCount()>0)
+                restartApp();
             FragmentTransaction transaction = manager.beginTransaction();
             MainFragment mainFragment = new MainFragment();
             transaction.add(R.id.main_content_root, mainFragment, "add_main_fragment");
             transaction.commit();
 
         }
+
+        if(manager!=null && manager.getBackStackEntryCount()>0)
+            restartApp();
 
         authStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -172,6 +177,13 @@ public class MainActivity extends AppCompatActivity
         getAdminRequest();
 //        addCourse();
     }
+
+    public void restartApp() {
+        Intent refresh = new Intent(context, SplashScreen.class);
+        refresh.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(refresh);
+    }
+
     /*end of onCreate Method*/
 
 

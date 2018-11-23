@@ -93,4 +93,5 @@
     <string name="dummy_phone">+8801965036172</string>
     <string name="dummy_email">shadat.tonmoy@gmail.com</string>
     <string name="following_faculty">Following Faculty List is Found</string>
+    <string name="internet_required">You need one time connection only. Once the data is loaded from server it will be available offline. Please check your connection and try again</string>
 </resources>
