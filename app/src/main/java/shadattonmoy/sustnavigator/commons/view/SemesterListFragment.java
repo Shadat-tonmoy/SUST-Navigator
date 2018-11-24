@@ -358,6 +358,8 @@ public class SemesterListFragment extends android.app.Fragment {
                 }
 //                Log.e("Semesters", txt);
                 if (semesters.size() > 0) {
+                    nothingFoundImage.setVisibility(View.GONE);
+                    nothingFoundText.setVisibility(View.GONE);
                     SemesterAdapter adapter = new SemesterAdapter(context, R.layout.semester_single_row, R.id.semester_icon, semesters);
                     semesterList.setAdapter(adapter);
                     semesterList.setVisibility(View.VISIBLE);
