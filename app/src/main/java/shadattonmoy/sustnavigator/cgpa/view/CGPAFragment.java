@@ -45,8 +45,9 @@ import shadattonmoy.sustnavigator.utils.Values;
 
 public class CGPAFragment extends android.app.Fragment implements View.OnClickListener {
 
-    private TextView deptTileView, cgpaLoadButton, cgpaCalculateButton, cgpaResetButton,noCourseFound;
-    private ListView courseList;
+    private TextView deptTileView, cgpaLoadButton, cgpaCalculateButton, cgpaResetButton;
+    public static TextView noCourseFound;
+    public static ListView courseList;
     private String semester;
     private Dept dept;
     private ArrayList<Course> cgpaForCourse;
@@ -58,7 +59,7 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
     public static float removedCredit;
     public static float extraCredit;
     FloatingActionButton addFromCurrentFab, addFromCustomFab;;
-    private FloatingActionMenu floatingActionMenu;
+    public static FloatingActionMenu floatingActionMenu;
     String session;
     private double subTotalCredit;
     private Context context;
@@ -144,6 +145,8 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
             else getCoursesFromServer();
         manager = getFragmentManager();
 
+        adapter = new CGPAAdapter(context, R.layout.fragment_cgpa, R.id.cgpa_calculate_button, cgpaForCourse, activity.getFragmentManager());
+
         CGPAAdapter.isReset = false;
         cgpaLoadButton.setOnClickListener(this);
         cgpaCalculateButton.setOnClickListener(this);
@@ -171,6 +174,18 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
 
             }
         });
+    }
+
+    public static void hideNothingFound()
+    {
+        noCourseFound.setVisibility(View.GONE);
+        courseList.setVisibility(View.VISIBLE);
+        adapter.notifyDataSetChanged();
+        courseList.setAdapter(adapter);
+        if(floatingActionMenu.isOpened())
+            floatingActionMenu.close(true);
+
+
     }
 
     public void getCoursesFromServer() {
@@ -225,6 +240,11 @@ public class CGPAFragment extends android.app.Fragment implements View.OnClickLi
             CGPAAdapter.record.clear();
         }
         progressBar.setVisibility(View.GONE);
+
+    }
+
+    public static void getCGPAAdpater()
+    {
 
     }
 

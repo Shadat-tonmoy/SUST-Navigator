@@ -38,7 +38,7 @@ public class CourseAddForCGPADialog extends DialogFragment{
     private String dept,semester;
     private View view;
     private ListView allCourseList;
-    private TextView debugView;
+    private TextView debugView,nothingFoundView;
     private ProgressBar progressBar;
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
@@ -64,6 +64,7 @@ public class CourseAddForCGPADialog extends DialogFragment{
         checkTaken = new HashMap<Course,Boolean>();
         view = inflater.inflate(R.layout.course_add_for_cgpa_dialog,null);
         allCourseList = (ListView) view.findViewById(R.id.all_course_list);
+        nothingFoundView =  view.findViewById(R.id.no_course_found_text);
         progressBar = (ProgressBar) view.findViewById(R.id.all_course_list_loading);
         progressBar.setVisibility(View.VISIBLE);
         getCoursesFromServer();
@@ -109,11 +110,20 @@ public class CourseAddForCGPADialog extends DialogFragment{
                     }
 
                 }
-                AllCourseListAdapter allCourseListAdapter =  new AllCourseListAdapter(getActivity().getApplicationContext(),R.layout.syllabus_single_row,R.id.course_icon,courses);
-                allCourseList.setAdapter(allCourseListAdapter);
-                progressBar.setVisibility(View.GONE);
-                allCourseList.setOnItemClickListener(new clickListener(getActivity().getApplicationContext(),view));
-                //debugView.setText(txt);
+                if(courses.size()==0)
+                {
+                    nothingFoundView.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.GONE);
+                }
+                else
+                {
+                    nothingFoundView.setVisibility(View.GONE);
+                    AllCourseListAdapter allCourseListAdapter =  new AllCourseListAdapter(getActivity().getApplicationContext(),R.layout.syllabus_single_row,R.id.course_icon,courses);
+                    allCourseList.setAdapter(allCourseListAdapter);
+                    progressBar.setVisibility(View.GONE);
+                    allCourseList.setOnItemClickListener(new clickListener(getActivity().getApplicationContext(),view));
+                    //debugView.setText(txt);
+                }
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -149,6 +159,7 @@ class clickListener implements AdapterView.OnItemClickListener{
             CourseAddForCGPADialog.checkTaken.put(course,true);
             course.setAdded(true);
             CGPAFragment.adapter.add(course);
+            CGPAFragment.hideNothingFound();
             CGPAFragment.extraCredit += Float.parseFloat(course.getCourse_credit());
 
             String code = course.getCourse_code();
@@ -163,6 +174,7 @@ class clickListener implements AdapterView.OnItemClickListener{
 
                 }
             });
+            snackbar.setActionTextColor(context.getResources().getColor(R.color.blue));
             snackbar.show();
 
         }

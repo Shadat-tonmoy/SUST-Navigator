@@ -80,6 +80,7 @@ public class CustomCourseAddForCGPA extends DialogFragment {
             Course course = new Course(courseCodeValue, courseTitleValue, courseCreditValue);
             CGPAFragment.adapter.add(course);
             CGPAFragment.extraCredit += Float.parseFloat(courseCreditValue);
+            CGPAFragment.hideNothingFound();
             return true;
         }
 
