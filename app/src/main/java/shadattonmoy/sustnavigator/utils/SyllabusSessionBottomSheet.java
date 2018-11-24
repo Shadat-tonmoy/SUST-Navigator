@@ -31,6 +31,7 @@ import shadattonmoy.sustnavigator.admin.view.CourseListDialog;
 import shadattonmoy.sustnavigator.dept.view.DeptFragment;
 import shadattonmoy.sustnavigator.school.controller.SchoolListAdapter;
 import shadattonmoy.sustnavigator.syllabus.controller.SyllabusAdapter;
+import shadattonmoy.sustnavigator.syllabus.view.SyllabusFragment;
 
 public class SyllabusSessionBottomSheet extends BottomSheetDialogFragment {
 
@@ -45,6 +46,7 @@ public class SyllabusSessionBottomSheet extends BottomSheetDialogFragment {
     private ArrayList<String> sessionFromServer;
     private ProgressBar sessionLoadingProgressBar;
     private String dept,semester,session;
+    private SyllabusFragment syllabusFragment;
     public SyllabusSessionBottomSheet()
     {
 
@@ -94,6 +96,7 @@ public class SyllabusSessionBottomSheet extends BottomSheetDialogFragment {
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference().child("syllabus");
         sessionFromServer = new ArrayList<>();
+        sessionFromServer.clear();
         sessionLoadingProgressBar = (ProgressBar) view.findViewById(R.id.session_loading_progress);
         sessionLoadingProgressBar.setVisibility(View.VISIBLE);
 
@@ -153,6 +156,7 @@ public class SyllabusSessionBottomSheet extends BottomSheetDialogFragment {
                 {
                     sessionToClone = sessionFromServer.get(i);
                     CourseListDialog courseListDialog = new CourseListDialog();
+                    courseListDialog.setSyllabusFragment(syllabusFragment);
                     Bundle args = new Bundle();
                     args.putString("sessionToClone",sessionToClone);
                     args.putString("session",session);
@@ -176,5 +180,7 @@ public class SyllabusSessionBottomSheet extends BottomSheetDialogFragment {
         this.schoolListAdapter = schoolListAdapter;
     }
 
-
+    public void setSyllabusFragment(SyllabusFragment syllabusFragment) {
+        this.syllabusFragment = syllabusFragment;
+    }
 }

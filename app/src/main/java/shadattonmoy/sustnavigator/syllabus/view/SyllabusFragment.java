@@ -82,6 +82,7 @@ public class SyllabusFragment extends android.app.Fragment {
     private BottomDialog bottomDialog;
     private SearchView searchView;
     private FragmentActivity fragmentActivity;
+    private SyllabusFragment syllabusFragment;
     public SyllabusFragment() {
         super();
     }
@@ -92,6 +93,7 @@ public class SyllabusFragment extends android.app.Fragment {
         this.isEditable = isEditable;
         this.session = session;
         this.semester = Values.getSemesterCode(semester);
+        syllabusFragment = this;
 
     }
 
@@ -153,10 +155,14 @@ public class SyllabusFragment extends android.app.Fragment {
                     currentCourse.setCourse_id(pushId);
                     courses.add(currentCourse);
                 }
+                if(floatingActionMenu.isOpened())
+                    floatingActionMenu.close(true);
 
                 if(courses.size()>0)
                 {
                     setHasOptionsMenu(true);
+                    nothingFoundImage.setVisibility(View.GONE);
+                    nothingFoundText.setVisibility(View.GONE);
                     adapter = new SyllabusAdapter(context,R.layout.fragment_syllabus2,R.id.course_code,courses,isEditable,getFragmentManager(),dept.getDeptCode().toLowerCase(),semester,session,activity);
                     syllabusList.setAdapter(adapter);
                     syllabusList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -318,12 +324,18 @@ public class SyllabusFragment extends android.app.Fragment {
                 @Override
                 public void onClick(View v) {
                     SyllabusSessionBottomSheet syllabusSessionBottomSheet = new SyllabusSessionBottomSheet(context,true,dept.getDeptCode().toLowerCase(),semester,session);
+                    syllabusSessionBottomSheet.setSyllabusFragment(syllabusFragment);
                     syllabusSessionBottomSheet.show(fragmentActivity.getSupportFragmentManager(),"syllabusSessionBottomSheet");
                 }
             });
         }
 
 
+    }
+
+    public void showProgressBar()
+    {
+        syllabusLoadingProgress.setVisibility(View.VISIBLE);
     }
 
     public View generateSortingOptionBottomSheet() {

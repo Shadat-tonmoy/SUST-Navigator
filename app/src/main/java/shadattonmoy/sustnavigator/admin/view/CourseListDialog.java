@@ -30,6 +30,8 @@ import shadattonmoy.sustnavigator.AllCourseListAdapter;
 import shadattonmoy.sustnavigator.Course;
 import shadattonmoy.sustnavigator.R;
 import shadattonmoy.sustnavigator.proctor.model.Proctor;
+import shadattonmoy.sustnavigator.syllabus.view.SyllabusFragment;
+import shadattonmoy.sustnavigator.utils.Values;
 
 public class CourseListDialog extends android.app.DialogFragment {
 
@@ -39,11 +41,11 @@ public class CourseListDialog extends android.app.DialogFragment {
     private String session,dept,semester,sessionToClone;
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
-    private ImageView nothingFoundImage;
     private TextView nothingFoundText;
     ListView courseList;
     ProgressBar progressBar;
     private  AlertDialog.Builder builder;
+    private SyllabusFragment syllabusFragment;
 
     public CourseListDialog() {
 
@@ -56,7 +58,6 @@ public class CourseListDialog extends android.app.DialogFragment {
         view = inflater.inflate(R.layout.course_list_dialog,null);
         courseList= (ListView) view.findViewById(R.id.course_list);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
-        nothingFoundImage = (ImageView) view.findViewById(R.id.nothing_found_image);
         nothingFoundText = (TextView) view.findViewById(R.id.nothing_found_txt);
 
         initialize();
@@ -95,6 +96,7 @@ public class CourseListDialog extends android.app.DialogFragment {
 
     public void getCoursesFromServer()
     {
+        progressBar.setVisibility(View.VISIBLE);
         courses = new ArrayList<>();
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference().child("syllabus").child(sessionToClone).child(dept).child(semester);
@@ -118,19 +120,7 @@ public class CourseListDialog extends android.app.DialogFragment {
                 else
                 {
                     progressBar.setVisibility(View.GONE);
-                    nothingFoundImage.setVisibility(View.VISIBLE);
                     nothingFoundText.setVisibility(View.VISIBLE);
-                    nothingFoundText.setText("OOOPS!!! No Records Found");
-                    try{
-                        Glide.with(context).load(context.getResources()
-                                .getIdentifier("nothing_found", "drawable", context.getPackageName())).thumbnail(0.5f)
-                                .crossFade()
-                                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                .into(nothingFoundImage);
-                    }catch (Exception e)
-                    {
-                        e.printStackTrace();
-                    }
                     builder.setPositiveButton("", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
@@ -152,26 +142,21 @@ public class CourseListDialog extends android.app.DialogFragment {
     public void generateNewCourses()
     {
         databaseReference = firebaseDatabase.getReference().child("syllabus").child(session).child(dept).child(semester);
+        syllabusFragment.showProgressBar();
         for(Course course:courses)
         {
             databaseReference.push().setValue(course, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-//                    progressDialog.dismiss();
-                    Snackbar snackbar = Snackbar.make(view, "Syllabus Cloned", Snackbar.LENGTH_SHORT);
-                    snackbar.setActionTextColor(context.getResources().getColor(android.R.color.holo_blue_dark));
-                    snackbar.setAction("Back", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            getFragmentManager().popBackStack();
-                        }
-                    });
-                    snackbar.show();
 
                 }
             });
         }
+        Values.showToast(context,"Course is cloned.");
+        syllabusFragment.getSyllabusFromServer();
+    }
 
-
+    public void setSyllabusFragment(SyllabusFragment syllabusFragment) {
+        this.syllabusFragment = syllabusFragment;
     }
 }
