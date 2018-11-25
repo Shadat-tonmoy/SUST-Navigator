@@ -90,6 +90,7 @@ public class HolidayAdapter extends ArrayAdapter<Holiday>{
         TextView holidayDateView = (TextView) row.findViewById(R.id.holiday_date);
         TextView holidayDaysView = (TextView) row.findViewById(R.id.holiday_days);
         TextView holidayDescView = (TextView) row.findViewById(R.id.holiday_desc);
+        editIcon = (ImageView) row.findViewById(R.id.holiday_edit_icon);
         if(isEditable)
         {
             editIcon = (ImageView) row.findViewById(R.id.holiday_edit_icon);
@@ -107,6 +108,7 @@ public class HolidayAdapter extends ArrayAdapter<Holiday>{
 
             //popupMenu.setOnMenuItemClickListener(new clickHandler(context,manager,holidayName,holidayStartTmp,holidayEndTmp,row));
         }
+        else editIcon.setVisibility(View.GONE);
 
         holidayNameView.setText(holidayName);
         holidayDateView.setText(holidayDate);

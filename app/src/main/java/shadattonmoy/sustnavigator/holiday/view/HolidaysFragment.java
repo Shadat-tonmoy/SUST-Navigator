@@ -31,12 +31,15 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 
 import shadattonmoy.sustnavigator.HolidayAddFragment;
 import shadattonmoy.sustnavigator.commons.view.AdminListBottomSheet;
 import shadattonmoy.sustnavigator.holiday.controller.HolidayAdapter;
 import shadattonmoy.sustnavigator.R;
 import shadattonmoy.sustnavigator.holiday.model.Holiday;
+import shadattonmoy.sustnavigator.teacher.model.Teacher;
 import shadattonmoy.sustnavigator.utils.Values;
 
 /**
@@ -171,6 +174,7 @@ public class HolidaysFragment extends android.app.Fragment {
                     holidays.add(holiday);
                     numOfHolidays++;
                 }
+                sortByDate();
                 connected =true;
                 if(numOfHolidays==0)
                 {
@@ -248,6 +252,20 @@ public class HolidaysFragment extends android.app.Fragment {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void sortByDate()
+    {
+        Collections.sort(holidays, new Comparator<Holiday>() {
+            @Override
+            public int compare(Holiday o1, Holiday o2) {
+                long time1 = o1.getStartTimeStamp();
+                long time2 = o1.getStartTimeStamp();
+                if(time1>time2)
+                    return 1;
+                else return -1;
+            }
+        });
     }
     
     private void requestAdmin()

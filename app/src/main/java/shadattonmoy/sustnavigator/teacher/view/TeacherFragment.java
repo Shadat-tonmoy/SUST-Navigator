@@ -421,9 +421,7 @@ public class TeacherFragment extends android.app.Fragment {
         {
             for(Teacher teacher:teachers)
             {
-                if(teacher.getName().toLowerCase().startsWith(query.toLowerCase()) || teacher.getName().toLowerCase().endsWith(query.toLowerCase())|| teacher.getDesignation().toLowerCase().startsWith(query.toLowerCase()) || teacher.getDesignation().endsWith(query.toLowerCase())
-                        || teacher.getRoom().toLowerCase().startsWith(query.toLowerCase()) || teacher.getRoom().endsWith(query.toLowerCase())
-                        || teacher.getPhone().toLowerCase().startsWith(query.toLowerCase()) || teacher.getPhone().endsWith(query.toLowerCase()))
+                if(teacher.getName().toLowerCase().contains(query.toLowerCase()) || teacher.getDesignation().toLowerCase().contains(query.toLowerCase()) || teacher.getRoom().toLowerCase().contains(query.toLowerCase()) || teacher.getPhone().toLowerCase().contains(query.toLowerCase()))
                 {
                     filteredTeacher.add(teacher);
                 }

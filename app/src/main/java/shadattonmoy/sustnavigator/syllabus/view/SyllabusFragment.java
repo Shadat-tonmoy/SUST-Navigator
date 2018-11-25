@@ -517,8 +517,7 @@ public class SyllabusFragment extends android.app.Fragment {
         {
             for(Course course:courses)
             {
-                if(course.getCourse_code().toLowerCase().startsWith(query.toLowerCase()) || course.getCourse_code().toLowerCase().endsWith(query.toLowerCase())|| course.getCourse_credit().toLowerCase().startsWith(query.toLowerCase()) || course.getCourse_credit().endsWith(query.toLowerCase())
-                        || course.getCourse_title().toLowerCase().startsWith(query.toLowerCase()) || course.getCourse_title().endsWith(query.toLowerCase()) || course.getCourseDetail().toLowerCase().contains(query.toLowerCase()))
+                if(course.getCourse_code().toLowerCase().contains(query.toLowerCase()) || course.getCourse_credit().toLowerCase().contains(query.toLowerCase()) || course.getCourse_title().toLowerCase().contains(query.toLowerCase()) || course.getCourseDetail().toLowerCase().contains(query.toLowerCase()))
                 {
                     filteredCourse.add(course);
                 }
