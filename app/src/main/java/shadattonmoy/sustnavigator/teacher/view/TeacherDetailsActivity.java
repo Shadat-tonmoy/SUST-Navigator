@@ -92,8 +92,12 @@ public class TeacherDetailsActivity extends AppCompatActivity {
     private void setValuesToViews()
     {
         titleView.setText(title);
-        phoneView.setText(phone);
-        emailView.setText(email);
+        if(phone.length()<2)
+            phoneView.setText("Phone No Not Available");
+        else phoneView.setText(phone);
+        if(email.length()<2)
+            emailView.setText("Email Not Available");
+        else emailView.setText(email);
         if(office.length()<3)
             officeView.setText("Office Details Not Available");
         else officeView.setText(office);

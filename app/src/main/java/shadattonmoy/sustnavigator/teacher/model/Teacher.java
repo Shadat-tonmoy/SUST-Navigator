@@ -17,11 +17,11 @@ public class Teacher implements Parcelable {
 
 
     public Teacher(String name, String designation, String room, String phone, String email) {
-        this.name = name;
-        this.designation = designation;
-        this.room = room;
-        this.email = email;
-        this.phone = phone;
+        this.name = name.trim();
+        this.designation = designation.trim();
+        this.room = room.trim();
+        this.email = email.trim();
+        this.phone = phone.trim();
     }
     public String getName() {
         return name;

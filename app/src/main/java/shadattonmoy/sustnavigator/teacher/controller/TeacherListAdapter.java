@@ -104,13 +104,13 @@ public class TeacherListAdapter extends ArrayAdapter<Teacher>{
         }
         else imageView.setVisibility(View.GONE);
         final PopupMenu popupMenu = new PopupMenu(context,imageView,Gravity.LEFT);
-        final String name = currentTeacher.getName();
-        final String designation = currentTeacher.getDesignation();
-        String room = currentTeacher.getRoom();
+        final String name = currentTeacher.getName().trim();
+        final String designation = currentTeacher.getDesignation().trim();
+        String room = currentTeacher.getRoom().trim();
         if(room.equals("N/A"))
             room = "Room Not Available";
-        final String phone = currentTeacher.getPhone();
-        final String email = currentTeacher.getEmail();
+        final String phone = currentTeacher.getPhone().trim();
+        final String email = currentTeacher.getEmail().trim();
         final String teacherId = currentTeacher.getId();
         String iconText = String.valueOf(name.charAt(0));
         popupMenu.inflate(R.menu.list_menu);
