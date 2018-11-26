@@ -43,6 +43,7 @@ import shadattonmoy.sustnavigator.admin.view.AdminPanelFragment;
 
 public class Values {
     public static String[] months = new String[]{"January","February","March","April","May","June","July","August","September","October","November","December"};
+    public static String[] depts = new String[]{"FES","ARC","CEP","CEE","EEE","FET","IPE","MEE","PME","SWE","BMB","GEB","BAN","CHE","GEE","MAT","OCG","PHY","STA","ANP","BNG","ECO","ENG","PSS","PAD","SCW","SCO"};
     public static String[] days = new String[]{"Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
     public static final int DETECTED_TYPE_COURSE_CODE = 1;
     public static final int DETECTED_TYPE_COURSE_TITLE = 2;

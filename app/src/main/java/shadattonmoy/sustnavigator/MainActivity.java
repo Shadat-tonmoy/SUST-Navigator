@@ -64,6 +64,7 @@ import shadattonmoy.sustnavigator.mlkit.CameraActivity;
 import shadattonmoy.sustnavigator.proctor.view.ProctorialBodyFragment;
 import shadattonmoy.sustnavigator.utils.DummyValues;
 import shadattonmoy.sustnavigator.utils.LastModified;
+import shadattonmoy.sustnavigator.utils.SyllabusCrawler;
 import shadattonmoy.sustnavigator.utils.Values;
 
 public class MainActivity extends AppCompatActivity
@@ -176,8 +177,21 @@ public class MainActivity extends AppCompatActivity
         getLastModified();
         getAdminRequest();
 //        addCourse();
+//        no need to call curriculum crawler now....
+//        crawlCurriculum();
     }
 
+    private void crawlCurriculum()
+    {
+        for(String dept:Values.depts)
+        {
+            SyllabusCrawler syllabusCrawler = new SyllabusCrawler();
+            syllabusCrawler.execute(dept);
+        }
+        /*SyllabusCrawler syllabusCrawler = new SyllabusCrawler();
+        syllabusCrawler.execute(Values.depts[0]);
+*/
+    }
     public void restartApp() {
         Intent refresh = new Intent(context, SplashScreen.class);
         refresh.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -624,52 +638,6 @@ public class MainActivity extends AppCompatActivity
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    /*public void addFaculty(*//*Teacher teacher, final String dept*//*)
-    {
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        AssetManager assetManager = getAssets();
-        InputStream input;
-        try {
-            input = assetManager.open("chemistry.txt");
-            String fileName = "chemistry.txt";
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(input, "UTF-8"));
-            String line = null;
-            while((line = bufferedReader.readLine()) != null) {
-                Log.e("ReadLine",line);
-                String[] properties = line.split(":");
-                String name,telephone,mobile,email;
-                int i=0;
-                *//*for (String prop:properties){
-                    System.out.println(prop+" at index "+i);;
-                    i++;
-                }*//*
-
-                name = properties[0];
-                telephone = properties[1];
-                mobile = properties[2];
-                email = properties[3];
-
-                databaseReference = firebaseDatabase.getReference().child("teacher").child("CHE".toLowerCase());
-                databaseReference.push().setValue(new Teacher(name, "N/A", "N/A", mobile, email, "N/A")).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        Log.e("TeacherAddeds","For Dept CHE");
-                    }
-                });
-
-                Log.e("Detail", "Name "+name+"\nTelephone "+telephone+"\nmobile "+mobile+"\nemail "+email+"\n");
-
-//                fileContent+=line;
-            }
-            bufferedReader.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-    }*/
-
     public void getLastModified() {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference databaseReference = firebaseDatabase.getReference().child("lastModified");
@@ -735,7 +703,5 @@ public class MainActivity extends AppCompatActivity
             });
 
         }
-
-
     }
 }
