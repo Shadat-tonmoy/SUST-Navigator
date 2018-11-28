@@ -15,7 +15,9 @@ import android.widget.Toast;
 
 import shadattonmoy.sustnavigator.R;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import shadattonmoy.sustnavigator.StaffFragment;
 import shadattonmoy.sustnavigator.commons.view.SemesterListFragment;
@@ -33,6 +35,7 @@ public class SchoolListAdapter extends RecyclerView.Adapter<SchoolListAdapter.My
     private List<School> schools;
     private FragmentManager fragmentManager;
     private String purpose,session;
+    private Map<Integer,Boolean> expandedMap;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView schoolTitle;
@@ -40,8 +43,8 @@ public class SchoolListAdapter extends RecyclerView.Adapter<SchoolListAdapter.My
 
         public MyViewHolder(View view) {
             super(view);
-            schoolTitle = (TextView) view.findViewById(R.id.school_title);
-            deptList = (LinearLayout) view.findViewById(R.id.dept_list);
+            schoolTitle = view.findViewById(R.id.school_title);
+            deptList =  view.findViewById(R.id.dept_list);
         }
     }
 
@@ -51,6 +54,7 @@ public class SchoolListAdapter extends RecyclerView.Adapter<SchoolListAdapter.My
         this.schools = schools;
         this.fragmentManager = fragmentManager;
         this.purpose = purpose;
+        expandedMap = new HashMap<>();
 
     }
 
@@ -68,6 +72,7 @@ public class SchoolListAdapter extends RecyclerView.Adapter<SchoolListAdapter.My
         String schoolTitle = school.getSchoolTitle();
         List<Dept> depts = school.getDepts();
         holder.deptList.removeAllViews();
+        boolean isExpanded = false;
         for(final Dept dept:depts)
         {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -181,6 +186,23 @@ public class SchoolListAdapter extends RecyclerView.Adapter<SchoolListAdapter.My
             }
 
         }
+        if(expandedMap.get(position)!=null && expandedMap.get(position))
+            holder.deptList.setVisibility(View.VISIBLE);
+        else holder.deptList.setVisibility(View.GONE);
+        holder.schoolTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(holder.deptList.getVisibility()==View.VISIBLE)
+                {
+                    holder.deptList.setVisibility(View.GONE);
+                    expandedMap.put(position,false);
+                }
+                else {
+                    holder.deptList.setVisibility(View.VISIBLE);
+                    expandedMap.put(position,true);
+                }
+            }
+        });
         holder.schoolTitle.setText(schoolTitle);
     }
 
@@ -211,14 +233,19 @@ public class SchoolListAdapter extends RecyclerView.Adapter<SchoolListAdapter.My
     }
 
     private class DeptClickListener implements View.OnClickListener{
-
-
-        public DeptClickListener() {
+        boolean isExpanded;
+        LinearLayout deptList;
+        public DeptClickListener(boolean isExpanded,LinearLayout deptList) {
+            this.isExpanded = isExpanded;
+            this.deptList = deptList;
 
         }
 
         @Override
         public void onClick(View view) {
+            if(isExpanded)
+                deptList.setVisibility(View.GONE);
+            else deptList.setVisibility(View.VISIBLE);
 
         }
     }

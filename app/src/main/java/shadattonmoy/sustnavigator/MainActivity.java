@@ -34,6 +34,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -179,7 +180,9 @@ public class MainActivity extends AppCompatActivity
 //        addCourse();
 //        no need to call curriculum crawler now....
 //        crawlCurriculum();
+//        removeSyllabus();
     }
+
 
     private void crawlCurriculum()
     {
@@ -703,5 +706,17 @@ public class MainActivity extends AppCompatActivity
             });
 
         }
+    }
+
+
+    public void removeSyllabus() {
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference().child("syllabus");
+        databaseReference.setValue(null).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Values.showToast(context,"Syllabus Cleared");
+            }
+        });
     }
 }

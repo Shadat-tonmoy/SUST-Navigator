@@ -116,6 +116,7 @@ public class DeptFragment extends android.app.Fragment{
         String purposeFormatted = WordUtils.capitalizeFully(purposeTrimmed);
         headerText.setText(Html.fromHtml("Dept. for <b>"+ purposeFormatted +"</b>"));
         appBarLayout.setExpanded(false);
+        deptList.setNestedScrollingEnabled(false);
         getSchoolsFromServer(purpose);
         checkForConnectionWithDB();
 
