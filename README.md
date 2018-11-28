@@ -8,3 +8,9 @@ by just dragging and dropping. User can also have their local database to store 
 # Playstore Link
 
 https://play.google.com/store/apps/details?id=shadattonmoy.sustnavigator&hl=en
+
+Source code is not available now on public repository. 
+
+# Private Repository Link
+
+https://gitlab.com/shadat.tonmoy/sust-navigator
